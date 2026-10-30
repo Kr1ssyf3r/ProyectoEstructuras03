@@ -69,3 +69,23 @@ class UsuarioRepository:
         self.usuarios_por_id[usuario.id] = usuario
         self.usuarios_por_nombre[usuario.usuario.lower()] = usuario
         self.usuarios_por_correo[usuario.correo.lower()] = usuario
+
+    def buscar_por_id(self, id_usuario):
+        """Busca un usuario mediante su identificador."""
+
+        return self.usuarios_por_id.get(id_usuario)
+
+    def buscar_por_nombre(self, nombre_usuario):
+        """Busca un usuario mediante su nombre de usuario."""
+
+        return self.usuarios_por_nombre.get(nombre_usuario.lower())
+
+    def buscar_por_correo(self, correo):
+        """Busca un usuario mediante su correo electrónico."""
+
+        return self.usuarios_por_correo.get(correo.lower())
+
+    def obtener_todos(self):
+        """Devuelve la lista de todos los usuarios registrados."""
+
+        return list(self.usuarios_por_id.values())

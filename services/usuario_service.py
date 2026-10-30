@@ -191,3 +191,18 @@ class UsuarioService:
         self.usuario_activo = usuario
 
         return usuario
+
+    def cerrar_sesion(self):
+        """Cierra la sesión actual."""
+
+        self.usuario_activo = None
+
+    def obtener_usuario(self, id_usuario):
+        """Obtiene un usuario mediante su ID."""
+
+        return self.repositorio.buscar_por_id(id_usuario)
+
+    def obtener_usuario_activo(self):
+        """Devuelve el usuario que tiene la sesión iniciada."""
+
+        return self.usuario_activo

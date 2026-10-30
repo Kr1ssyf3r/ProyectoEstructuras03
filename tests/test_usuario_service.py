@@ -227,3 +227,4 @@ def test_rechazar_hash_malformado(servicio):
         "Contrasena123",
         "hash_invalido"
     ) is False
+

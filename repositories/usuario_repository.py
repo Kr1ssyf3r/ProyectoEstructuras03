@@ -175,3 +175,47 @@ class UsuarioRepository:
             raise
 
         return True
+
+    
+    def actualizar(self, usuario):
+        """Actualiza un usuario existente y su persistencia."""
+
+        usuario_anterior = self.buscar_por_id(usuario.id)
+
+        if usuario_anterior is None:
+            raise ValueError("No existe un usuario con ese ID.")
+
+        # Comprobar que el nombre de usuario no pertenezca a otro usuario.
+        usuario_existente = self.buscar_por_nombre(usuario.usuario)
+
+        if (
+            usuario_existente is not None
+            and usuario_existente.id != usuario.id
+        ):
+            raise ValueError("Ese nombre de usuario ya está registrado.")
+
+        # Comprobar que el correo no pertenezca a otro usuario.
+        correo_existente = self.buscar_por_correo(usuario.correo)
+
+        if (
+            correo_existente is not None
+            and correo_existente.id != usuario.id
+        ):
+            raise ValueError("Ese correo ya está registrado.")
+
+        # Quitar los datos anteriores de los índices.
+        self._quitar_de_indices(usuario_anterior)
+
+        # Registrar los datos actualizados.
+        self._agregar_a_indices(usuario)
+
+        try:
+            self.guardar_usuarios()
+
+        except Exception:
+            # Restaurar los datos anteriores si falla la persistencia.
+            self._quitar_de_indices(usuario)
+            self._agregar_a_indices(usuario_anterior)
+            raise
+
+        return usuario

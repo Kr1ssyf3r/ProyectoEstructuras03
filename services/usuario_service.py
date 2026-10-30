@@ -206,3 +206,31 @@ class UsuarioService:
         """Devuelve el usuario que tiene la sesión iniciada."""
 
         return self.usuario_activo
+
+    
+    def restablecer_contrasena(self, id_usuario, nueva_contrasena):
+        """Actualiza la contraseña de un usuario mediante su ID."""
+
+        self._validar_cadena(
+            nueva_contrasena,
+            "contraseña"
+        )
+
+        if len(nueva_contrasena) < self.LONGITUD_MINIMA_CONTRASENA:
+            raise ValueError(
+                f"La contraseña debe tener al menos "
+                f"{self.LONGITUD_MINIMA_CONTRASENA} caracteres."
+            )
+
+        usuario = self.repositorio.buscar_por_id(id_usuario)
+
+        if usuario is None:
+            raise ValueError("No se encontró el usuario.")
+
+        # Generar un nuevo hash con un salt aleatorio.
+        usuario.contrasena_hash = self._generar_hash(nueva_contrasena)
+
+        # Persistir la actualización del usuario.
+        self.repositorio.actualizar(usuario)
+
+        return usuario

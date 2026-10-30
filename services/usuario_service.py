@@ -234,3 +234,75 @@ class UsuarioService:
         self.repositorio.actualizar(usuario)
 
         return usuario
+
+    def actualizar_perfil(
+            self,
+            id_usuario,
+            nombre,
+            nombre_usuario,
+            correo
+        ):
+            """Actualiza los datos personales de un usuario."""
+
+            campos = [
+                (nombre, "nombre"),
+                (nombre_usuario, "nombre de usuario"),
+                (correo, "correo")
+            ]
+
+            for valor, campo in campos:
+                self._validar_cadena(valor, campo)
+
+            nombre = nombre.strip()
+            nombre_usuario = nombre_usuario.strip()
+            correo = correo.strip().lower()
+
+            if any(caracter.isspace() for caracter in nombre_usuario):
+                raise ValueError(
+                    "El nombre de usuario no puede contener espacios."
+                )
+
+            if "@" not in correo or "." not in correo.split("@")[-1]:
+                raise ValueError("El correo electrónico no es válido.")
+
+            usuario_anterior = self.repositorio.buscar_por_id(id_usuario)
+
+            if usuario_anterior is None:
+                raise ValueError("No se encontró el usuario.")
+
+            usuario_existente = self.repositorio.buscar_por_nombre(
+                nombre_usuario
+            )
+
+            if (
+                usuario_existente is not None
+                and usuario_existente.id != id_usuario
+            ):
+                raise ValueError(
+                    "Ese nombre de usuario ya está registrado."
+                )
+
+            correo_existente = self.repositorio.buscar_por_correo(correo)
+
+            if (
+                correo_existente is not None
+                and correo_existente.id != id_usuario
+            ):
+                raise ValueError(
+                    "Ese correo electrónico ya está registrado."
+                )
+
+            # Crear un objeto nuevo para conservar los datos anteriores
+            # mientras el repositorio actualiza sus índices.
+            usuario_actualizado = Usuario(
+                id=usuario_anterior.id,
+                nombre=nombre,
+                usuario=nombre_usuario,
+                correo=correo,
+                contrasena_hash=usuario_anterior.contrasena_hash,
+                fecha_registro=usuario_anterior.fecha_registro
+            )
+
+            self.repositorio.actualizar(usuario_actualizado)
+
+            return usuario_actualizado

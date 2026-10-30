@@ -104,11 +104,22 @@ class UsuarioRepository:
         self.usuarios_por_correo[usuario.correo.lower()] = usuario
 
     def _quitar_de_indices(self, usuario):
-        """Elimina un usuario de los tres índices."""
+        """Elimina un usuario de todos los índices."""
 
         self.usuarios_por_id.pop(usuario.id, None)
-        self.usuarios_por_nombre.pop(usuario.usuario.lower(), None)
-        self.usuarios_por_correo.pop(usuario.correo.lower(), None)
+
+        # Eliminar las claves asociadas al ID del usuario.
+        for nombre, registrado in list(
+            self.usuarios_por_nombre.items()
+        ):
+            if registrado.id == usuario.id:
+                del self.usuarios_por_nombre[nombre]
+
+        for correo, registrado in list(
+            self.usuarios_por_correo.items()
+        ):
+            if registrado.id == usuario.id:
+                del self.usuarios_por_correo[correo]
 
     def guardar(self, usuario):
         """Registra un usuario y actualiza la persistencia."""

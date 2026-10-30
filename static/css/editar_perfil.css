@@ -1,0 +1,71 @@
+
+/* =========================================
+   EDICIÓN DEL PERFIL
+   ========================================= */
+
+/* Contenedor principal del formulario. */
+.edit-profile-card {
+    width: 100%;
+}
+
+/* Separación entre el encabezado y el formulario. */
+.edit-profile-card form {
+    margin-top: 24px;
+}
+
+/* Espaciado entre los campos. */
+.edit-profile-card .form-group {
+    margin-bottom: 20px;
+}
+
+/* Campos de entrada. */
+.edit-profile-card .input-container input {
+    width: 100%;
+}
+
+/* Botones de guardar y cancelar. */
+.edit-profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 28px;
+}
+
+.edit-profile-actions .login-button {
+    width: 100%;
+}
+
+/* Enlace para cancelar la edición. */
+.cancel-edit {
+    display: block;
+    padding: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    color: var(--text-secondary, #64748b);
+    transition: color 0.2s ease;
+}
+
+.cancel-edit:hover {
+    color: var(--primary, #4967d5);
+}
+
+/* =========================================
+   DISPOSITIVOS MÓVILES
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .edit-profile-card {
+        padding: 22px;
+    }
+
+    .edit-profile-card .form-group {
+        margin-bottom: 16px;
+    }
+
+    .edit-profile-actions {
+        margin-top: 22px;
+    }
+
+}

@@ -136,6 +136,43 @@ def perfil(usuario):
 
 
 # ============================================================
+# EDICIÓN DEL PERFIL
+# ============================================================
+
+@app.route("/perfil/editar", methods=["GET", "POST"])
+@requiere_sesion
+def editar_perfil(usuario):
+
+    if request.method == "POST":
+
+        nombre = request.form.get("nombre", "")
+        nombre_usuario = request.form.get("nombre_usuario", "")
+        correo = request.form.get("correo", "")
+
+        try:
+            usuario_service.actualizar_perfil(
+                id_usuario=usuario.id,
+                nombre=nombre,
+                nombre_usuario=nombre_usuario,
+                correo=correo
+            )
+
+            return redirect(url_for("perfil"))
+
+        except ValueError as error:
+            return render_template(
+                "editar_perfil.html",
+                usuario=usuario,
+                error=str(error)
+            )
+
+    return render_template(
+        "editar_perfil.html",
+        usuario=usuario
+    )
+
+
+# ============================================================
 # CIERRE DE SESIÓN
 # ============================================================
 

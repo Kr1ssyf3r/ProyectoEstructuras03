@@ -88,3 +88,62 @@ class UsuarioService:
 
         except (ValueError, TypeError, AttributeError, OverflowError):
             return False
+
+    def registrar_usuario(
+        self,
+        nombre,
+        nombre_usuario,
+        correo,
+        contrasena,
+        confirmar_contrasena
+    ):
+        """Valida y registra un nuevo usuario."""
+
+        campos = [
+            (nombre, "nombre"),
+            (nombre_usuario, "nombre de usuario"),
+            (correo, "correo"),
+            (contrasena, "contraseña"),
+            (confirmar_contrasena, "confirmación de contraseña")
+        ]
+
+        for valor, campo in campos:
+            self._validar_cadena(valor, campo)
+
+        nombre = nombre.strip()
+        nombre_usuario = nombre_usuario.strip()
+        correo = correo.strip().lower()
+
+        if any(caracter.isspace() for caracter in nombre_usuario):
+            raise ValueError(
+                "El nombre de usuario no puede contener espacios."
+            )
+
+        if len(contrasena) < self.LONGITUD_MINIMA_CONTRASENA:
+            raise ValueError(
+                f"La contraseña debe tener al menos "
+                f"{self.LONGITUD_MINIMA_CONTRASENA} caracteres."
+            )
+
+        if contrasena != confirmar_contrasena:
+            raise ValueError("Las contraseñas no coinciden.")
+
+        if self.repositorio.buscar_por_nombre(nombre_usuario):
+            raise ValueError(
+                "Ese nombre de usuario ya está registrado."
+            )
+
+        if self.repositorio.buscar_por_correo(correo):
+            raise ValueError("Ese correo ya está registrado.")
+
+        usuario = Usuario(
+            id=str(uuid.uuid4()),
+            nombre=nombre,
+            usuario=nombre_usuario,
+            correo=correo,
+            contrasena_hash=self._generar_hash(contrasena)
+        )
+
+        self.repositorio.guardar(usuario)
+
+        return usuario

@@ -70,6 +70,21 @@ class UsuarioRepository:
         self.usuarios_por_nombre[usuario.usuario.lower()] = usuario
         self.usuarios_por_correo[usuario.correo.lower()] = usuario
 
+    def guardar(self, usuario):
+        """Registra un usuario en memoria y lo guarda en JSON."""
+
+        if usuario.id in self.usuarios_por_id:
+            raise ValueError("El ID del usuario ya está registrado.")
+
+        if usuario.usuario.lower() in self.usuarios_por_nombre:
+            raise ValueError("El nombre de usuario ya está registrado.")
+
+        if usuario.correo.lower() in self.usuarios_por_correo:
+            raise ValueError("El correo electrónico ya está registrado.")
+
+        self._agregar_a_indices(usuario)
+        self.guardar_usuarios()
+
     def buscar_por_id(self, id_usuario):
         """Busca un usuario mediante su identificador."""
 
@@ -89,3 +104,19 @@ class UsuarioRepository:
         """Devuelve la lista de todos los usuarios registrados."""
 
         return list(self.usuarios_por_id.values())
+
+    def eliminar(self, id_usuario):
+        """Elimina un usuario de las tablas hash y del JSON."""
+
+        usuario = self.buscar_por_id(id_usuario)
+
+        if usuario is None:
+            return False
+
+        del self.usuarios_por_id[usuario.id]
+        del self.usuarios_por_nombre[usuario.usuario.lower()]
+        del self.usuarios_por_correo[usuario.correo.lower()]
+
+        self.guardar_usuarios()
+
+        return True

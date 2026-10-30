@@ -66,3 +66,15 @@ class Usuario:
             datetime.fromisoformat(self.fecha_registro)
         except ValueError:
             raise ValueError("La fecha de registro no es válida.")
+
+    def to_dict(self) -> dict:
+        """Convierte el usuario en un diccionario para guardarlo en JSON."""
+
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "usuario": self.usuario,
+            "correo": self.correo,
+            "contrasena_hash": self.contrasena_hash,
+            "fecha_registro": self.fecha_registro
+        }

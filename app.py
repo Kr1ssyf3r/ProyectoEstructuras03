@@ -1,6 +1,7 @@
 
 import os
 import webbrowser
+
 from threading import Timer
 from functools import wraps
 
@@ -18,6 +19,7 @@ from repositories.token_repository import TokenRepository
 
 from services.usuario_service import UsuarioService
 from services.recuperacion_service import RecuperacionService
+from services.correo_service import CorreoService
 
 
 # ============================================================
@@ -47,6 +49,8 @@ recuperacion_service = RecuperacionService(
     token_repository=token_repository,
     usuario_service=usuario_service
 )
+
+correo_service = CorreoService()
 
 
 # ============================================================
@@ -82,7 +86,6 @@ def requiere_sesion(funcion):
 @app.route("/", methods=["GET"])
 def inicio():
 
-    # Si ya inició sesión, enviarlo al perfil.
     if session.get("usuario_id"):
         return redirect(url_for("perfil"))
 
@@ -107,7 +110,6 @@ def login():
             contrasena=contrasena
         )
 
-        # Guardar el identificador del usuario autenticado.
         session.clear()
         session["usuario_id"] = usuario.id
 
@@ -150,6 +152,7 @@ def editar_perfil(usuario):
         correo = request.form.get("correo", "")
 
         try:
+
             usuario_service.actualizar_perfil(
                 id_usuario=usuario.id,
                 nombre=nombre,
@@ -160,6 +163,7 @@ def editar_perfil(usuario):
             return redirect(url_for("perfil"))
 
         except ValueError as error:
+
             return render_template(
                 "editar_perfil.html",
                 usuario=usuario,
@@ -211,7 +215,7 @@ def registro():
 
         try:
 
-            usuario_service.registrar_usuario(
+            usuario = usuario_service.registrar_usuario(
                 nombre=nombre,
                 nombre_usuario=nombre_usuario,
                 correo=correo,
@@ -219,12 +223,32 @@ def registro():
                 confirmar_contrasena=confirmar_contrasena
             )
 
+            # Enviar correo de bienvenida.
+            try:
+
+                correo_service.enviar_bienvenida(
+                    destinatario=usuario.correo,
+                    nombre=usuario.nombre
+                )
+
+                mensaje = (
+                    "¡Tu cuenta se creó correctamente! "
+                    "Te enviamos un correo de bienvenida."
+                )
+
+            except Exception:
+                app.logger.exception(
+                    "No se pudo enviar el correo de bienvenida."
+                )
+
+                mensaje = (
+                    "Tu cuenta se creó correctamente, "
+                    "pero no pudimos enviar el correo de bienvenida."
+                )
+
             return render_template(
                 "login.html",
-                mensaje=(
-                    "¡Tu cuenta se creó correctamente! "
-                    "Ya puedes iniciar sesión."
-                )
+                mensaje=mensaje
             )
 
         except ValueError as error:
@@ -281,17 +305,32 @@ def solicitar_recuperacion():
                 _external=True
             )
 
-            return render_template(
-                "recuperar.html",
-                mensaje="Se generó el enlace de recuperación.",
+            correo_service.enviar_recuperacion(
+                destinatario=usuario.correo,
                 enlace=enlace
             )
 
-        except (ValueError, OSError) as error:
+            return render_template(
+                "recuperar.html",
+                mensaje=(
+                    "Si la cuenta existe y el correo pudo enviarse, "
+                    "recibirás un enlace de recuperación. "
+                    "Revisa también tu carpeta de spam."
+                )
+            )
+
+        except (ValueError, OSError, Exception):
+
+            app.logger.exception(
+                "No se pudo procesar la recuperación de contraseña."
+            )
 
             return render_template(
                 "recuperar.html",
-                error=f"No se pudo generar la recuperación: {error}"
+                error=(
+                    "No se pudo enviar el correo de recuperación. "
+                    "Inténtalo nuevamente."
+                )
             )
 
     return render_template("recuperar.html")

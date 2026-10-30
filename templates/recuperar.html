@@ -98,128 +98,80 @@
 
                 <p class="recovery-description">
                     No te preocupes. Introduce el correo electrónico
-                    asociado a tu cuenta para generar un enlace
+                    asociado a tu cuenta para recibir un enlace
                     de recuperación.
                 </p>
 
 
-                <!-- Mensajes -->
+                <!-- Mensajes de error -->
                 {% if error %}
+
                     <div class="error-message recovery-alert">
                         {{ error }}
                     </div>
+
                 {% endif %}
 
+
+                <!-- Mensaje de éxito -->
                 {% if mensaje %}
+
                     <div class="success-message recovery-alert">
                         {{ mensaje }}
                     </div>
+
                 {% endif %}
 
 
-                {% if enlace %}
+                <!-- Formulario de recuperación -->
+                <form
+                    method="POST"
+                    action="{{ url_for('solicitar_recuperacion') }}"
+                >
 
-                    <!-- ENLACE GENERADO -->
-                    <div class="development-link">
+                    <div class="form-group">
 
-                        <div class="development-icon">
-                            <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="1.8"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="m9 12 2 2 4-4"></path>
-                            </svg>
-                        </div>
+                        <label for="correo">
+                            Correo electrónico
+                        </label>
 
-                        <span class="development-tag">
-                            ENLACE GENERADO
-                        </span>
+                        <div class="input-container">
 
-                        <h3>¡Ya casi recuperas tu cuenta!</h3>
-
-                        <p class="development-description">
-                            Tu enlace de recuperación está listo.
-                            Utilízalo para establecer una nueva contraseña.
-                        </p>
-
-                        <a href="{{ enlace }}" class="development-button">
-                            Restablecer mi contraseña
-
-                            <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14"></path>
-                                <path d="m13 6 6 6-6 6"></path>
-                            </svg>
-                        </a>
-
-                        <div class="development-notice">
-                            <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="1.8">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M12 8v4m0 4h.01"></path>
+                            <svg class="field-icon"
+                                 viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.7">
+                                <rect x="3" y="5" width="18"
+                                      height="14" rx="3"></rect>
+                                <path d="m3 7 9 6 9-6"></path>
                             </svg>
 
-                            <p>
-                                Este es un enlace de prueba local.
-                                Caduca en 30 minutos. El envío automático
-                                de correos todavía no está configurado.
-                            </p>
+                            <input
+                                type="email"
+                                id="correo"
+                                name="correo"
+                                placeholder="ejemplo@correo.com"
+                                autocomplete="email"
+                                required
+                            >
+
                         </div>
 
                     </div>
 
-                {% else %}
 
-                    <!-- FORMULARIO -->
-                    <form
-                        method="POST"
-                        action="{{ url_for('solicitar_recuperacion') }}"
-                    >
+                    <button type="submit" class="login-button">
 
-                        <div class="form-group">
+                        <span>Enviar enlace de recuperación</span>
 
-                            <label for="correo">
-                                Correo electrónico
-                            </label>
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m13 6 6 6-6 6"></path>
+                        </svg>
 
-                            <div class="input-container">
+                    </button>
 
-                                <svg class="field-icon"
-                                     viewBox="0 0 24 24" fill="none"
-                                     stroke="currentColor" stroke-width="1.7">
-                                    <rect x="3" y="5" width="18"
-                                          height="14" rx="3"></rect>
-                                    <path d="m3 7 9 6 9-6"></path>
-                                </svg>
-
-                                <input
-                                    type="email"
-                                    id="correo"
-                                    name="correo"
-                                    placeholder="ejemplo@correo.com"
-                                    autocomplete="email"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-                        <button type="submit" class="login-button">
-
-                            <span>Generar enlace de recuperación</span>
-
-                            <svg viewBox="0 0 24 24" fill="none"
-                                 stroke="currentColor" stroke-width="2">
-                                <path d="M5 12h14"></path>
-                                <path d="m13 6 6 6-6 6"></path>
-                            </svg>
-
-                        </button>
-
-                    </form>
-
-                {% endif %}
+                </form>
 
 
                 <!-- Volver al login -->

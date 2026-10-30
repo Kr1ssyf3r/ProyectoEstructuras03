@@ -10,6 +10,7 @@ env/
 # Variables de entorno y credenciales
 .env
 .env.*
+!.env.example
 
 # Datos locales de la aplicación
 data/*.json

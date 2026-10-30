@@ -62,3 +62,10 @@ class UsuarioRepository:
         # Guardar los datos en formato JSON.
         with open(self.ruta_archivo, "w", encoding="utf-8") as archivo:
             json.dump(datos, archivo, indent=4, ensure_ascii=False)
+
+    def _agregar_a_indices(self, usuario):
+        """Agrega un usuario a las tablas hash."""
+
+        self.usuarios_por_id[usuario.id] = usuario
+        self.usuarios_por_nombre[usuario.usuario.lower()] = usuario
+        self.usuarios_por_correo[usuario.correo.lower()] = usuario

@@ -147,3 +147,47 @@ class UsuarioService:
         self.repositorio.guardar(usuario)
 
         return usuario
+
+    def validar_credenciales(self, nombre_usuario, contrasena):
+        """Comprueba las credenciales y devuelve el usuario si son válidas."""
+
+        if not isinstance(nombre_usuario, str):
+            return None
+
+        if not isinstance(contrasena, str):
+            return None
+
+        if not nombre_usuario.strip() or not contrasena.strip():
+            return None
+
+        usuario = self.repositorio.buscar_por_nombre(
+            nombre_usuario.strip()
+        )
+
+        if usuario is None:
+            return None
+
+        if not self._verificar_contrasena(
+            contrasena,
+            usuario.contrasena_hash
+        ):
+            return None
+
+        return usuario
+
+    def iniciar_sesion(self, nombre_usuario, contrasena):
+        """Inicia la sesión de un usuario."""
+
+        usuario = self.validar_credenciales(
+            nombre_usuario,
+            contrasena
+        )
+
+        if usuario is None:
+            raise ValueError(
+                "Nombre de usuario o contraseña incorrectos."
+            )
+
+        self.usuario_activo = usuario
+
+        return usuario

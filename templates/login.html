@@ -157,6 +157,12 @@
                     </div>
                 {% endif %}
 
+                {% if mensaje %}
+                    <div class="success-message">
+                        {{ mensaje }}
+                    </div>
+                {% endif %}
+
 
                 <form method="POST" action="{{ url_for('login') }}">
 
@@ -253,6 +259,12 @@
 
                     </div>
 
+                    <!-- Recuperación de contraseña -->
+                    <div class="forgot-password">
+                        <a href="{{ url_for('solicitar_recuperacion') }}">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
 
                     <button type="submit" class="login-button">
 

@@ -1,3 +1,4 @@
+
 /* =========================================
    VARIABLES Y TEMAS
 ========================================= */
@@ -5,10 +6,24 @@
 :root {
     color-scheme: light;
 
-   --background:
-    radial-gradient(ellipse at 10% 10%, rgba(52, 120, 246, 0.17), transparent 38%),
-    radial-gradient(ellipse at 90% 85%, rgba(111, 86, 255, 0.14), transparent 38%),
-    linear-gradient(135deg, #edf3ff 0%, #f7f9ff 50%, #eef1ff 100%);
+    --background:
+        radial-gradient(
+            ellipse at 10% 10%,
+            rgba(52, 120, 246, 0.17),
+            transparent 38%
+        ),
+        radial-gradient(
+            ellipse at 90% 85%,
+            rgba(111, 86, 255, 0.14),
+            transparent 38%
+        ),
+        linear-gradient(
+            135deg,
+            #edf3ff 0%,
+            #f7f9ff 50%,
+            #eef1ff 100%
+        );
+
     --card: rgba(255, 255, 255, 0.88);
     --input: #f5f7fc;
 
@@ -76,7 +91,6 @@
 
 body {
     min-height: 100vh;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,6 +112,17 @@ body {
 /* =========================================
    LUCES AMBIENTALES
 ========================================= */
+
+.ambient-light {
+    position: fixed;
+    z-index: 0;
+
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.8;
+
+    pointer-events: none;
+}
 
 .light-one {
     width: 450px;
@@ -121,15 +146,6 @@ body {
     top: 30%;
     right: 25%;
     background: rgba(38, 174, 255, 0.16);
-}
-
-.ambient-light {
-    position: fixed;
-    z-index: 0;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.8;
-    pointer-events: none;
 }
 
 [data-theme="dark"] .light-one {
@@ -174,7 +190,6 @@ body {
     border-color: rgba(255, 255, 255, 0.07);
 }
 
-/* Sombra y profundidad del contenedor en modo claro. */
 :root:not([data-theme="dark"]) .page-container {
     box-shadow:
         0 35px 90px rgba(39, 65, 120, 0.14),
@@ -182,15 +197,6 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* Fondo degradado y translúcido del formulario en modo claro. */
-:root:not([data-theme="dark"]) .form-panel {
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.75),
-            rgba(239, 244, 255, 0.72)
-        );
-}
 
 /* =========================================
    PANEL IZQUIERDO
@@ -220,10 +226,7 @@ body {
             transparent 40%
         ),
         linear-gradient(145deg, #192d50, #0a1429);
-
 }
-
-/* Luz decorativa */
 
 .welcome-panel::before {
     content: "";
@@ -260,6 +263,11 @@ body {
     border-radius: 50%;
 }
 
+
+/* =========================================
+   MARCA SOCIAL UNA
+========================================= */
+
 .brand {
     position: relative;
     z-index: 2;
@@ -291,6 +299,7 @@ body {
 
     background: linear-gradient(145deg, #5794ff, #2463d5);
 
+    color: #ffffff;
     font-size: 23px;
     font-weight: 800;
 
@@ -298,6 +307,11 @@ body {
         0 8px 25px rgba(52, 120, 246, 0.38),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
+
+
+/* =========================================
+   CONTENIDO DE BIENVENIDA
+========================================= */
 
 .welcome-content {
     position: relative;
@@ -383,7 +397,6 @@ body {
 .orbit-one {
     width: 110px;
     height: 110px;
-
     left: 15px;
     top: 0;
 }
@@ -391,7 +404,6 @@ body {
 .orbit-two {
     width: 80px;
     height: 80px;
-
     left: 30px;
     top: 15px;
 }
@@ -399,7 +411,6 @@ body {
 .orbit-three {
     width: 50px;
     height: 50px;
-
     left: 45px;
     top: 30px;
 }
@@ -455,12 +466,27 @@ body {
     top: 85px;
 }
 
+
+/* =========================================
+   PIE DEL PANEL IZQUIERDO
+========================================= */
+
 .panel-footer {
     position: relative;
     z-index: 2;
 
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
     color: #8295b5;
     font-size: 12px;
+}
+
+.footer-line {
+    width: 35px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.25);
 }
 
 
@@ -479,6 +505,20 @@ body {
 
     background: var(--card);
 }
+
+:root:not([data-theme="dark"]) .form-panel {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.75),
+            rgba(239, 244, 255, 0.72)
+        );
+}
+
+
+/* =========================================
+   ACCIONES SUPERIORES
+========================================= */
 
 .top-actions {
     position: absolute;
@@ -538,7 +578,6 @@ body {
 .theme-toggle:hover {
     color: var(--primary);
     border-color: var(--primary);
-
     transform: translateY(-2px);
 }
 
@@ -613,19 +652,34 @@ body {
 
 
 /* =========================================
-   MENSAJE DE ERROR
+   MENSAJES
 ========================================= */
 
-.error-message {
+.error-message,
+.success-message {
     padding: 13px 15px;
     margin-bottom: 22px;
 
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.error-message {
     background: var(--error-bg);
     border: 1px solid var(--border);
-    border-radius: 10px;
-
     color: var(--error-text);
-    font-size: 13px;
+}
+
+.success-message {
+    background: rgba(22, 131, 74, 0.10);
+    border: 1px solid rgba(22, 131, 74, 0.18);
+    color: #16834a;
+}
+
+[data-theme="dark"] .success-message {
+    background: #183c2c;
+    border-color: #285b42;
+    color: #9ae6b4;
 }
 
 
@@ -744,6 +798,35 @@ body {
 
 .password-toggle.is-visible .eye-closed {
     display: block;
+}
+
+
+/* =========================================
+   RECUPERACIÓN DE CONTRASEÑA
+========================================= */
+
+.forgot-password {
+    display: flex;
+    justify-content: center;
+
+    margin-top: -10px;
+    margin-bottom: 22px;
+}
+
+.forgot-password a {
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+.forgot-password a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 
@@ -896,7 +979,6 @@ body {
     .mobile-brand .brand-icon {
         color: white;
     }
-
 }
 
 @media (max-width: 480px) {
@@ -926,5 +1008,4 @@ body {
     .form-footer {
         flex-wrap: wrap;
     }
-
 }

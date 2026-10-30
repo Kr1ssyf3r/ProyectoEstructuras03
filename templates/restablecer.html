@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f1f5fc">
+
+    <title>Social UNA | Nueva contraseña</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/restablecer.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script
+        src="{{ url_for('static', filename='js/recuperacion.js') }}"
+        defer
+    ></script>
+</head>
+
+<body>
+
+    <!-- Luces decorativas -->
+    <div class="ambient-light light-one"></div>
+    <div class="ambient-light light-two"></div>
+    <div class="ambient-light light-three"></div>
+
+    <main class="reset-container">
+
+        <section class="reset-card">
+
+            <!-- Encabezado -->
+            <header class="reset-header">
+
+                <a href="{{ url_for('inicio') }}" class="reset-brand">
+                    <div class="brand-icon">S</div>
+                    <span>Social <strong>UNA</strong></span>
+                </a>
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="theme-toggle"
+                    aria-label="Cambiar tema"
+                    title="Cambiar tema"
+                >
+                    <svg class="sun-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.42 1.42"></path>
+                        <path d="m17.65 17.65 1.42 1.42"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.35 17.65-1.42 1.42"></path>
+                        <path d="m19.07 4.93-1.42-1.42"></path>
+                    </svg>
+
+                    <svg class="moon-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <path d="M20.9 13A9 9 0 0 1 11 3.1
+                                 9 9 0 1 0 20.9 13Z"></path>
+                    </svg>
+                </button>
+
+            </header>
+
+
+            <div class="reset-content">
+
+                {% if completado %}
+
+                    <!-- CONTRASEÑA ACTUALIZADA -->
+                    <div class="reset-state-icon success-state">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 4 4L19 6"></path>
+                        </svg>
+                    </div>
+
+                    <span class="form-tag">PROCESO COMPLETADO</span>
+
+                    <h1>¡Contraseña actualizada<span>.</span></h1>
+
+                    <p class="reset-description">
+                        {{ exito }}
+                    </p>
+
+                    <a href="{{ url_for('inicio') }}"
+                       class="login-button reset-button-link">
+                        <span>Volver al inicio de sesión</span>
+
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m13 6 6 6-6 6"></path>
+                        </svg>
+                    </a>
+
+
+                {% elif token_invalido %}
+
+                    <!-- TOKEN INVÁLIDO -->
+                    <div class="reset-state-icon error-state">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round">
+                            <path d="M12 8v4"></path>
+                            <path d="M12 16h.01"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                    </div>
+
+                    <span class="form-tag">ENLACE NO DISPONIBLE</span>
+
+                    <h1>No se pudo restablecer<span>.</span></h1>
+
+                    <div class="error-message reset-alert">
+                        {{ error }}
+                    </div>
+
+                    <p class="reset-description">
+                        Puedes solicitar un nuevo enlace para
+                        continuar con la recuperación de tu cuenta.
+                    </p>
+
+                    <a href="{{ url_for('solicitar_recuperacion') }}"
+                       class="login-button reset-button-link">
+                        <span>Solicitar otro enlace</span>
+
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m13 6 6 6-6 6"></path>
+                        </svg>
+                    </a>
+
+
+                {% else %}
+
+                    <!-- FORMULARIO PARA NUEVA CONTRASEÑA -->
+                    <div class="reset-state-icon password-state">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+                            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                        </svg>
+                    </div>
+
+                    <span class="form-tag">SEGURIDAD DE TU CUENTA</span>
+
+                    <h1>Crear nueva contraseña<span>.</span></h1>
+
+                    <p class="reset-description">
+                        Introduce tu nueva contraseña y confírmala
+                        para completar el proceso.
+                    </p>
+
+                    {% if error %}
+                        <div class="error-message reset-alert">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST">
+
+                        <div class="form-group">
+
+                            <label for="contrasena">
+                                Nueva contraseña
+                            </label>
+
+                            <div class="input-container">
+
+                                <svg class="field-icon"
+                                     viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="1.7">
+                                    <rect x="4" y="10" width="16"
+                                          height="11" rx="2"></rect>
+                                    <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                                </svg>
+
+                                <input
+                                    type="password"
+                                    id="contrasena"
+                                    name="contrasena"
+                                    placeholder="Mínimo 8 caracteres"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="confirmar_contrasena">
+                                Confirmar contraseña
+                            </label>
+
+                            <div class="input-container">
+
+                                <svg class="field-icon"
+                                     viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="1.7">
+                                    <rect x="4" y="10" width="16"
+                                          height="11" rx="2"></rect>
+                                    <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                                </svg>
+
+                                <input
+                                    type="password"
+                                    id="confirmar_contrasena"
+                                    name="confirmar_contrasena"
+                                    placeholder="Repite tu contraseña"
+                                    autocomplete="new-password"
+                                    minlength="8"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <button type="submit" class="login-button">
+                            <span>Cambiar contraseña</span>
+
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+
+            <footer class="reset-footer">
+                <span>© 2026 Social UNA</span>
+                <span>Conectando estudiantes.</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

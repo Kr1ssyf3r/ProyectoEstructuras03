@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f1f5fc">
+
+    <title>Social UNA | Recuperar contraseña</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/recuperacion.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script
+        src="{{ url_for('static', filename='js/recuperacion.js') }}"
+        defer
+    ></script>
+</head>
+
+<body>
+
+    <!-- Luces decorativas -->
+    <div class="ambient-light light-one"></div>
+    <div class="ambient-light light-two"></div>
+    <div class="ambient-light light-three"></div>
+
+    <main class="recovery-container">
+
+        <section class="recovery-card">
+
+            <!-- Encabezado -->
+            <header class="recovery-header">
+
+                <a href="{{ url_for('inicio') }}" class="recovery-brand">
+                    <div class="brand-icon">S</div>
+                    <span>Social <strong>UNA</strong></span>
+                </a>
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="theme-toggle"
+                    aria-label="Cambiar tema"
+                    title="Cambiar tema"
+                >
+                    <svg class="sun-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.42 1.42"></path>
+                        <path d="m17.65 17.65 1.42 1.42"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.35 17.65-1.42 1.42"></path>
+                        <path d="m19.07 4.93-1.42-1.42"></path>
+                    </svg>
+
+                    <svg class="moon-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <path d="M20.9 13A9 9 0 0 1 11 3.1
+                                 9 9 0 1 0 20.9 13Z"></path>
+                    </svg>
+                </button>
+
+            </header>
+
+
+            <div class="recovery-content">
+
+                <!-- Icono -->
+                <div class="recovery-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="1.8"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="3"></rect>
+                        <path d="m3 7 9 6 9-6"></path>
+                    </svg>
+                </div>
+
+                <span class="form-tag">RECUPERACIÓN DE CUENTA</span>
+
+                <h1>Recupera tu cuenta<span>.</span></h1>
+
+                <p class="recovery-description">
+                    No te preocupes. Introduce el correo electrónico
+                    asociado a tu cuenta para generar un enlace
+                    de recuperación.
+                </p>
+
+
+                <!-- Mensajes -->
+                {% if error %}
+                    <div class="error-message recovery-alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                {% if mensaje %}
+                    <div class="success-message recovery-alert">
+                        {{ mensaje }}
+                    </div>
+                {% endif %}
+
+
+                {% if enlace %}
+
+                    <!-- ENLACE GENERADO -->
+                    <div class="development-link">
+
+                        <div class="development-icon">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.8"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+
+                        <span class="development-tag">
+                            ENLACE GENERADO
+                        </span>
+
+                        <h3>¡Ya casi recuperas tu cuenta!</h3>
+
+                        <p class="development-description">
+                            Tu enlace de recuperación está listo.
+                            Utilízalo para establecer una nueva contraseña.
+                        </p>
+
+                        <a href="{{ enlace }}" class="development-button">
+                            Restablecer mi contraseña
+
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+                        </a>
+
+                        <div class="development-notice">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 8v4m0 4h.01"></path>
+                            </svg>
+
+                            <p>
+                                Este es un enlace de prueba local.
+                                Caduca en 30 minutos. El envío automático
+                                de correos todavía no está configurado.
+                            </p>
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <!-- FORMULARIO -->
+                    <form
+                        method="POST"
+                        action="{{ url_for('solicitar_recuperacion') }}"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="correo">
+                                Correo electrónico
+                            </label>
+
+                            <div class="input-container">
+
+                                <svg class="field-icon"
+                                     viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="1.7">
+                                    <rect x="3" y="5" width="18"
+                                          height="14" rx="3"></rect>
+                                    <path d="m3 7 9 6 9-6"></path>
+                                </svg>
+
+                                <input
+                                    type="email"
+                                    id="correo"
+                                    name="correo"
+                                    placeholder="ejemplo@correo.com"
+                                    autocomplete="email"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="login-button">
+
+                            <span>Generar enlace de recuperación</span>
+
+                            <svg viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"></path>
+                                <path d="m13 6 6 6-6 6"></path>
+                            </svg>
+
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+
+                <!-- Volver al login -->
+                <div class="recovery-return">
+                    <a href="{{ url_for('inicio') }}">
+                        ← Volver al inicio de sesión
+                    </a>
+                </div>
+
+            </div>
+
+
+            <footer class="recovery-footer">
+                <span>© 2026 Social UNA</span>
+                <span>Conectando estudiantes.</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

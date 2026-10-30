@@ -1,120 +1,126 @@
 import json
 import os
 import tempfile
+from pathlib import Path
 
 from models.usuario import Usuario
 
 
 class UsuarioRepository:
-    """
-    Administra el almacenamiento y recuperación de usuarios.
-
-    Utiliza diccionarios como tablas hash para realizar
-    búsquedas rápidas y un archivo JSON para persistencia.
-    """
 
     def __init__(self, ruta_archivo="data/usuarios.json"):
-        self.ruta_archivo = ruta_archivo
+        self.ruta_archivo = Path(ruta_archivo)
 
         self.usuarios_por_id = {}
         self.usuarios_por_nombre = {}
         self.usuarios_por_correo = {}
 
-        if not os.path.exists(self.ruta_archivo):
-            self.guardar_usuarios()
-
         self.cargar_usuarios()
 
     def cargar_usuarios(self):
-        """Carga los usuarios desde el archivo JSON."""
+        """Carga los usuarios y reconstruye los índices desde cero."""
 
-        try:
-            with open(self.ruta_archivo, "r", encoding="utf-8") as archivo:
-                datos = json.load(archivo)
+        self.ruta_archivo.parent.mkdir(parents=True, exist_ok=True)
 
-            if not isinstance(datos, list):
+        if not self.ruta_archivo.exists():
+            self.ruta_archivo.write_text("[]", encoding="utf-8")
+
+        with open(self.ruta_archivo, "r", encoding="utf-8") as archivo:
+            datos = json.load(archivo)
+
+        if not isinstance(datos, list):
+            raise ValueError("El archivo de usuarios debe contener una lista.")
+
+        # Diccionarios temporales para evitar cargas parciales.
+        usuarios_por_id = {}
+        usuarios_por_nombre = {}
+        usuarios_por_correo = {}
+
+        for registro in datos:
+            usuario = Usuario.from_dict(registro)
+
+            id_usuario = usuario.id
+            nombre_usuario = usuario.usuario.lower()
+            correo = usuario.correo.lower()
+
+            if id_usuario in usuarios_por_id:
+                raise ValueError(f"ID duplicado: {id_usuario}")
+
+            if nombre_usuario in usuarios_por_nombre:
                 raise ValueError(
-                    "El contenido del archivo JSON no es válido."
+                    f"Nombre de usuario duplicado: {nombre_usuario}"
                 )
 
-            for registro in datos:
-                usuario = Usuario.from_dict(registro)
+            if correo in usuarios_por_correo:
+                raise ValueError(f"Correo duplicado: {correo}")
 
-                if (
-                    usuario.id in self.usuarios_por_id
-                    or usuario.usuario.lower() in self.usuarios_por_nombre
-                    or usuario.correo.lower() in self.usuarios_por_correo
-                ):
-                    raise ValueError(
-                        "El archivo contiene usuarios duplicados."
-                    )
+            usuarios_por_id[id_usuario] = usuario
+            usuarios_por_nombre[nombre_usuario] = usuario
+            usuarios_por_correo[correo] = usuario
 
-                self._agregar_a_indices(usuario)
-
-        except (json.JSONDecodeError, TypeError, KeyError) as error:
-            raise ValueError(
-                "El archivo de usuarios contiene datos inválidos."
-            ) from error
+        # Se reemplazan los índices únicamente si toda la carga fue válida.
+        self.usuarios_por_id = usuarios_por_id
+        self.usuarios_por_nombre = usuarios_por_nombre
+        self.usuarios_por_correo = usuarios_por_correo
 
     def guardar_usuarios(self):
-        """Guarda los usuarios mediante un archivo temporal."""
-
-        carpeta = os.path.dirname(os.path.abspath(self.ruta_archivo))
-        os.makedirs(carpeta, exist_ok=True)
+        """Guarda todos los usuarios utilizando un archivo temporal."""
 
         datos = [
             usuario.to_dict()
             for usuario in self.usuarios_por_id.values()
         ]
 
-        ruta_temporal = None
+        archivo_temporal = None
 
         try:
             with tempfile.NamedTemporaryFile(
                 mode="w",
                 encoding="utf-8",
-                dir=carpeta,
+                dir=self.ruta_archivo.parent,
                 suffix=".tmp",
                 delete=False
             ) as archivo:
-                ruta_temporal = archivo.name
+                archivo_temporal = archivo.name
 
-                json.dump(datos, archivo, indent=4, ensure_ascii=False)
+                json.dump(datos, archivo, ensure_ascii=False, indent=4)
                 archivo.flush()
                 os.fsync(archivo.fileno())
 
-            os.replace(ruta_temporal, self.ruta_archivo)
-            ruta_temporal = None
+            os.replace(archivo_temporal, self.ruta_archivo)
 
         finally:
-            if ruta_temporal and os.path.exists(ruta_temporal):
-                os.remove(ruta_temporal)
+            if (
+                archivo_temporal is not None
+                and os.path.exists(archivo_temporal)
+            ):
+                os.remove(archivo_temporal)
 
     def _agregar_a_indices(self, usuario):
-        """Agrega un usuario a las tablas hash."""
+        """Agrega un usuario a los tres índices."""
 
         self.usuarios_por_id[usuario.id] = usuario
         self.usuarios_por_nombre[usuario.usuario.lower()] = usuario
         self.usuarios_por_correo[usuario.correo.lower()] = usuario
 
     def _quitar_de_indices(self, usuario):
-        """Elimina un usuario de las tablas hash."""
+        """Elimina un usuario de los tres índices."""
 
-        del self.usuarios_por_id[usuario.id]
-        del self.usuarios_por_nombre[usuario.usuario.lower()]
-        del self.usuarios_por_correo[usuario.correo.lower()]
+        self.usuarios_por_id.pop(usuario.id, None)
+        self.usuarios_por_nombre.pop(usuario.usuario.lower(), None)
+        self.usuarios_por_correo.pop(usuario.correo.lower(), None)
 
     def guardar(self, usuario):
-        """Registra un usuario en memoria y lo guarda en JSON."""
+        """Registra un usuario y actualiza la persistencia."""
 
         if usuario.id in self.usuarios_por_id:
-            raise ValueError("El ID del usuario ya está registrado.")
+            raise ValueError("Ya existe un usuario con ese ID.")
 
         if usuario.usuario.lower() in self.usuarios_por_nombre:
-            raise ValueError("El nombre de usuario ya está registrado.")
+            raise ValueError("Ese nombre de usuario ya está registrado.")
 
         if usuario.correo.lower() in self.usuarios_por_correo:
-            raise ValueError("El correo electrónico ya está registrado.")
+            raise ValueError("Ese correo ya está registrado.")
 
         self._agregar_a_indices(usuario)
 
@@ -124,28 +130,36 @@ class UsuarioRepository:
             self._quitar_de_indices(usuario)
             raise
 
+        return usuario
+
     def buscar_por_id(self, id_usuario):
-        """Busca un usuario mediante su identificador."""
+        """Busca un usuario por su ID."""
 
         return self.usuarios_por_id.get(id_usuario)
 
     def buscar_por_nombre(self, nombre_usuario):
-        """Busca un usuario mediante su nombre de usuario."""
+        """Busca un usuario por su nombre de usuario."""
+
+        if not isinstance(nombre_usuario, str):
+            return None
 
         return self.usuarios_por_nombre.get(nombre_usuario.lower())
 
     def buscar_por_correo(self, correo):
-        """Busca un usuario mediante su correo electrónico."""
+        """Busca un usuario por su correo electrónico."""
+
+        if not isinstance(correo, str):
+            return None
 
         return self.usuarios_por_correo.get(correo.lower())
 
     def obtener_todos(self):
-        """Devuelve todos los usuarios registrados."""
+        """Devuelve una lista con todos los usuarios."""
 
         return list(self.usuarios_por_id.values())
 
     def eliminar(self, id_usuario):
-        """Elimina un usuario de las tablas hash y del JSON."""
+        """Elimina un usuario y actualiza la persistencia."""
 
         usuario = self.buscar_por_id(id_usuario)
 

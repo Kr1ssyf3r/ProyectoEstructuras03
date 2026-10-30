@@ -78,3 +78,16 @@ class Usuario:
             "contrasena_hash": self.contrasena_hash,
             "fecha_registro": self.fecha_registro
         }
+
+    @classmethod
+    def from_dict(cls, datos: dict):
+        """Construye un usuario a partir de un diccionario."""
+
+        return cls(
+            id=datos["id"],
+            nombre=datos["nombre"],
+            usuario=datos["usuario"],
+            correo=datos["correo"],
+            contrasena_hash=datos["contrasena_hash"],
+            fecha_registro=datos["fecha_registro"]
+        )

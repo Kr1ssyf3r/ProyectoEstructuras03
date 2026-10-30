@@ -1,0 +1,53 @@
+
+/* =========================================
+   ESTILOS DE LA PANTALLA DE REGISTRO
+   ========================================= */
+
+/* Permitir que el formulario ocupe más espacio vertical. */
+.form-panel {
+    overflow-y: auto;
+}
+
+/* Ajustar el ancho del contenido del formulario. */
+.form-content {
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Reducir ligeramente la separación entre los campos. */
+.form-content .form-group {
+    margin-bottom: 14px;
+}
+
+/* Ajustar el espacio inferior del encabezado. */
+.form-content .form-description {
+    margin-bottom: 22px;
+}
+
+/* Mantener el botón separado del último campo. */
+.form-content .login-button {
+    margin-top: 8px;
+}
+
+/* Evitar que el formulario quede cortado en pantallas pequeñas. */
+@media (max-height: 850px) {
+    .form-panel {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .form-content .form-group {
+        margin-bottom: 11px;
+    }
+}
+
+/* Ajustes para celulares. */
+@media (max-width: 768px) {
+    .form-panel {
+        overflow-y: visible;
+    }
+
+    .form-content {
+        max-width: 100%;
+    }
+}

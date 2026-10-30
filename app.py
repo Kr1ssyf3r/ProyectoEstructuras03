@@ -23,10 +23,16 @@ def login():
     )
 
 
-@app.route("/registro")
+@app.route("/registro", methods=["GET", "POST"])
 def registro():
-    return "La pantalla de registro todavía está en desarrollo."
 
+    if request.method == "POST":
+        return render_template(
+            "registro.html",
+            error="El registro todavía no está conectado."
+        )
+
+    return render_template("registro.html")
 
 if __name__ == "__main__":
     Timer(

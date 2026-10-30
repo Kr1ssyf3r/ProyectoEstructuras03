@@ -1,4 +1,5 @@
 import re
+from uuid import UUID
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -9,7 +10,7 @@ class Usuario:
     Representa a un estudiante registrado en Social UNA.
 
     Atributos:
-        id: Identificador único del usuario (UUID).
+        id: Identificador único del usuario (UUID v4).
         nombre: Nombre completo del estudiante.
         usuario: Nombre de usuario para iniciar sesión.
         correo: Correo electrónico del estudiante.
@@ -50,6 +51,16 @@ class Usuario:
                 raise ValueError(
                     f"El campo {nombre} no puede estar vacío."
                 )
+
+        # Validar que el identificador sea un UUID versión 4.
+        try:
+            identificador = UUID(self.id)
+
+            if identificador.version != 4 or str(identificador) != self.id:
+                raise ValueError
+
+        except ValueError:
+            raise ValueError("El ID debe ser un UUID versión 4 válido.")
 
         # Validar el formato básico del correo electrónico.
         patron_correo = (

@@ -61,6 +61,9 @@ class RecuperacionService:
         if usuario is None:
             raise ValueError("No se encontró el usuario.")
 
+        # Invalidar los tokens anteriores del usuario.
+        self.invalidar_tokens_usuario(usuario_id)
+
         # Generar un token aleatorio.
         token_original = secrets.token_urlsafe(32)
 

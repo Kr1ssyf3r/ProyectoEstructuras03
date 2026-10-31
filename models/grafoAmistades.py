@@ -124,5 +124,49 @@ class GrafoAmistades:
         """Convierte el grafo a un formato compatible con JSON."""
         return {usuario: sorted(amigos) for usuario, amigos in self._adyacencia.items()}
 
+
+
+
+
+
+
+
+
     #JSON no permite sets (que es lo que usamos , es decir un diccionario que tiene 3: {1,2,3} ) ,
-    #por eso se convierte a listas de strings (uuid de los
+    #por eso se convierte a listas de strings (uuid de los amigos) para poder guardarlo en un archivo JSON
+    @classmethod
+    def desde_datos(cls, datos: dict[str, list[str]]):
+        """Reconstruye y valida tipos, simetría, ausencia de lazos y de duplicados."""
+        if not isinstance(datos, dict):
+            raise ValueError("Las amistades deben ser un diccionario.")
+
+        #(CAMBIO) la validacion ahora se hace en dos fases. Antes se mezclaban los chequeos de tipo con los de relaciones,
+        #y se podia hacer datos[amigo] cuando datos[amigo] todavia no estaba verificado como lista (posible TypeError con datos corruptos).
+        #fase 1: solo se revisa el formato de cada usuario y de su lista de amigos
+        for usuario, vecinos in datos.items():
+            if not isinstance(usuario, str) or not usuario:
+                raise ValueError("UUID de vértice inválido.")
+            if not isinstance(vecinos, list):
+                raise ValueError("La lista de amistades debe ser una lista.")
+            if not all(isinstance(a, str) for a in vecinos):
+                raise ValueError("UUID de amigo inválido.")
+            if len(vecinos) != len(set(vecinos)):
+                raise ValueError("Lista de amistades duplicada.")
+
+        #(CAMBIO) fase 2: ya se sabe que todos los tipos son correctos, entonces es seguro hacer datos[amigo]
+        #aqui se revisa que el amigo exista, que no sea el mismo usuario y que la amistad sea bidireccional
+        for usuario, vecinos in datos.items():
+            for amigo in vecinos:
+                if amigo == usuario or amigo not in datos:
+                    raise ValueError("Amistad con usuario inexistente o consigo mismo.")
+                if usuario not in datos[amigo]:
+                    raise ValueError("Las amistades guardadas no son bidireccionales.")
+
+        #(CAMBIO) antes se llamaba a agregar_amistad por cada par, lo que validaba dos veces y en la segunda vuelta (B->A)
+        #retornaba False en silencio porque la arista ya estaba. Como la simetria ya quedo validada arriba,
+        #se arma la adyacencia directamente con un set por usuario
+        grafo = cls()
+        for usuario, vecinos in datos.items():
+            grafo._adyacencia[usuario] = set(vecinos)
+
+        return grafo

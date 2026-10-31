@@ -207,7 +207,7 @@ class UsuarioService:
     def listar_usuarios(self):
         """Devuelve todos los usuarios registrados."""
 
-        return self.repositorio.listar()
+        return self.repositorio.obtener_todos()
 
 
     def obtener_usuario_activo(self):

@@ -73,15 +73,21 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
                 })
 
         return render_template(
-            'amigos.html',
-            amigos=amistad_service.obtener_amigos(usuario.id),
-            recibidas=recibidas,
-            enviadas=enviadas,
-            resultados=resultados,
-            recomendaciones=recomendaciones_detalladas,
-            q=q,
-            csrf_token=csrf_token(),
-        )
+    'amigos.html',
+    amigos=amistad_service.obtener_amigos(usuario.id),
+    recibidas=recibidas,
+    enviadas=enviadas,
+    resultados=resultados,
+    recomendaciones=recomendaciones_detalladas,
+
+    # ---------------------------------------
+    # APARTADO DE BLOQUEOS
+    # ---------------------------------------
+    #obtenemos los usuarios que bloqueo la cuenta activa
+    #para mostrarlos en la pestaña de bloqueados
+    bloqueados=amistad_service.obtener_usuarios_bloqueados(usuario.id),
+    q=q,
+    csrf_token=csrf_token(),)
 
     @app.post('/amigos/solicitar/<id_receptor>')
     @requiere_sesion
@@ -138,6 +144,49 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
         except ValueError as exc:
             flash(str(exc), 'error')
         return volver('amigos')
+
+
+    # ---------------------------------------
+    # APARTADO DE BLOQUEOS
+    # ---------------------------------------
+    @app.post('/amigos/bloquear/<id_bloqueado>')
+    @requiere_sesion
+    def amigos_bloquear(usuario, id_bloqueado):
+        #validamos el token csrf para evitar que otra pagina pueda
+        #enviar formularios de bloqueo sin autorizacion del usuario
+        validar_csrf()
+
+        #obtenemos la busqueda para regresar al mismo apartado
+        #si el bloqueo se hizo desde los resultados del buscador
+        q = request.form.get('q', '').strip()[:100]
+
+        try:
+            #el service registra el bloqueo y elimina cualquier
+            #amistad o solicitud pendiente entre ambos usuarios
+            amistad_service.bloquear_usuario(usuario.id, id_bloqueado)
+            flash('Usuario bloqueado correctamente.', 'success')
+
+        except ValueError as exc:
+            flash(str(exc), 'error')
+
+        return volver('descubrir', q)
+
+    @app.post('/amigos/desbloquear/<id_bloqueado>')
+    @requiere_sesion
+    def amigos_desbloquear(usuario, id_bloqueado):
+        #validamos el token csrf antes de modificar los bloqueos
+        validar_csrf()
+
+        try:
+            #solamente elimina el bloqueo que realizo el usuario activo
+            #no restaura amistades ni solicitudes anteriores
+            amistad_service.desbloquear_usuario(usuario.id, id_bloqueado)
+            flash('Usuario desbloqueado correctamente.', 'success')
+
+        except ValueError as exc:
+            flash(str(exc), 'error')
+
+        return volver('bloqueados')
 
     
     # ============================================================

@@ -1,0 +1,917 @@
+/* =========================================
+
+   SOCIAL UNA - MÓDULO DE AMISTADES
+
+   Reutiliza las variables de login.css
+
+   y los componentes de perfil.css.
+
+========================================= */
+
+/* =========================================
+
+   CONTENEDOR PRINCIPAL
+
+========================================= */
+
+.friends-container {
+
+    width: 100%;
+
+    max-width: 860px;
+
+    min-height: 700px;
+
+    padding: 35px 50px 25px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    position: relative;
+
+    z-index: 1;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 27px;
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(18px);
+
+}
+
+.friends-content {
+
+    width: 100%;
+
+    margin: 40px auto 30px;
+
+}
+
+/* =========================================
+
+   ENLACE DE REGRESO
+
+========================================= */
+
+.back-link {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+
+}
+
+.back-link:hover {
+
+    color: var(--primary);
+
+}
+
+/* =========================================
+
+   ENCABEZADO
+
+========================================= */
+
+.friends-heading {
+
+    margin-bottom: 26px;
+
+}
+
+.friends-heading h1 {
+
+    color: var(--text);
+
+    font-size: 34px;
+
+    font-weight: 800;
+
+    letter-spacing: -1.2px;
+
+}
+
+.friends-heading p {
+
+    margin-top: 8px;
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+/* =========================================
+
+   PESTAÑAS DE NAVEGACIÓN
+
+========================================= */
+
+.friends-tabs {
+
+    display: flex;
+
+    gap: 6px;
+
+    margin-bottom: 22px;
+
+    padding: 5px;
+
+    background: var(--input);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+}
+
+.friends-tab {
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 42px;
+
+    padding: 0 14px;
+
+    background: transparent;
+
+    border: none;
+
+    border-radius: 10px;
+
+    color: var(--muted);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+
+        background 0.2s ease,
+
+        color 0.2s ease;
+
+}
+
+.friends-tab:hover {
+
+    color: var(--text);
+
+}
+
+.friends-tab[aria-selected="true"] {
+
+    background: var(--card);
+
+    color: var(--primary);
+
+    box-shadow: 0 2px 10px rgba(30, 50, 90, 0.08);
+
+}
+
+/* =========================================
+
+   CONTADORES DE PESTAÑAS
+
+========================================= */
+
+.tab-count {
+
+    min-width: 22px;
+
+    padding: 2px 7px;
+
+    background: rgba(52, 120, 246, 0.12);
+
+    border-radius: 20px;
+
+    color: var(--primary);
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    text-align: center;
+
+}
+
+/* Contador de solicitudes pendientes. */
+
+.tab-count-alert {
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+}
+
+/* =========================================
+
+   PANELES Y TÍTULOS DE SECCIÓN
+
+========================================= */
+
+.friends-section-title {
+
+    margin: 26px 0 12px;
+
+    color: var(--text);
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+}
+
+.friends-panel > .friends-section-title:first-child {
+
+    margin-top: 4px;
+
+}
+
+/*
+
+   Mantener ocultos los paneles inactivos,
+
+   incluso si otros archivos CSS definen display.
+
+*/
+
+.friends-panel[hidden] {
+
+    display: none !important;
+
+}
+
+/* =========================================
+
+   LISTAS DE AMIGOS Y SOLICITUDES
+
+========================================= */
+
+.friend-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    padding: 0;
+
+    list-style: none;
+
+}
+
+.friend-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 14px;
+
+    background: var(--input);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+}
+
+/* =========================================
+
+   AVATAR DEL USUARIO
+
+========================================= */
+
+.friend-avatar {
+
+    width: 46px;
+
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: grid;
+
+    place-items: center;
+
+    background: linear-gradient(
+
+        135deg,
+
+        var(--primary),
+
+        #7659e8
+
+    );
+
+    border-radius: 14px;
+
+    color: #ffffff;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+}
+
+/* =========================================
+
+   INFORMACIÓN DEL USUARIO
+
+========================================= */
+
+.friend-info {
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+}
+
+.friend-info strong {
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    overflow-wrap: anywhere;
+
+}
+
+.friend-info span {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+}
+
+.friend-actions {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+/* =========================================
+
+   BOTONES GENERALES
+
+========================================= */
+
+.friend-btn {
+
+    min-height: 38px;
+
+    padding: 0 16px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+
+        background 0.2s ease,
+
+        border-color 0.2s ease,
+
+        color 0.2s ease;
+
+}
+
+.friend-btn:hover {
+
+    border-color: var(--primary);
+
+    color: var(--primary);
+
+}
+
+/* =========================================
+
+   BOTÓN PRINCIPAL
+
+========================================= */
+
+.friend-btn-primary {
+
+    background: linear-gradient(
+
+        110deg,
+
+        #4388ff,
+
+        #2866df
+
+    );
+
+    border-color: transparent;
+
+    color: #ffffff;
+
+}
+
+.friend-btn-primary:hover {
+
+    color: #ffffff;
+
+    border-color: transparent;
+
+    filter: brightness(1.08);
+
+}
+
+/* =========================================
+
+   BOTÓN DE ELIMINACIÓN
+
+========================================= */
+
+.friend-btn-danger {
+
+    border-color: rgba(230, 75, 75, 0.25);
+
+    color: #dc5555;
+
+}
+
+.friend-btn-danger:hover {
+
+    background: rgba(230, 75, 75, 0.08);
+
+    border-color: #dc5555;
+
+    color: #dc5555;
+
+}
+
+/* =========================================
+
+   ACCESIBILIDAD DE BOTONES Y ENLACES
+
+========================================= */
+
+.friend-btn:focus-visible,
+
+.friends-tab:focus-visible,
+
+.back-link:focus-visible {
+
+    outline: 3px solid var(--primary);
+
+    outline-offset: 2px;
+
+}
+
+/* =========================================
+
+   ETIQUETAS DE ESTADO
+
+========================================= */
+
+.friend-badge {
+
+    padding: 7px 12px;
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+}
+
+/* Etiqueta para amistades confirmadas. */
+
+.friend-badge-ok {
+
+    color: #16a36a;
+
+    border-color: rgba(22, 163, 106, 0.3);
+
+}
+
+/* =========================================
+
+   BUSCADOR DE ESTUDIANTES
+
+========================================= */
+
+.friends-search {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+}
+
+.friends-search .input-container {
+
+    flex: 1;
+
+}
+
+.friends-search input {
+
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 16px 0 48px;
+
+    background: var(--input);
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    outline: none;
+
+    color: var(--text);
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+
+        background 0.2s ease,
+
+        border-color 0.2s ease;
+
+}
+
+.friends-search input::placeholder {
+
+    color: var(--muted);
+
+}
+
+.friends-search input:focus {
+
+    background: var(--card);
+
+    border-color: var(--primary);
+
+    box-shadow: var(--input-focus);
+
+}
+
+.friends-search .friend-btn {
+
+    min-height: 48px;
+
+}
+
+/* =========================================
+
+   ESTADOS VACÍOS
+
+========================================= */
+
+.friends-empty {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 40px 20px;
+
+    border: 1px dashed var(--border);
+
+    border-radius: 14px;
+
+}
+
+.friends-empty p,
+
+.friends-empty-text {
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+}
+
+.friends-empty-text {
+
+    padding: 6px 2px;
+
+}
+
+/* =========================================
+
+   DISEÑO RESPONSIVE
+
+   Pantallas de 700px o menos
+
+========================================= */
+
+@media (max-width: 700px) {
+
+    .friends-container {
+
+        min-height: auto;
+
+        padding: 25px 18px;
+
+        border-radius: 22px;
+
+    }
+
+    .friends-heading h1 {
+
+        font-size: 29px;
+
+    }
+
+    .friends-tab {
+
+        padding: 0 6px;
+
+        font-size: 12px;
+
+    }
+
+    .friend-row {
+
+        flex-wrap: wrap;
+
+    }
+
+    .friend-row > form,
+
+    .friend-row > .friend-actions,
+
+    .friend-row > .friend-badge {
+
+        margin-left: 60px;
+
+    }
+
+    .friends-search {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+    }
+
+}
+
+/* =========================================
+
+   ALERTA DE SOLICITUDES DE AMISTAD
+
+========================================= */
+
+.friends-notification {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 24px;
+
+    padding: 18px 20px;
+
+    background: rgba(52, 120, 246, 0.08);
+
+    border: 1px solid rgba(52, 120, 246, 0.22);
+
+    border-radius: 16px;
+
+    animation: notification-appear 0.3s ease;
+
+}
+
+/* Ocultar cuando no existen solicitudes. */
+
+.friends-notification[hidden],
+
+.tab-count[hidden] {
+
+    display: none !important;
+
+}
+
+/* ICONO */
+
+.friends-notification-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: grid;
+
+    place-items: center;
+
+    background: rgba(52, 120, 246, 0.13);
+
+    border-radius: 13px;
+
+    font-size: 22px;
+
+}
+
+/* INFORMACIÓN */
+
+.friends-notification-info {
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+.friends-notification-info strong {
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+}
+
+.friends-notification-info p {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+}
+
+/* ANIMACIÓN DE ENTRADA */
+
+@keyframes notification-appear {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(-8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+/* MODO OSCURO */
+
+[data-theme="dark"] .friends-notification {
+
+    background: rgba(87, 146, 255, 0.1);
+
+    border-color: rgba(87, 146, 255, 0.23);
+
+}
+
+/* PANTALLAS PEQUEÑAS */
+
+@media (max-width: 600px) {
+
+    .friends-notification {
+
+        flex-wrap: wrap;
+
+        gap: 12px;
+
+        padding: 15px;
+
+    }
+
+    .friends-notification-info {
+
+        flex-basis: calc(100% - 65px);
+
+    }
+
+    .friends-notification > .friend-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+/* RESPETAR PREFERENCIAS DE ACCESIBILIDAD */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .friends-notification {
+
+        animation: none;
+
+    }
+
+}
+
+/* =========================================
+
+   ACCESIBILIDAD
+
+   REDUCCIÓN DE ANIMACIONES
+
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .friend-btn,
+
+    .friends-tab,
+
+    .back-link {
+
+        transition: none;
+
+    }
+
+}

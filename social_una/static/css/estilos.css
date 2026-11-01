@@ -1,0 +1,120 @@
+/* ==========================================================================
+   estilos.css - Estilos globales de Social UNA.
+   Contiene las variables de diseño, el marco de la ventana principal y los
+   componentes compartidos (.tarjeta y .boton).
+   Solo el Integrante 4 modifica este archivo. Los módulos usan su propio CSS.
+   ========================================================================== */
+
+/* ===== Variables globales =====
+   Paleta y valores compartidos. Se usan con var(--nombre) en vez de escribir
+   colores a mano, así un cambio de diseño se hace en una sola línea. */
+:root {
+    --primary-color: #007bff;        /* Color de marca (barra lateral, botones) */
+    --primary-dark-color: #0056b3;   /* Tono oscuro del primario (hover) */
+    --secondary-color: #6c757d;      /* Gris para elementos secundarios */
+    --success-color: #28a745;        /* Éxito */
+    --danger-color: #dc3545;         /* Error o peligro */
+    --warning-color: #ffc107;        /* Aviso */
+    --info-color: #17a2b8;           /* Información */
+    --light-color: #f8f9fa;          /* Fondos claros y texto sobre fondos oscuros */
+    --dark-color: #343a40;           /* Textos y fondos oscuros */
+    --shadow-color: rgba(0, 0, 0, 0.1); /* Sombras suaves */
+}
+
+/* ===== Marco de la ventana principal =====
+   El body es un contenedor flex: la barra lateral (aside) queda a la izquierda
+   y el contenido (main) ocupa el resto. Los módulos no deben tocar body, aside ni main. */
+body {
+    display: flex;
+    margin: 0;
+}
+
+/* Barra lateral de navegación. */
+aside {
+    background-color: var(--primary-color);
+    width: 200px;
+    padding: 20px;
+    min-height: 100vh;      /* Llega hasta abajo aunque el contenido sea corto */
+    box-sizing: border-box; /* El padding cuenta dentro de los 200px de ancho */
+
+}
+
+/* Enlaces de la barra lateral, uno debajo del otro. */
+aside a {
+    display: block;
+    color: var(--light-color);
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+aside h1 {
+    color: var(--light-color);
+}
+
+/* Área central: ocupa todo el ancho que deja la barra lateral. */
+main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Enlace de la sección actual (la clase "active" la pone base.html). */
+aside a.active {
+    font-weight: bold;
+    text-decoration: underline;
+
+}
+
+/* ===== Componentes compartidos ===== */
+
+/* Tarjeta: caja con fondo claro, esquinas redondeadas y sombra suave.
+   La usa el macro templates/componentes/tarjeta.html. */
+.tarjeta {
+    background-color: var(--light-color);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* Botón de acción estándar. Uso: <button class="boton">Texto</button> */
+.boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 10px 20px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--light-color);
+    background-color: var(--primary-color);
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    box-shadow: 0 2px 6px var(--shadow-color);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+/* Estados del botón: al pasar el mouse, al pulsar, al enfocar con teclado
+   y deshabilitado. */
+.boton:hover {
+    background-color: var(--primary-dark-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.boton:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.boton:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.boton:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+}

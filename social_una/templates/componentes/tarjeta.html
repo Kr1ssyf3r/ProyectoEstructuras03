@@ -1,0 +1,19 @@
+{#
+  tarjeta.html - Componente reutilizable: tarjeta con título y texto.
+
+  Parámetros:
+    titulo    - texto del encabezado de la tarjeta.
+    contenido - texto del cuerpo de la tarjeta.
+
+  Uso (en cualquier plantilla, después del extends):
+    from "componentes/tarjeta.html" import tarjeta
+    tarjeta("Título", "Texto de la tarjeta")
+
+  El aspecto viene de la clase global .tarjeta en estilos.css.
+#}
+{% macro tarjeta(titulo, contenido) %}
+    <div class="tarjeta">
+        <h2>{{ titulo }}</h2>
+        <p>{{ contenido }}</p>
+    </div>
+{% endmacro %}

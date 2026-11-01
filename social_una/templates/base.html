@@ -1,0 +1,55 @@
+{#
+  base.html - Plantilla base de Social UNA (ventana principal).
+
+  Define el marco que comparten todas las pantallas:
+    - <aside>: barra lateral de navegación (la mantiene el Integrante 4).
+    - <main>:  área central donde cada pantalla inserta su contenido.
+
+  Cada pantalla hereda de esta plantilla con extends y rellena los blocks:
+  title, contenido, estilos y scripts.
+  Solo el Integrante 4 modifica este archivo.
+#}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {# Estilos globales (variables, marco general, .tarjeta y .boton). #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
+
+    {# Block "estilos": cada pantalla enlaza aquí su CSS propio. Va vacío a propósito. #}
+    {% block estilos %}
+    {% endblock %}
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {# Block "title": la pantalla escribe solo el texto de la pestaña (sin etiquetas). #}
+    <title>{% block title %}Social UNA{% endblock %}</title>
+</head>
+<body>
+    {# Barra lateral. La clase "active" marca el enlace de la sección actual:
+       request.path es la dirección en la que está el usuario (por ejemplo, "/feed").
+       Para agregar una sección nueva, copiar uno de estos enlaces con su ruta. #}
+    <aside>
+        <h1>Social UNA</h1>
+        <a class="{% if request.path == '/' %}active{% endif %}" href="/">Inicio</a>
+        <a class="{% if request.path == '/perfil' %}active{% endif %}" href="/perfil">Perfil</a>
+        <a class="{% if request.path == '/amigos' %}active{% endif %}" href="/amigos">Amigos</a>
+        <a class="{% if request.path == '/feed' %}active{% endif %}" href="/feed">Feed</a>
+    </aside>
+
+{# Área central: aquí se muestra el contenido de cada pantalla. #}
+<main>
+
+{% block contenido %}
+{% endblock %}
+
+</main>
+
+{# Block "scripts": cada pantalla enlaza aquí su JavaScript propio.
+   Va vacío a propósito para que el script de un módulo no se cargue en los demás. #}
+{% block scripts %}
+{% endblock %}
+
+</body>
+</html>

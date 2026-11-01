@@ -1,0 +1,9 @@
+/* amigos.css - Estilos del módulo Amigos.
+   Solo afecta lo que está dentro del contenedor .vista-amigos (ver amigos.html).
+   No se tocan body, aside ni main: son el marco general (estilos.css). */
+.vista-amigos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: lightblue; /* TODO: usar una variable de estilos.css */
+}

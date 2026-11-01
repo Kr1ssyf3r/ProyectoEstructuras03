@@ -1,0 +1,22 @@
+{# feed.html - Pantalla del feed general (Integrante 4).
+   Hoy muestra tarjetas de prueba con el componente "tarjeta".
+   TODO: reemplazarlas por las publicaciones reales del feed (feed_service)
+   y conectar el botón "Publicar" con el módulo de publicaciones. #}
+{% extends "base.html" %}
+{# Componente reutilizable: ver templates/componentes/tarjeta.html #}
+{% from "componentes/tarjeta.html" import tarjeta %}
+
+{% block contenido %}
+    <h1>Bienvenido al Feed</h1>
+    <p>Aqui irian los posts del feed.</p>
+    {# Tarjetas de prueba. #}
+    {{ tarjeta("Nuevo Post", "Este es un nuevo post en el feed.") }}
+    {{ tarjeta("Otro Post", "Este es otro post en el feed.") }}
+    {{ tarjeta("Post Interesante", "Este post es realmente interesante.") }}
+    {# Botón con el estilo global .boton (aún sin acción). #}
+    <button class="boton">
+        Publicar
+    </button>
+{% endblock %}
+
+{% block title %}Feed{% endblock %}

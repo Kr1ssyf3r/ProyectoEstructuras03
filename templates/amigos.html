@@ -689,31 +689,33 @@
 
                         <ul class="friend-list">
 
-                            {% for recomendado, comunes in recomendaciones %}
+                            {% for item in recomendaciones %}
 
                                 <li class="friend-row">
 
-                                    {{ avatar(recomendado) }}
+                                    {{ avatar(item.usuario) }}
 
                                     <div class="friend-info">
 
-                                        <strong>
-                                            {{ recomendado.nombre }}
-                                        </strong>
+                                        <strong>{{ item.usuario.nombre }}</strong>
 
-                                        <span>
-                                            {{ comunes }}
-                                            {{ 'amigo en común' if comunes == 1
-                                               else 'amigos en común' }}
-                                        </span>
+                                        <span>@{{ item.usuario.usuario }}</span>
+
+                                        {% if item.amigos_comunes %}
+                                            <span>
+                                                {{ 'Amigo en común:' if item.amigos_comunes | length == 1 else 'Amigos en común:' }}
+                                                {% for amigo in item.amigos_comunes %}
+                                                    {{ amigo.nombre }}{{ ', ' if not loop.last else '' }}
+                                                {% endfor %}
+                                            </span>
+                                        {% endif %}
 
                                     </div>
 
                                     <form
                                         method="POST"
-                                        action="{{ url_for('amigos_solicitar', id_receptor=recomendado.id) }}"
+                                        action="{{ url_for('amigos_solicitar', id_receptor=item.usuario.id) }}"
                                     >
-
                                         <input
                                             type="hidden"
                                             name="csrf_token"
@@ -726,7 +728,6 @@
                                         >
                                             Enviar solicitud
                                         </button>
-
                                     </form>
 
                                 </li>

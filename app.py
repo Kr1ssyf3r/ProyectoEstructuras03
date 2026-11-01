@@ -451,15 +451,14 @@ amistad_service = registrar_rutas_amistades(
 # ============================================================
 # PANTALLA PRINCIPAL - FEED SOCIAL UNA
 # ============================================================
-
 @app.route("/inicio", methods=["GET"])
 @requiere_sesion
 def inicio_feed(usuario):
     """
     Página principal de Social UNA.
 
-    Integra las recomendaciones de amistad y prepara
-    el espacio para las publicaciones de los estudiantes.
+    Muestra recomendaciones de amistad, nombres de amigos
+    en común y cantidad de solicitudes pendientes.
     """
 
     # =========================================
@@ -472,7 +471,22 @@ def inicio_feed(usuario):
     )
 
     # =========================================
-    # SOLICITUDES RECIBIDAS
+    # OBTENER NOMBRES DE AMIGOS EN COMÚN
+    # =========================================
+
+    amigos_comunes_por_usuario = {}
+
+    for candidato, cantidad in recomendaciones:
+
+        amigos_comunes = amistad_service.amigos_en_comun(
+            usuario.id,
+            candidato.id
+        )
+
+        amigos_comunes_por_usuario[candidato.id] = amigos_comunes
+
+    # =========================================
+    # SOLICITUDES DE AMISTAD
     # =========================================
 
     solicitudes_recibidas = (
@@ -484,21 +498,20 @@ def inicio_feed(usuario):
     cantidad_solicitudes = len(solicitudes_recibidas)
 
     # =========================================
-    # PUBLICACIONES
+    # PUBLICACIONES (PROVISIONAL)
     # =========================================
 
-    # Provisional: sustituiremos esta lista cuando
-    # se integre el servicio real de publicaciones.
     publicaciones = []
 
     # =========================================
-    # RENDERIZAR LA PÁGINA
+    # RENDERIZAR PANTALLA PRINCIPAL
     # =========================================
 
     return render_template(
         "inicio.html",
         usuario=usuario,
         recomendaciones=recomendaciones,
+        amigos_comunes_por_usuario=amigos_comunes_por_usuario,
         cantidad_solicitudes=cantidad_solicitudes,
         publicaciones=publicaciones
     )

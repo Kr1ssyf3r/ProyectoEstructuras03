@@ -54,13 +54,31 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             if receptor is not None:
                 enviadas.append({'solicitud': solicitud, 'usuario': receptor})
 
+        # Obtener los nombres de los amigos en común, para mostrar en la sección de recomendaciones
+        recomendaciones_detalladas = []
+        if not q:
+            for candidato, cantidad in amistad_service.recomendaciones(
+                usuario.id,
+                limite=10
+            ):
+                amigos_comunes = amistad_service.amigos_en_comun(
+                    usuario.id,
+                    candidato.id
+                )
+
+                recomendaciones_detalladas.append({
+                    "usuario": candidato,
+                    "cantidad": cantidad,
+                    "amigos_comunes": amigos_comunes
+                })
+
         return render_template(
             'amigos.html',
             amigos=amistad_service.obtener_amigos(usuario.id),
             recibidas=recibidas,
             enviadas=enviadas,
             resultados=resultados,
-            recomendaciones=amistad_service.recomendaciones(usuario.id, limite=10) if not q else [],
+            recomendaciones=recomendaciones_detalladas,
             q=q,
             csrf_token=csrf_token(),
         )

@@ -519,9 +519,18 @@
                                     </strong>
 
                                     <small>
-                                        {{ comunes }}
-                                        {{ 'amigo en común' if comunes == 1
-                                           else 'amigos en común' }}
+                                        {% set lista_comunes = amigos_comunes_por_usuario.get(candidato.id, []) %}
+
+                                        {% if lista_comunes %}
+
+                                        {{ 'Amigo en común:' if lista_comunes | length == 1
+                                        else 'Amigos en común:' }}
+
+                                        {% for amigo in lista_comunes %}
+                                            {{ amigo.nombre }}{{ ', ' if not loop.last else '' }}
+                                        {% endfor %}
+
+                                        {% endif %}
                                     </small>
 
                                 </div>

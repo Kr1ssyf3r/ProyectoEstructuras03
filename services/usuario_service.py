@@ -202,6 +202,14 @@ class UsuarioService:
 
         return self.repositorio.buscar_por_id(id_usuario)
 
+
+#NUEVO METODO : NECESARIO PARA IMPLEMENTAR EN EL GRAFO DE AMISTADES 
+    def listar_usuarios(self):
+        """Devuelve todos los usuarios registrados."""
+
+        return self.repositorio.obtener_todos()
+
+
     def obtener_usuario_activo(self):
         """Devuelve el usuario que tiene la sesión iniciada."""
 
@@ -306,3 +314,6 @@ class UsuarioService:
             self.repositorio.actualizar(usuario_actualizado)
 
             return usuario_actualizado
+
+
+    

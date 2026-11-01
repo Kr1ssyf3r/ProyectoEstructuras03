@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Amigos | Social UNA</title>
+
+    <!-- TIPOGRAFÍA -->
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- ESTILOS -->
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/login.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/perfil.css') }}">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/amigos.css') }}">
+
+    <!-- JAVASCRIPT -->
+
+    <script
+        src="{{ url_for('static', filename='js/amigos.js') }}"
+        defer>
+    </script>
+
+    <script
+        src="{{ url_for('static', filename='js/notificaciones.js') }}"
+        defer>
+    </script>
+
+</head>
+
+
+<!-- =========================================
+     COMPONENTE REUTILIZABLE: AVATAR
+========================================= -->
+
+{% macro avatar(usuario) %}
+
+    <div class="friend-avatar" aria-hidden="true">
+        {{ usuario.nombre[:1] | upper }}
+    </div>
+
+{% endmacro %}
+
+
+<body>
+
+    <!-- FONDO -->
+
+    <div class="ambient-light light-one"></div>
+    <div class="ambient-light light-two"></div>
+    <div class="ambient-light light-three"></div>
+
+
+    <main
+        class="friends-container"
+        data-tab-inicial="{{ 'descubrir' if q else 'amigos' }}"
+    >
+
+        <!-- =================================
+             ENCABEZADO
+        ================================== -->
+
+        <header class="profile-header">
+
+            <a href="{{ url_for('inicio_feed') }}"
+               class="brand">
+
+                <span class="brand-icon">S</span>
+                <span>Social UNA</span>
+
+            </a>
+
+            <div class="top-actions">
+
+                <a href="{{ url_for('inicio_feed') }}"
+                   class="back-link">
+                    Volver al inicio
+                </a>
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    aria-label="Cambiar tema"
+                >
+
+                    <svg class="sun-icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+
+                        <circle cx="12" cy="12" r="4"/>
+
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
+
+                    </svg>
+
+                    <svg class="moon-icon"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+
+                        <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/>
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================
+             CONTENIDO PRINCIPAL
+        ================================== -->
+
+        <section class="friends-content">
+
+            <div class="friends-heading">
+
+                <h1>Amigos</h1>
+
+                <p>
+                    Conecta con otros estudiantes
+                    de tu comunidad universitaria.
+                </p>
+
+            </div>
+
+
+            <!-- =================================
+                 MENSAJES DE FLASK
+            ================================== -->
+
+            {% with mensajes = get_flashed_messages(with_categories=true) %}
+
+                {% for categoria, texto in mensajes %}
+
+                    <div
+                        class="{{ 'error-message' if categoria == 'error' else 'success-message' }}"
+                        role="{{ 'alert' if categoria == 'error' else 'status' }}"
+                    >
+                        {{ texto }}
+                    </div>
+
+                {% endfor %}
+
+            {% endwith %}
+
+
+            <!-- =================================
+                 ALERTA DE SOLICITUDES RECIBIDAS
+            ================================== -->
+
+            <div
+                class="friends-notification"
+                data-notification-alert
+                {% if not recibidas %}hidden{% endif %}
+            >
+
+                <span class="friends-notification-icon"
+                      aria-hidden="true">
+                    🔔
+                </span>
+
+                <div class="friends-notification-info">
+
+                    <strong>
+                        Nuevas solicitudes de amistad
+                    </strong>
+
+                    <p data-notification-message>
+
+                        {% if recibidas | length == 1 %}
+                            Tenés 1 solicitud de amistad pendiente.
+                        {% else %}
+                            Tenés {{ recibidas | length }} solicitudes de amistad pendientes.
+                        {% endif %}
+
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="friend-btn friend-btn-primary"
+                    data-ir-a="solicitudes"
+                >
+                    Revisar
+                </button>
+
+            </div>
+
+
+            <!-- =================================
+                 PESTAÑAS DE NAVEGACIÓN
+            ================================== -->
+
+            <nav class="friends-tabs"
+                 role="tablist"
+                 aria-label="Secciones de amigos">
+
+                <button
+                    type="button"
+                    class="friends-tab"
+                    id="tab-amigos"
+                    role="tab"
+                    data-tab="amigos"
+                    aria-controls="panel-amigos"
+                    aria-selected="true"
+                >
+
+                    Mis amigos
+
+                    <span class="tab-count">
+                        {{ amigos | length }}
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="friends-tab"
+                    id="tab-solicitudes"
+                    role="tab"
+                    data-tab="solicitudes"
+                    aria-controls="panel-solicitudes"
+                    aria-selected="false"
+                >
+
+                    Solicitudes
+
+                    <span
+                        class="tab-count tab-count-alert"
+                        data-notification-count
+                        {% if not recibidas %}hidden{% endif %}
+                    >
+                        {{ recibidas | length }}
+                    </span>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="friends-tab"
+                    id="tab-descubrir"
+                    role="tab"
+                    data-tab="descubrir"
+                    aria-controls="panel-descubrir"
+                    aria-selected="false"
+                >
+                    Buscar personas
+                </button>
+
+                <!-- ---------------------------------------
+                     APARTADO DE BLOQUEOS
+                     --------------------------------------- -->
+                <button type="button" class="friends-tab" id="tab-bloqueados"
+                        role="tab" data-tab="bloqueados"
+                        aria-controls="panel-bloqueados" aria-selected="false">
+                    Bloqueados <span class="tab-count">{{ bloqueados | length }}</span>
+                </button>
+
+            </nav>
+
+
+            <!-- =================================
+                 PANEL: MIS AMIGOS
+            ================================== -->
+
+            <section
+                class="friends-panel"
+                id="panel-amigos"
+                role="tabpanel"
+                aria-labelledby="tab-amigos"
+            >
+
+                {% if amigos %}
+
+                    <ul class="friend-list">
+
+                        {% for amigo in amigos %}
+
+                            <li class="friend-row">
+
+                                {{ avatar(amigo) }}
+
+                                <div class="friend-info">
+
+                                    <strong>{{ amigo.nombre }}</strong>
+
+                                    <span>@{{ amigo.usuario }}</span>
+
+                                </div>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('amigos_eliminar', id_amigo=amigo.id) }}"
+                                    data-confirmar="¿Eliminar a {{ amigo.nombre }} de tus amigos?"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="friend-btn friend-btn-danger"
+                                    >
+                                        Eliminar
+                                    </button>
+
+                                </form>
+
+                                <!-- ---------------------------------------
+                                     APARTADO DE BLOQUEOS
+                                     --------------------------------------- -->
+                                <form method="POST"
+                                      action="{{ url_for('amigos_bloquear', id_bloqueado=amigo.id) }}"
+                                      data-confirmar="¿Bloquear a {{ amigo.nombre }}? Se eliminará la amistad.">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                    <button type="submit" class="friend-btn friend-btn-danger">Bloquear</button>
+                                </form>
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <div class="friends-empty">
+
+                        <p>
+                            Todavía no tenés amigos agregados.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="friend-btn friend-btn-primary"
+                            data-ir-a="descubrir"
+                        >
+                            Buscar personas
+                        </button>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- =================================
+                 PANEL: SOLICITUDES
+            ================================== -->
+
+            <section
+                class="friends-panel"
+                id="panel-solicitudes"
+                role="tabpanel"
+                aria-labelledby="tab-solicitudes"
+                hidden
+            >
+
+                <!-- SOLICITUDES RECIBIDAS -->
+
+                <h2 class="friends-section-title">
+                    Solicitudes recibidas
+                </h2>
+
+                {% if recibidas %}
+
+                    <ul class="friend-list">
+
+                        {% for item in recibidas %}
+
+                            <li class="friend-row">
+
+                                {{ avatar(item.usuario) }}
+
+                                <div class="friend-info">
+
+                                    <strong>
+                                        {{ item.usuario.nombre }}
+                                    </strong>
+
+                                    <span>
+                                        @{{ item.usuario.usuario }}
+                                    </span>
+
+                                </div>
+
+                                <div class="friend-actions">
+
+                                    <!-- ACEPTAR -->
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('amigos_aceptar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="friend-btn friend-btn-primary"
+                                        >
+                                            Aceptar
+                                        </button>
+
+                                    </form>
+
+
+                                    <!-- RECHAZAR -->
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('amigos_rechazar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="friend-btn"
+                                        >
+                                            Rechazar
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p class="friends-empty-text">
+                        No tenés solicitudes pendientes de responder.
+                    </p>
+
+                {% endif %}
+
+
+                <!-- SOLICITUDES ENVIADAS -->
+
+                <h2 class="friends-section-title">
+                    Solicitudes enviadas
+                </h2>
+
+                {% if enviadas %}
+
+                    <ul class="friend-list">
+
+                        {% for item in enviadas %}
+
+                            <li class="friend-row">
+
+                                {{ avatar(item.usuario) }}
+
+                                <div class="friend-info">
+
+                                    <strong>
+                                        {{ item.usuario.nombre }}
+                                    </strong>
+
+                                    <span>
+                                        @{{ item.usuario.usuario }}
+                                    </span>
+
+                                </div>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('amigos_cancelar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="friend-btn"
+                                    >
+                                        Cancelar solicitud
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                {% else %}
+
+                    <p class="friends-empty-text">
+                        No has enviado solicitudes de amistad.
+                    </p>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- =================================
+                 PANEL: BUSCAR PERSONAS
+            ================================== -->
+
+            <section
+                class="friends-panel"
+                id="panel-descubrir"
+                role="tabpanel"
+                aria-labelledby="tab-descubrir"
+                hidden
+            >
+
+                <!-- FORMULARIO DE BÚSQUEDA -->
+
+                <form
+                    method="GET"
+                    action="{{ url_for('amigos') }}"
+                    class="friends-search"
+                >
+
+                    <div class="input-container">
+
+                        <svg
+                            class="field-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            aria-hidden="true"
+                        >
+                            <circle cx="11" cy="11" r="7"/>
+                            <path d="m20 20-3.5-3.5"/>
+                        </svg>
+
+                        <input
+                            type="search"
+                            name="q"
+                            value="{{ q }}"
+                            placeholder="Busca por nombre o usuario"
+                            aria-label="Buscar estudiantes"
+                            maxlength="100"
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="friend-btn friend-btn-primary"
+                    >
+                        Buscar
+                    </button>
+
+                </form>
+
+
+                {% if q %}
+
+                    <!-- RESULTADOS -->
+
+                    <h2 class="friends-section-title">
+                        Resultados para "{{ q }}"
+                    </h2>
+
+                    {% if resultados %}
+
+                        <ul class="friend-list">
+
+                            {% for item in resultados %}
+
+                                <li class="friend-row">
+
+                                    {{ avatar(item.usuario) }}
+
+                                    <div class="friend-info">
+
+                                        <strong>
+                                            {{ item.usuario.nombre }}
+                                        </strong>
+
+                                        <span>
+                                            @{{ item.usuario.usuario }}
+                                        </span>
+
+                                    </div>
+
+
+                                    {% if item.estado == 'disponible' %}
+
+                                        <!-- ENVIAR SOLICITUD -->
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('amigos_solicitar', id_receptor=item.usuario.id) }}"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="csrf_token"
+                                                value="{{ csrf_token }}"
+                                            >
+
+                                            <input
+                                                type="hidden"
+                                                name="q"
+                                                value="{{ q }}"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="friend-btn friend-btn-primary"
+                                            >
+                                                Enviar solicitud
+                                            </button>
+
+                                        </form>
+
+
+                                    {% elif item.estado == 'pendiente' %}
+
+                                        <span class="friend-badge">
+                                            Solicitud pendiente
+                                        </span>
+
+
+                                    {% elif item.estado == 'amigos' %}
+
+                                        <span class="friend-badge friend-badge-ok">
+                                            Ya son amigos
+                                        </span>
+
+                                    {% endif %}
+
+                                    <!-- ---------------------------------------
+                                         APARTADO DE BLOQUEOS
+                                         --------------------------------------- -->
+                                    {% if item.estado == 'bloqueado' %}
+                                        <span class="friend-badge">No disponible</span>
+                                    {% else %}
+                                        <form method="POST"
+                                              action="{{ url_for('amigos_bloquear', id_bloqueado=item.usuario.id) }}"
+                                              data-confirmar="¿Bloquear a {{ item.usuario.nombre }}?">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <input type="hidden" name="q" value="{{ q }}">
+                                            <button type="submit" class="friend-btn friend-btn-danger">Bloquear</button>
+                                        </form>
+                                    {% endif %}
+
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% else %}
+
+                        <p class="friends-empty-text">
+                            No encontramos estudiantes con ese nombre
+                            o usuario. Probá con otra búsqueda.
+                        </p>
+
+                    {% endif %}
+
+
+                {% else %}
+
+                    <!-- RECOMENDACIONES -->
+
+                    <h2 class="friends-section-title">
+                        Personas que quizás conoces
+                    </h2>
+
+                    {% if recomendaciones %}
+
+                        <ul class="friend-list">
+
+                            {% for item in recomendaciones %}
+
+                                <li class="friend-row">
+
+                                    {{ avatar(item.usuario) }}
+
+                                    <div class="friend-info">
+
+                                        <strong>{{ item.usuario.nombre }}</strong>
+
+                                        <span>@{{ item.usuario.usuario }}</span>
+
+                                        {% if item.amigos_comunes %}
+                                            <span>
+                                                {{ 'Amigo en común:' if item.amigos_comunes | length == 1 else 'Amigos en común:' }}
+                                                {% for amigo in item.amigos_comunes %}
+                                                    {{ amigo.nombre }}{{ ', ' if not loop.last else '' }}
+                                                {% endfor %}
+                                            </span>
+                                        {% endif %}
+
+                                    </div>
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('amigos_solicitar', id_receptor=item.usuario.id) }}"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="friend-btn friend-btn-primary"
+                                        >
+                                            Enviar solicitud
+                                        </button>
+                                    </form>
+
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% else %}
+
+                        <p class="friends-empty-text">
+                            Cuando tengas amigos, aquí aparecerán
+                            sugerencias basadas en amigos en común.
+                        </p>
+
+                    {% endif %}
+
+                {% endif %}
+
+            </section>
+
+            <!-- ---------------------------------------
+                 APARTADO DE BLOQUEOS
+                 --------------------------------------- -->
+            <section class="friends-panel" id="panel-bloqueados"
+                     role="tabpanel" aria-labelledby="tab-bloqueados" hidden>
+                <h2 class="friends-section-title">Cuentas bloqueadas</h2>
+                {% if bloqueados %}
+                    <ul class="friend-list">
+                        {% for bloqueado in bloqueados %}
+                            <li class="friend-row">
+                                {{ avatar(bloqueado) }}
+                                <div class="friend-info">
+                                    <strong>{{ bloqueado.nombre }}</strong>
+                                    <span>@{{ bloqueado.usuario }}</span>
+                                </div>
+                                <form method="POST"
+                                      action="{{ url_for('amigos_desbloquear', id_bloqueado=bloqueado.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                    <button type="submit" class="friend-btn friend-btn-primary">Desbloquear</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="friends-empty-text">No tenés usuarios bloqueados.</p>
+                {% endif %}
+            </section>
+
+        </section>
+
+
+        <!-- =================================
+             PIE DE PÁGINA
+        ================================== -->
+
+        <footer class="profile-footer">
+            © 2026 Social UNA · Tu comunidad universitaria
+        </footer>
+
+    </main>
+
+</body>
+</html>

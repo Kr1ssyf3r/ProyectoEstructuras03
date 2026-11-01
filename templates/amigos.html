@@ -277,6 +277,15 @@
                     Buscar personas
                 </button>
 
+                <!-- ---------------------------------------
+                     APARTADO DE BLOQUEOS
+                     --------------------------------------- -->
+                <button type="button" class="friends-tab" id="tab-bloqueados"
+                        role="tab" data-tab="bloqueados"
+                        aria-controls="panel-bloqueados" aria-selected="false">
+                    Bloqueados <span class="tab-count">{{ bloqueados | length }}</span>
+                </button>
+
             </nav>
 
 
@@ -328,6 +337,16 @@
                                         Eliminar
                                     </button>
 
+                                </form>
+
+                                <!-- ---------------------------------------
+                                     APARTADO DE BLOQUEOS
+                                     --------------------------------------- -->
+                                <form method="POST"
+                                      action="{{ url_for('amigos_bloquear', id_bloqueado=amigo.id) }}"
+                                      data-confirmar="¿Bloquear a {{ amigo.nombre }}? Se eliminará la amistad.">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                    <button type="submit" class="friend-btn friend-btn-danger">Bloquear</button>
                                 </form>
 
                             </li>
@@ -661,6 +680,21 @@
 
                                     {% endif %}
 
+                                    <!-- ---------------------------------------
+                                         APARTADO DE BLOQUEOS
+                                         --------------------------------------- -->
+                                    {% if item.estado == 'bloqueado' %}
+                                        <span class="friend-badge">No disponible</span>
+                                    {% else %}
+                                        <form method="POST"
+                                              action="{{ url_for('amigos_bloquear', id_bloqueado=item.usuario.id) }}"
+                                              data-confirmar="¿Bloquear a {{ item.usuario.nombre }}?">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                            <input type="hidden" name="q" value="{{ q }}">
+                                            <button type="submit" class="friend-btn friend-btn-danger">Bloquear</button>
+                                        </form>
+                                    {% endif %}
+
                                 </li>
 
                             {% endfor %}
@@ -747,6 +781,34 @@
 
                 {% endif %}
 
+            </section>
+
+            <!-- ---------------------------------------
+                 APARTADO DE BLOQUEOS
+                 --------------------------------------- -->
+            <section class="friends-panel" id="panel-bloqueados"
+                     role="tabpanel" aria-labelledby="tab-bloqueados" hidden>
+                <h2 class="friends-section-title">Cuentas bloqueadas</h2>
+                {% if bloqueados %}
+                    <ul class="friend-list">
+                        {% for bloqueado in bloqueados %}
+                            <li class="friend-row">
+                                {{ avatar(bloqueado) }}
+                                <div class="friend-info">
+                                    <strong>{{ bloqueado.nombre }}</strong>
+                                    <span>@{{ bloqueado.usuario }}</span>
+                                </div>
+                                <form method="POST"
+                                      action="{{ url_for('amigos_desbloquear', id_bloqueado=bloqueado.id) }}">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                    <button type="submit" class="friend-btn friend-btn-primary">Desbloquear</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="friends-empty-text">No tenés usuarios bloqueados.</p>
+                {% endif %}
             </section>
 
         </section>

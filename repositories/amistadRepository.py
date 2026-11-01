@@ -1,4 +1,5 @@
-"""Persistencia de amistades y solicitudes en un único JSON."""
+"""Persistencia de amistades, solicitudes y bloqueos en un único JSON."""
+
 import json
 import os
 import tempfile
@@ -6,6 +7,7 @@ from pathlib import Path
 
 
 class AmistadRepository:
+
     def __init__(self, ruta_archivo="data/relaciones.json"):
         self.ruta_archivo = Path(ruta_archivo)
 
@@ -16,19 +18,18 @@ class AmistadRepository:
             return {
                 "version": 1,
                 "amistades": {},
-                "solicitudes": []
+                "solicitudes": [],
+                "bloqueos": {}
             }
 
-        #(CAMBIO) antes solo se abria el archivo y si fallaba la lectura (permisos, archivo bloqueado)
-        #salia un OSError que el resto del programa no esperaba. Ahora se captura y se convierte en ValueError
-        #para que todos los errores de carga sean del mismo tipo.
-        #JSONDecodeError y UnicodeDecodeError ya heredan de ValueError, por eso no hace falta capturarlos aparte
+        # (CAMBIO) Captura errores de lectura y los convierte en ValueError.
         try:
             with self.ruta_archivo.open(
                 "r",
                 encoding="utf-8"
             ) as archivo:
                 datos = json.load(archivo)
+
         except OSError as error:
             raise ValueError(
                 f"No se pudo leer el archivo de relaciones: {error}"
@@ -48,18 +49,39 @@ class AmistadRepository:
         ):
             raise ValueError("Archivo de relaciones incompleto.")
 
+        # ---------------------------------------
+        # APARTADO DE BLOQUEOS
+        # ---------------------------------------
+
+        # Compatibilidad con JSON anteriores que no contienen bloqueos.
+        if "bloqueos" not in datos:
+            datos["bloqueos"] = {}
+
+        if not isinstance(datos["bloqueos"], dict):
+            raise ValueError("Archivo de bloqueos inválido.")
+
         return datos
 
-    #(CAMBIO) antes guardar(grafo, gestor) llamaba a grafo.exportar() y gestor.exportar() por dentro,
-    #lo que hacia que el repository conociera como son esas clases. Ahora recibe los datos ya exportados
-    #(un dict y una lista), asi solo se encarga de escribir en disco y es mas facil de probar con datos simples
-    def guardar(self, amistades: dict, solicitudes: list) -> None:
-        """Guarda amistades y solicitudes mediante un archivo temporal."""
+    # ---------------------------------------
+    # APARTADO DE BLOQUEOS
+    # ---------------------------------------
+
+    def guardar(
+        self,
+        amistades: dict,
+        solicitudes: list,
+        bloqueos: dict
+    ) -> None:
+        """
+        Guarda amistades, solicitudes y bloqueos
+        en un único archivo JSON mediante escritura atómica.
+        """
 
         datos = {
             "version": 1,
             "amistades": amistades,
-            "solicitudes": solicitudes
+            "solicitudes": solicitudes,
+            "bloqueos": bloqueos
         }
 
         carpeta = self.ruta_archivo.resolve().parent
@@ -89,8 +111,8 @@ class AmistadRepository:
                 archivo.flush()
                 os.fsync(archivo.fileno())
 
-            #escritura atomica: el archivo temporal reemplaza al original de una sola vez,
-            #asi si el programa se cae a mitad de escribir no queda un JSON corrupto
+            # Escritura atómica:
+            # Se reemplaza el JSON original por el temporal.
             os.replace(temporal, self.ruta_archivo)
             temporal = None
 

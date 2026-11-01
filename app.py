@@ -14,12 +14,28 @@ from flask import (
     session
 )
 
+# ============================================================
+# REPOSITORIOS
+# ============================================================
+
 from repositories.usuario_repository import UsuarioRepository
 from repositories.token_repository import TokenRepository
+
+
+# ============================================================
+# SERVICIOS
+# ============================================================
 
 from services.usuario_service import UsuarioService
 from services.recuperacion_service import RecuperacionService
 from services.correo_service import CorreoService
+
+
+# ============================================================
+# CONTROLADORES
+# ============================================================
+
+from controllers.amistades_routes import registrar_rutas_amistades
 
 
 # ============================================================
@@ -85,15 +101,17 @@ def requiere_sesion(funcion):
 
 @app.route("/", methods=["GET"])
 def inicio():
+    """Muestra el login o redirige al feed si ya hay sesión."""
 
     if session.get("usuario_id"):
-        return redirect(url_for("perfil"))
+        return redirect(url_for("inicio_feed"))
 
     return render_template("login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
+    """Autentica al estudiante y lo lleva al feed."""
 
     nombre_usuario = request.form.get(
         "nombre_usuario", ""
@@ -113,7 +131,8 @@ def login():
         session.clear()
         session["usuario_id"] = usuario.id
 
-        return redirect(url_for("perfil"))
+        # NUEVO: después del login vamos al feed.
+        return redirect(url_for("inicio_feed"))
 
     except ValueError as error:
 
@@ -130,6 +149,7 @@ def login():
 @app.route("/perfil", methods=["GET"])
 @requiere_sesion
 def perfil(usuario):
+    """Muestra el perfil personal del estudiante."""
 
     return render_template(
         "perfil.html",
@@ -144,11 +164,14 @@ def perfil(usuario):
 @app.route("/perfil/editar", methods=["GET", "POST"])
 @requiere_sesion
 def editar_perfil(usuario):
+    """Permite actualizar los datos personales."""
 
     if request.method == "POST":
 
         nombre = request.form.get("nombre", "")
-        nombre_usuario = request.form.get("nombre_usuario", "")
+        nombre_usuario = request.form.get(
+            "nombre_usuario", ""
+        )
         correo = request.form.get("correo", "")
 
         try:
@@ -182,6 +205,7 @@ def editar_perfil(usuario):
 
 @app.route("/logout", methods=["GET"])
 def logout():
+    """Cierra la sesión del usuario actual."""
 
     session.clear()
 
@@ -194,6 +218,7 @@ def logout():
 
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
+    """Registra nuevos estudiantes."""
 
     if request.method == "POST":
 
@@ -237,6 +262,7 @@ def registro():
                 )
 
             except Exception:
+
                 app.logger.exception(
                     "No se pudo enviar el correo de bienvenida."
                 )
@@ -267,6 +293,7 @@ def registro():
 
 @app.route("/recuperar", methods=["GET", "POST"])
 def solicitar_recuperacion():
+    """Solicita un enlace para recuperar la contraseña."""
 
     if request.method == "POST":
 
@@ -281,7 +308,6 @@ def solicitar_recuperacion():
                 error="Debes introducir tu correo electrónico."
             )
 
-        # Buscar al usuario mediante su correo.
         usuario = usuario_repository.buscar_por_correo(correo)
 
         if usuario is None:
@@ -293,12 +319,10 @@ def solicitar_recuperacion():
 
         try:
 
-            # Generar un token de recuperación.
             token = recuperacion_service.generar_token(
                 usuario.id
             )
 
-            # Crear el enlace para restablecer la contraseña.
             enlace = url_for(
                 "restablecer_contrasena",
                 token=token,
@@ -319,7 +343,7 @@ def solicitar_recuperacion():
                 )
             )
 
-        except (ValueError, OSError, Exception):
+        except Exception:
 
             app.logger.exception(
                 "No se pudo procesar la recuperación de contraseña."
@@ -342,8 +366,8 @@ def solicitar_recuperacion():
 
 @app.route("/restablecer/<token>", methods=["GET", "POST"])
 def restablecer_contrasena(token):
+    """Permite establecer una nueva contraseña."""
 
-    # Comprobar que el token sea válido.
     token_validado = recuperacion_service.validar_token(token)
 
     if token_validado is None:
@@ -392,6 +416,91 @@ def restablecer_contrasena(token):
     return render_template(
         "restablecer.html",
         token=token
+    )
+
+
+# ============================================================
+# INTEGRACIÓN DEL MÓDULO DE AMISTADES
+# ============================================================
+
+# Registrar una sola vez las rutas de amistades.
+#
+# Este controlador utiliza:
+# - UsuarioService
+# - AmistadService
+# - GrafoAmistades
+# - GestorSolicitudes
+# - AmistadRepository
+#
+# También crea las rutas para:
+# - Ver amigos
+# - Buscar estudiantes
+# - Enviar solicitudes
+# - Aceptar solicitudes
+# - Rechazar solicitudes
+# - Cancelar solicitudes
+# - Eliminar amistades
+
+amistad_service = registrar_rutas_amistades(
+    app,
+    usuario_service,
+    requiere_sesion
+)
+
+
+# ============================================================
+# PANTALLA PRINCIPAL - FEED SOCIAL UNA
+# ============================================================
+
+@app.route("/inicio", methods=["GET"])
+@requiere_sesion
+def inicio_feed(usuario):
+    """
+    Página principal de Social UNA.
+
+    Integra las recomendaciones de amistad y prepara
+    el espacio para las publicaciones de los estudiantes.
+    """
+
+    # =========================================
+    # RECOMENDACIONES DE AMISTAD
+    # =========================================
+
+    recomendaciones = amistad_service.recomendaciones(
+        usuario.id,
+        limite=5
+    )
+
+    # =========================================
+    # SOLICITUDES RECIBIDAS
+    # =========================================
+
+    solicitudes_recibidas = (
+        amistad_service.obtener_solicitudes_recibidas(
+            usuario.id
+        )
+    )
+
+    cantidad_solicitudes = len(solicitudes_recibidas)
+
+    # =========================================
+    # PUBLICACIONES
+    # =========================================
+
+    # Provisional: sustituiremos esta lista cuando
+    # se integre el servicio real de publicaciones.
+    publicaciones = []
+
+    # =========================================
+    # RENDERIZAR LA PÁGINA
+    # =========================================
+
+    return render_template(
+        "inicio.html",
+        usuario=usuario,
+        recomendaciones=recomendaciones,
+        cantidad_solicitudes=cantidad_solicitudes,
+        publicaciones=publicaciones
     )
 
 

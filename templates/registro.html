@@ -1,41 +1,17 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% block title %}Social UNA | Crear cuenta{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+{% block meta %}
     <meta name="theme-color" content="#f1f5fc">
+{% endblock %}
 
-    <title>Social UNA | Crear cuenta</title>
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro.css') }}">
+{% endblock %}
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/login.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/registro.css') }}"
-    >
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <script
-        src="{{ url_for('static', filename='js/registro.js') }}"
-        defer
-    ></script>
-</head>
-
-<body>
-
+{% block contenido %}
     <!-- Luces decorativas del fondo -->
     <div class="ambient-light light-one"></div>
     <div class="ambient-light light-two"></div>
@@ -185,7 +161,7 @@
 
 
                 <!-- Formulario de registro -->
-                <form method="POST" action="{{ url_for('registro') }}">
+                <form method="POST" action="{{ url_for('autenticacion.registro') }}">
 
                     <!-- Nombre completo -->
                     <div class="form-group">
@@ -472,7 +448,7 @@
 
                     <span>¿Ya tienes una cuenta?</span>
 
-                    <a href="{{ url_for('inicio') }}">
+                    <a href="{{ url_for('autenticacion.inicio') }}">
                         Inicia sesión
                     </a>
 
@@ -490,6 +466,8 @@
         </section>
 
     </main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/registro.js') }}" defer></script>
+{% endblock %}

@@ -1,69 +1,12 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% block title %}Amigos | Social UNA{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/amigos.css') }}">
+{% endblock %}
 
-    <title>Amigos | Social UNA</title>
-
-    <!-- TIPOGRAFÍA -->
-
-    <link rel="preconnect"
-          href="https://fonts.googleapis.com">
-
-    <link rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <!-- ESTILOS -->
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/login.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/perfil.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/amigos.css') }}">
-
-    <!-- JAVASCRIPT -->
-
-    <script
-        src="{{ url_for('static', filename='js/amigos.js') }}"
-        defer>
-    </script>
-
-    <script
-        src="{{ url_for('static', filename='js/notificaciones.js') }}"
-        defer>
-    </script>
-
-</head>
-
-
-<!-- =========================================
-     COMPONENTE REUTILIZABLE: AVATAR
-========================================= -->
-
-{% macro avatar(usuario) %}
-
-    <div class="friend-avatar" aria-hidden="true">
-        {{ usuario.nombre[:1] | upper }}
-    </div>
-
-{% endmacro %}
-
-
-<body>
-
+{% block contenido %}
     <!-- FONDO -->
 
     <div class="ambient-light light-one"></div>
@@ -82,7 +25,7 @@
 
         <header class="profile-header">
 
-            <a href="{{ url_for('inicio_feed') }}"
+            <a href="{{ url_for('inicio.inicio_feed') }}"
                class="brand">
 
                 <span class="brand-icon">S</span>
@@ -92,7 +35,7 @@
 
             <div class="top-actions">
 
-                <a href="{{ url_for('inicio_feed') }}"
+                <a href="{{ url_for('inicio.inicio_feed') }}"
                    class="back-link">
                     Volver al inicio
                 </a>
@@ -320,7 +263,7 @@
 
                                 <form
                                     method="POST"
-                                    action="{{ url_for('amigos_eliminar', id_amigo=amigo.id) }}"
+                                    action="{{ url_for('amistades.amigos_eliminar', id_amigo=amigo.id) }}"
                                     data-confirmar="¿Eliminar a {{ amigo.nombre }} de tus amigos?"
                                 >
 
@@ -343,7 +286,7 @@
                                      APARTADO DE BLOQUEOS
                                      --------------------------------------- -->
                                 <form method="POST"
-                                      action="{{ url_for('amigos_bloquear', id_bloqueado=amigo.id) }}"
+                                      action="{{ url_for('amistades.amigos_bloquear', id_bloqueado=amigo.id) }}"
                                       data-confirmar="¿Bloquear a {{ amigo.nombre }}? Se eliminará la amistad.">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                     <button type="submit" class="friend-btn friend-btn-danger">Bloquear</button>
@@ -424,7 +367,7 @@
 
                                     <form
                                         method="POST"
-                                        action="{{ url_for('amigos_aceptar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                        action="{{ url_for('amistades.amigos_aceptar', id_solicitud=item.solicitud.id_solicitud) }}"
                                     >
 
                                         <input
@@ -447,7 +390,7 @@
 
                                     <form
                                         method="POST"
-                                        action="{{ url_for('amigos_rechazar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                        action="{{ url_for('amistades.amigos_rechazar', id_solicitud=item.solicitud.id_solicitud) }}"
                                     >
 
                                         <input
@@ -512,7 +455,7 @@
 
                                 <form
                                     method="POST"
-                                    action="{{ url_for('amigos_cancelar', id_solicitud=item.solicitud.id_solicitud) }}"
+                                    action="{{ url_for('amistades.amigos_cancelar', id_solicitud=item.solicitud.id_solicitud) }}"
                                 >
 
                                     <input
@@ -563,7 +506,7 @@
 
                 <form
                     method="GET"
-                    action="{{ url_for('amigos') }}"
+                    action="{{ url_for('amistades.amigos') }}"
                     class="friends-search"
                 >
 
@@ -640,7 +583,7 @@
 
                                         <form
                                             method="POST"
-                                            action="{{ url_for('amigos_solicitar', id_receptor=item.usuario.id) }}"
+                                            action="{{ url_for('amistades.amigos_solicitar', id_receptor=item.usuario.id) }}"
                                         >
 
                                             <input
@@ -687,7 +630,7 @@
                                         <span class="friend-badge">No disponible</span>
                                     {% else %}
                                         <form method="POST"
-                                              action="{{ url_for('amigos_bloquear', id_bloqueado=item.usuario.id) }}"
+                                              action="{{ url_for('amistades.amigos_bloquear', id_bloqueado=item.usuario.id) }}"
                                               data-confirmar="¿Bloquear a {{ item.usuario.nombre }}?">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                             <input type="hidden" name="q" value="{{ q }}">
@@ -748,7 +691,7 @@
 
                                     <form
                                         method="POST"
-                                        action="{{ url_for('amigos_solicitar', id_receptor=item.usuario.id) }}"
+                                        action="{{ url_for('amistades.amigos_solicitar', id_receptor=item.usuario.id) }}"
                                     >
                                         <input
                                             type="hidden"
@@ -799,7 +742,7 @@
                                     <span>@{{ bloqueado.usuario }}</span>
                                 </div>
                                 <form method="POST"
-                                      action="{{ url_for('amigos_desbloquear', id_bloqueado=bloqueado.id) }}">
+                                      action="{{ url_for('amistades.amigos_desbloquear', id_bloqueado=bloqueado.id) }}">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                     <button type="submit" class="friend-btn friend-btn-primary">Desbloquear</button>
                                 </form>
@@ -823,6 +766,9 @@
         </footer>
 
     </main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/amigos.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/notificaciones.js') }}" defer></script>
+{% endblock %}

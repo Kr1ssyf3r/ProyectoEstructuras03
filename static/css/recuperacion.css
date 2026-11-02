@@ -1,0 +1,378 @@
+
+/* ========================================
+   RECUPERACIÓN DE CONTRASEÑA
+   Diseño de tarjeta única
+======================================== */
+
+/* Contenedor principal */
+.recovery-container {
+    width: 100%;
+    min-height: 100vh;
+    padding: 35px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tarjeta */
+.recovery-card {
+    position: relative;
+    width: 100%;
+    max-width: 510px;
+    padding: 30px 48px 22px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 25px;
+    background: var(--card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition:
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* Tema claro */
+:root:not([data-theme="dark"]) .recovery-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.88),
+            rgba(239, 244, 255, 0.82)
+        );
+    border-color: rgba(255, 255, 255, 0.85);
+    box-shadow:
+        0 35px 90px rgba(39, 65, 120, 0.14),
+        0 12px 30px rgba(39, 65, 120, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Tema oscuro */
+html[data-theme="dark"] .recovery-card {
+    background: rgba(19, 29, 49, 0.91);
+    border-color: rgba(255, 255, 255, 0.07);
+    box-shadow:
+        0 30px 90px rgba(0, 0, 0, 0.42),
+        0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ========================================
+   ENCABEZADO
+======================================== */
+
+.recovery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+/* Marca Social UNA */
+.recovery-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.recovery-brand .brand-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--primary);
+    color: white;
+    font-size: 20px;
+}
+
+
+/* ========================================
+   CONTENIDO
+======================================== */
+
+.recovery-content {
+    text-align: center;
+}
+
+/* Icono principal */
+.recovery-state-icon {
+    width: 65px;
+    height: 65px;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 22px;
+    border-radius: 20px;
+    background: rgba(52, 120, 246, 0.11);
+    color: var(--primary);
+}
+
+.recovery-state-icon svg {
+    width: 31px;
+    height: 31px;
+}
+
+/* Título */
+.recovery-content h1 {
+    color: var(--text);
+    font-size: 29px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 12px 0;
+}
+
+.recovery-content h1 span {
+    color: var(--primary);
+}
+
+/* Descripción */
+.recovery-description {
+    max-width: 360px;
+    margin: 0 auto 25px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* ========================================
+   FORMULARIO
+======================================== */
+
+.recovery-content form {
+    text-align: left;
+}
+
+.recovery-content .form-group {
+    margin-bottom: 19px;
+}
+
+.recovery-content .login-button {
+    margin-top: 10px;
+}
+
+
+/* ========================================
+   MENSAJES
+======================================== */
+
+.recovery-alert {
+    margin: 18px 0;
+    text-align: left;
+}
+
+/* Mensaje de éxito */
+.recovery-content .success-message {
+    padding: 13px 15px;
+    margin-bottom: 22px;
+    background: rgba(22, 131, 74, 0.10);
+    border: 1px solid rgba(22, 131, 74, 0.18);
+    border-radius: 10px;
+    color: #16834a;
+    font-size: 13px;
+}
+
+html[data-theme="dark"] .recovery-content .success-message {
+    background: #183c2c;
+    border-color: #285b42;
+    color: #9ae6b4;
+}
+
+
+/* ========================================
+   ENLACE PARA VOLVER AL LOGIN
+======================================== */
+
+.recovery-return {
+    margin-top: 28px;
+    text-align: center;
+}
+
+.recovery-return a {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.recovery-return a:hover {
+    text-decoration: underline;
+}
+
+
+/* ========================================
+   ENLACE DE RECUPERACIÓN LOCAL
+======================================== */
+
+.development-link {
+    width: 100%;
+    padding: 25px 22px;
+    margin-top: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    background: var(--input);
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+/* Icono */
+.development-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 15px;
+    display: grid;
+    place-items: center;
+    border-radius: 17px;
+    background: rgba(52, 120, 246, 0.12);
+    color: var(--primary);
+}
+
+.development-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Etiqueta */
+.development-tag {
+    display: inline-block;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    margin-bottom: 9px;
+}
+
+/* Título */
+.development-link h3 {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 800;
+    margin-bottom: 9px;
+}
+
+/* Descripción */
+.development-description {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Botón */
+.development-button {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 11px;
+    background: var(--primary);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.development-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.development-button svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Aviso informativo */
+.development-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(52, 120, 246, 0.07);
+    text-align: left;
+}
+
+.development-notice svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    color: var(--primary);
+}
+
+.development-notice p {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* ========================================
+   PIE DE PÁGINA
+======================================== */
+
+.recovery-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 35px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--footer);
+    font-size: 10px;
+}
+
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 520px) {
+
+    .recovery-container {
+        padding: 18px 12px;
+    }
+
+    .recovery-card {
+        padding: 25px 22px 20px;
+        border-radius: 21px;
+    }
+
+    .recovery-header {
+        margin-bottom: 30px;
+    }
+
+    .recovery-content h1 {
+        font-size: 25px;
+    }
+
+    .development-link {
+        padding: 22px 16px;
+    }
+
+    .development-link h3 {
+        font-size: 17px;
+    }
+
+    .recovery-footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}

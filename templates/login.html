@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#f1f5fc">
+
+    <title>Social UNA | Iniciar sesión</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/login.css') }}"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script
+        src="{{ url_for('static', filename='js/login.js') }}"
+        defer
+    ></script>
+</head>
+
+<body>
+
+    <!-- Luces decorativas del fondo -->
+    <div class="ambient-light light-one"></div>
+    <div class="ambient-light light-two"></div>
+    <div class="ambient-light light-three"></div>
+
+    <main class="page-container">
+
+        <!-- Panel de presentación -->
+        <section class="welcome-panel">
+
+            <div class="brand">
+                <div class="brand-icon">S</div>
+                <span>Social <strong>UNA</strong></span>
+            </div>
+
+            <div class="welcome-content">
+
+                <span class="welcome-tag">
+                    <span class="status-dot"></span>
+                    TU COMUNIDAD UNIVERSITARIA
+                </span>
+
+                <h1>
+                    Conecta.<br>
+                    Comparte.<br>
+                    <span>Crece.</span>
+                </h1>
+
+                <p>
+                    Un espacio para conectar con otros estudiantes,
+                    compartir experiencias y formar parte de la
+                    comunidad universitaria.
+                </p>
+
+                <div class="decoration">
+                    <div class="decoration-orbit orbit-one"></div>
+                    <div class="decoration-orbit orbit-two"></div>
+                    <div class="decoration-orbit orbit-three"></div>
+
+                    <div class="decoration-center">S</div>
+
+                    <div class="floating-dot dot-one"></div>
+                    <div class="floating-dot dot-two"></div>
+                    <div class="floating-dot dot-three"></div>
+                </div>
+
+            </div>
+
+            <div class="panel-footer">
+                <span>Universidad Nacional de Costa Rica</span>
+                <span class="footer-line"></span>
+            </div>
+
+        </section>
+
+
+        <!-- Panel de inicio de sesión -->
+        <section class="form-panel">
+
+            <div class="top-actions">
+
+                <span class="secure-label">
+                    <span class="secure-dot"></span>
+                    ACCESO SEGURO
+                </span>
+
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="theme-toggle"
+                    aria-label="Activar modo oscuro"
+                    title="Cambiar tema"
+                >
+                    <svg class="sun-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="m4.93 4.93 1.42 1.42"></path>
+                        <path d="m17.65 17.65 1.42 1.42"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="m6.35 17.65-1.42 1.42"></path>
+                        <path d="m19.07 4.93-1.42 1.42"></path>
+                    </svg>
+
+                    <svg class="moon-icon" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor"
+                         stroke-width="1.8" stroke-linecap="round">
+                        <path d="M20.9 13A9 9 0 0 1 11 3.1
+                                 9 9 0 1 0 20.9 13Z"></path>
+                    </svg>
+                </button>
+
+            </div>
+
+
+            <div class="form-content">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">S</div>
+                    <span>Social <strong>UNA</strong></span>
+                </div>
+
+                <div class="form-heading">
+
+                    <span class="form-tag">
+                        BIENVENIDO DE NUEVO
+                    </span>
+
+                    <h2>Inicia sesión<span>.</span></h2>
+
+                    <p>
+                        Nos alegra tenerte aquí. Ingresa tus datos
+                        para continuar.
+                    </p>
+
+                </div>
+
+
+                {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                {% if mensaje %}
+                    <div class="success-message">
+                        {{ mensaje }}
+                    </div>
+                {% endif %}
+
+
+                <form method="POST" action="{{ url_for('login') }}">
+
+                    <div class="form-group">
+
+                        <label for="usuario">
+                            Nombre de usuario
+                        </label>
+
+                        <div class="input-container">
+
+                            <svg class="field-icon"
+                                 viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor"
+                                 stroke-width="1.7">
+                                <circle cx="12" cy="8" r="4"></circle>
+                                <path d="M5 21v-2a7 7 0 0 1 14 0v2"></path>
+                            </svg>
+
+                            <input
+                                type="text"
+                                id="usuario"
+                                name="nombre_usuario"
+                                placeholder="Ingresa tu usuario"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="contrasena">
+                            Contraseña
+                        </label>
+
+                        <div class="input-container">
+
+                            <svg class="field-icon"
+                                 viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor"
+                                 stroke-width="1.7">
+                                <rect x="4" y="10" width="16" height="11"
+                                      rx="2"></rect>
+                                <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                            </svg>
+
+                            <input
+                                type="password"
+                                id="contrasena"
+                                name="contrasena"
+                                placeholder="Ingresa tu contraseña"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="password-toggle"
+                                aria-label="Mostrar contraseña"
+                                aria-pressed="false"
+                                title="Mostrar contraseña"
+                            >
+                                <svg class="eye-open"
+                                     viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M2 12s3.6-7 10-7
+                                             10 7 10 7-3.6 7-10 7
+                                             -10-7-10-7Z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+
+                                <svg class="eye-closed"
+                                     viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="m3 3 18 18"></path>
+                                    <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"></path>
+                                    <path d="M9.9 5.2A10.8 10.8 0 0 1 12 5
+                                             c6.4 0 10 7 10 7
+                                             a16 16 0 0 1-4 4.7"></path>
+                                    <path d="M6.6 6.6C3.7 8.3 2 12 2 12
+                                             s3.6 7 10 7
+                                             a10 10 0 0 0 4-.8"></path>
+                                </svg>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Recuperación de contraseña -->
+                    <div class="forgot-password">
+                        <a href="{{ url_for('solicitar_recuperacion') }}">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="login-button">
+
+                        <span>Iniciar sesión</span>
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor"
+                             stroke-width="2">
+                            <path d="M5 12h14"></path>
+                            <path d="m13 6 6 6-6 6"></path>
+                        </svg>
+
+                    </button>
+
+                </form>
+
+
+                <div class="register-section">
+                    <span>¿Todavía no tienes una cuenta?</span>
+
+                    <a href="{{ url_for('registro') }}">
+                        Crear una cuenta
+                    </a>
+                </div>
+
+            </div>
+
+
+            <footer class="form-footer">
+                <span>© Social UNA</span>
+                <span>Conectando estudiantes.</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

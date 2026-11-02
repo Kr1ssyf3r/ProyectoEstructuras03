@@ -1,0 +1,59 @@
+/* =========================================
+   ESTILOS ESPECÍFICOS DE REGISTRO
+   ========================================= */
+
+/* Permitir el desplazamiento cuando el formulario
+   necesita más espacio vertical. */
+.form-panel {
+    overflow-y: auto;
+}
+
+/* Darle espacio suficiente al formulario de registro. */
+.form-content {
+    width: 100%;
+    max-width: 440px;
+}
+
+/* Reducir la separación entre los campos. */
+.form-content .form-group {
+    margin-bottom: 14px;
+}
+
+/* Ajustar el espacio del texto introductorio. */
+.form-content .form-heading p {
+    margin-bottom: 22px;
+}
+
+/* Separar el botón del último campo. */
+.form-content .login-button {
+    margin-top: 8px;
+}
+
+/* =========================================
+   AJUSTES PARA PANTALLAS BAJAS
+   ========================================= */
+
+@media (max-height: 850px) {
+    .form-panel {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .form-content .form-group {
+        margin-bottom: 11px;
+    }
+}
+
+/* =========================================
+   AJUSTES PARA DISPOSITIVOS MÓVILES
+   ========================================= */
+
+@media (max-width: 768px) {
+    .form-panel {
+        overflow-y: visible;
+    }
+
+    .form-content {
+        max-width: 100%;
+    }
+}

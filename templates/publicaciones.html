@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Mis publicaciones | Social UNA{% endblock %}
+
+{% block body_class %}home-body{% endblock %}
+
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones.css') }}">
+{% endblock %}
+
+{% block contenido %}
+<div class="social-shell vista-publicaciones">
+
+    <header class="social-topbar">
+        <a class="social-brand" href="{{ url_for('inicio.inicio_feed') }}">
+            <span class="social-brand-symbol">S</span>
+            <span>Social <strong>UNA</strong></span>
+        </a>
+
+        <a class="volver-inicio" href="{{ url_for('inicio.inicio_feed') }}">
+            ← Volver al inicio
+        </a>
+    </header>
+
+    <main class="social-feed muro-contenido">
+
+        <div class="feed-heading">
+            <div>
+                <span class="eyebrow">MI MURO</span>
+                <h1>Mis publicaciones</h1>
+            </div>
+            <span class="feed-greeting">{{ publicaciones | length }} en total</span>
+        </div>
+
+        {% for p in publicaciones %}
+            <article class="post-card">
+                <div class="post-author">
+                    <span class="feed-avatar small">{{ usuario.nombre[:1] | upper }}</span>
+                    <div>
+                        <strong>{{ usuario.nombre }}</strong>
+                        <span>@{{ usuario.usuario }} · {{ p.fecha.strftime('%d/%m/%Y %H:%M') }}</span>
+                    </div>
+                </div>
+                <p class="post-text">{{ p.contenido }}</p>
+            </article>
+        {% else %}
+            <section class="empty-feed">
+                <h3>Todavía no has publicado nada</h3>
+                <p>Cuando publiques algo, aparecerá aquí, de la más reciente a la más antigua.</p>
+            </section>
+        {% endfor %}
+
+    </main>
+</div>
+{% endblock %}

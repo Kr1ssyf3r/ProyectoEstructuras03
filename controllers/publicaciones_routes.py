@@ -1,5 +1,17 @@
 """Blueprint del módulo de publicaciones."""
-from flask import Blueprint, render_template
+import hmac
+import secrets
+
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 
 from controllers.decorators import requiere_sesion
 
@@ -7,15 +19,41 @@ from controllers.decorators import requiere_sesion
 def crear_publicaciones_blueprint(publicacion_service, usuario_service):
     bp = Blueprint("publicaciones", __name__)
 
+    def csrf_token():
+        # Un código secreto por sesión, para que otra página no pueda
+        # enviar formularios en nombre del usuario.
+        if "csrf_publicaciones" not in session:
+            session["csrf_publicaciones"] = secrets.token_urlsafe(32)
+        return session["csrf_publicaciones"]
+
+    def validar_csrf():
+        esperado = session.get("csrf_publicaciones", "")
+        recibido = request.form.get("csrf_token", "")
+        if not esperado or not hmac.compare_digest(esperado, recibido):
+            abort(400, description="Formulario inválido o expirado.")
+
     @bp.get("/publicaciones")
     @requiere_sesion
     def muro(usuario):
-        #Pide al servicio las publicaciones de este usuario
         publicaciones = publicacion_service.obtener_publicaciones_usuario(usuario.id)
         return render_template(
             "publicaciones.html",
             usuario=usuario,
             publicaciones=publicaciones,
+            csrf_token=csrf_token(),
         )
+
+    @bp.post("/publicaciones/crear")
+    @requiere_sesion
+    def crear(usuario):
+        validar_csrf()
+        try:
+            publicacion_service.crear_publicacion(
+                usuario.id, request.form.get("contenido", "")
+            )
+            flash("Publicación creada.", "success")
+        except ValueError as error:
+            flash(str(error), "error")
+        return redirect(url_for("publicaciones.muro"))
 
     return bp

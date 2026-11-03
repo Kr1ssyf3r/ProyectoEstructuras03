@@ -32,7 +32,19 @@
             </div>
             <span class="feed-greeting">{{ publicaciones | length }} en total</span>
         </div>
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% for categoria, texto in mensajes %}
+                <div class="{{ 'success-message' if categoria == 'success' else 'error-message' }}">{{ texto }}</div>
+            {% endfor %}
+        {% endwith %}
 
+        <form class="form-publicar" method="post" action="{{ url_for('publicaciones.crear') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <textarea name="contenido" rows="3" maxlength="500"
+                      placeholder="¿Qué estás pensando, {{ usuario.nombre.split()[0] }}?" required></textarea>
+            <button type="submit">Publicar</button>
+        </form>
+        
         {% for p in publicaciones %}
             <article class="post-card">
                 <div class="post-author">

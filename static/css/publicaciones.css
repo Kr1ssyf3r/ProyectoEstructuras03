@@ -16,3 +16,44 @@
 .vista-publicaciones .volver-inicio:hover {
     color: var(--primary-dark);
 }
+.vista-publicaciones .form-publicar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.vista-publicaciones .form-publicar textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 12px;
+    font: inherit;
+    color: var(--text);
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.vista-publicaciones .form-publicar textarea:focus {
+    outline: none;
+    box-shadow: var(--input-focus);
+}
+
+.vista-publicaciones .form-publicar button {
+    align-self: flex-end;
+    padding: 10px 22px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.vista-publicaciones .form-publicar button:hover {
+    background: var(--primary-dark);
+}

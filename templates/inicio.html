@@ -1,52 +1,14 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% block title %}Inicio | Social UNA{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block body_class %}home-body{% endblock %}
 
-    <title>Inicio | Social UNA</title>
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+{% endblock %}
 
-    <!-- TIPOGRAFÍA -->
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <!-- ESTILOS -->
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/login.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/inicio.css') }}"
-    >
-
-    <!-- JAVASCRIPT -->
-
-    <script
-        src="{{ url_for('static', filename='js/inicio.js') }}"
-        defer>
-    </script>
-
-    <script
-        src="{{ url_for('static', filename='js/notificaciones.js') }}"
-        defer>
-    </script>
-
-</head>
-
-
-<body class="home-body">
-
+{% block contenido %}
     <!-- FONDO DECORATIVO -->
 
     <div class="ambient-light light-one"></div>
@@ -70,7 +32,7 @@
 
             <a
                 class="social-brand"
-                href="{{ url_for('inicio_feed') }}"
+                href="{{ url_for('inicio.inicio_feed') }}"
             >
                 <span class="social-brand-symbol">S</span>
 
@@ -88,7 +50,7 @@
 
                 <a
                     class="header-action"
-                    href="{{ url_for('amigos') }}#descubrir"
+                    href="{{ url_for('amistades.amigos') }}#descubrir"
                     title="Buscar estudiantes"
                     aria-label="Buscar estudiantes"
                 >
@@ -108,7 +70,7 @@
 
                 <a
                     class="header-action notification-action"
-                    href="{{ url_for('amigos') }}#solicitudes"
+                    href="{{ url_for('amistades.amigos') }}#solicitudes"
                     title="Ver solicitudes de amistad"
                     aria-label="Ver solicitudes de amistad"
                 >
@@ -166,7 +128,7 @@
 
                 <a
                     class="header-avatar"
-                    href="{{ url_for('perfil') }}"
+                    href="{{ url_for('perfil.perfil') }}"
                     title="Mi perfil"
                     aria-label="Mi perfil"
                 >
@@ -197,7 +159,7 @@
 
                     <a
                         class="social-menu-link is-active"
-                        href="{{ url_for('inicio_feed') }}"
+                        href="{{ url_for('inicio.inicio_feed') }}"
                         aria-current="page"
                     >
                         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -214,7 +176,7 @@
 
                     <a
                         class="social-menu-link"
-                        href="{{ url_for('amigos') }}"
+                        href="{{ url_for('amistades.amigos') }}"
                     >
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <circle cx="9" cy="8" r="3"/>
@@ -231,7 +193,7 @@
 
                     <a
                         class="social-menu-link"
-                        href="{{ url_for('perfil') }}"
+                        href="{{ url_for('perfil.perfil') }}"
                     >
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <circle cx="12" cy="8" r="4"/>
@@ -246,7 +208,7 @@
 
                     <a
                         class="social-menu-link"
-                        href="{{ url_for('editar_perfil') }}"
+                        href="{{ url_for('perfil.editar_perfil') }}"
                     >
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <circle cx="12" cy="12" r="3"/>
@@ -270,7 +232,7 @@
                     </span>
 
                     <a
-                        href="{{ url_for('logout') }}"
+                        href="{{ url_for('autenticacion.logout') }}"
                         class="logout-link"
                     >
                         Cerrar sesión
@@ -470,7 +432,7 @@
 
                         <a
                             class="primary-link"
-                            href="{{ url_for('amigos') }}#descubrir"
+                            href="{{ url_for('amistades.amigos') }}#descubrir"
                         >
                             Encontrar estudiantes
                         </a>
@@ -552,7 +514,7 @@
 
                     <a
                         class="see-more"
-                        href="{{ url_for('amigos') }}#descubrir"
+                        href="{{ url_for('amistades.amigos') }}#descubrir"
                     >
                         Descubrir personas →
                     </a>
@@ -569,6 +531,9 @@
         </div>
 
     </div>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/inicio.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/notificaciones.js') }}" defer></script>
+{% endblock %}

@@ -1,36 +1,16 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% block title %}Social UNA | Recuperar contraseña{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block meta %}
     <meta name="theme-color" content="#f1f5fc">
+{% endblock %}
 
-    <title>Social UNA | Recuperar contraseña</title>
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recuperacion.css') }}">
+{% endblock %}
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/login.css') }}">
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/recuperacion.css') }}">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <script
-        src="{{ url_for('static', filename='js/recuperacion.js') }}"
-        defer
-    ></script>
-</head>
-
-<body>
-
+{% block contenido %}
     <!-- Luces decorativas -->
     <div class="ambient-light light-one"></div>
     <div class="ambient-light light-two"></div>
@@ -43,7 +23,7 @@
             <!-- Encabezado -->
             <header class="recovery-header">
 
-                <a href="{{ url_for('inicio') }}" class="recovery-brand">
+                <a href="{{ url_for('autenticacion.inicio') }}" class="recovery-brand">
                     <div class="brand-icon">S</div>
                     <span>Social <strong>UNA</strong></span>
                 </a>
@@ -126,7 +106,7 @@
                 <!-- Formulario de recuperación -->
                 <form
                     method="POST"
-                    action="{{ url_for('solicitar_recuperacion') }}"
+                    action="{{ url_for('autenticacion.solicitar_recuperacion') }}"
                 >
 
                     <div class="form-group">
@@ -176,7 +156,7 @@
 
                 <!-- Volver al login -->
                 <div class="recovery-return">
-                    <a href="{{ url_for('inicio') }}">
+                    <a href="{{ url_for('autenticacion.inicio') }}">
                         ← Volver al inicio de sesión
                     </a>
                 </div>
@@ -192,6 +172,8 @@
         </section>
 
     </main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/recuperacion.js') }}" defer></script>
+{% endblock %}

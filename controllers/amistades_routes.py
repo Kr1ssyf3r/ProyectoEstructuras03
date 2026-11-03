@@ -1,13 +1,25 @@
-"""Rutas de amistades para integrarse sin reemplazar app.py."""
+"""Blueprint del módulo de amistades."""
 import hmac
 import secrets
 
-from flask import (abort,flash,jsonify,redirect,render_template,request,session,url_for)
-from services.amistadService import AmistadService
+from flask import (
+    Blueprint,
+    abort,
+    flash,
+    jsonify,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
+
+from controllers.decorators import requiere_sesion
 
 
-def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
-    amistad_service = AmistadService(usuario_service=usuario_service)
+def crear_amistades_blueprint(usuario_service, amistad_service):
+    """Construye el Blueprint de amistades con sus dependencias."""
+    bp = Blueprint("amistades", __name__)
 
     def csrf_token():
         if 'csrf_amigos' not in session:
@@ -21,10 +33,14 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             abort(400, description='Formulario inválido o expirado.')
 
     def volver(tab, q=''):
-        destino = url_for('amigos', q=q) if q else url_for('amigos')
+        destino = (
+            url_for('amistades.amigos', q=q)
+            if q
+            else url_for('amistades.amigos')
+        )
         return redirect(f'{destino}#{tab}')
 
-    @app.get('/amigos')
+    @bp.get('/amigos')
     @requiere_sesion
     def amigos(usuario):
         q = request.args.get('q', '').strip()[:100]
@@ -73,23 +89,19 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
                 })
 
         return render_template(
-    'amigos.html',
-    amigos=amistad_service.obtener_amigos(usuario.id),
-    recibidas=recibidas,
-    enviadas=enviadas,
-    resultados=resultados,
-    recomendaciones=recomendaciones_detalladas,
+            'amigos.html',
+            amigos=amistad_service.obtener_amigos(usuario.id),
+            recibidas=recibidas,
+            enviadas=enviadas,
+            resultados=resultados,
+            recomendaciones=recomendaciones_detalladas,
+            # Usuarios que la cuenta activa tiene bloqueados.
+            bloqueados=amistad_service.obtener_usuarios_bloqueados(usuario.id),
+            q=q,
+            csrf_token=csrf_token(),
+        )
 
-    # ---------------------------------------
-    # APARTADO DE BLOQUEOS
-    # ---------------------------------------
-    #obtenemos los usuarios que bloqueo la cuenta activa
-    #para mostrarlos en la pestaña de bloqueados
-    bloqueados=amistad_service.obtener_usuarios_bloqueados(usuario.id),
-    q=q,
-    csrf_token=csrf_token(),)
-
-    @app.post('/amigos/solicitar/<id_receptor>')
+    @bp.post('/amigos/solicitar/<id_receptor>')
     @requiere_sesion
     def amigos_solicitar(usuario, id_receptor):
         validar_csrf()
@@ -101,7 +113,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             flash(str(exc), 'error')
         return volver('descubrir', q)
 
-    @app.post('/amigos/aceptar/<id_solicitud>')
+    @bp.post('/amigos/aceptar/<id_solicitud>')
     @requiere_sesion
     def amigos_aceptar(usuario, id_solicitud):
         validar_csrf()
@@ -112,7 +124,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             flash(str(exc), 'error')
         return volver('solicitudes')
 
-    @app.post('/amigos/rechazar/<id_solicitud>')
+    @bp.post('/amigos/rechazar/<id_solicitud>')
     @requiere_sesion
     def amigos_rechazar(usuario, id_solicitud):
         validar_csrf()
@@ -123,7 +135,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             flash(str(exc), 'error')
         return volver('solicitudes')
 
-    @app.post('/amigos/cancelar/<id_solicitud>')
+    @bp.post('/amigos/cancelar/<id_solicitud>')
     @requiere_sesion
     def amigos_cancelar(usuario, id_solicitud):
         validar_csrf()
@@ -134,7 +146,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             flash(str(exc), 'error')
         return volver('solicitudes')
 
-    @app.post('/amigos/eliminar/<id_amigo>')
+    @bp.post('/amigos/eliminar/<id_amigo>')
     @requiere_sesion
     def amigos_eliminar(usuario, id_amigo):
         validar_csrf()
@@ -149,7 +161,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
     # ---------------------------------------
     # APARTADO DE BLOQUEOS
     # ---------------------------------------
-    @app.post('/amigos/bloquear/<id_bloqueado>')
+    @bp.post('/amigos/bloquear/<id_bloqueado>')
     @requiere_sesion
     def amigos_bloquear(usuario, id_bloqueado):
         #validamos el token csrf para evitar que otra pagina pueda
@@ -171,7 +183,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
 
         return volver('descubrir', q)
 
-    @app.post('/amigos/desbloquear/<id_bloqueado>')
+    @bp.post('/amigos/desbloquear/<id_bloqueado>')
     @requiere_sesion
     def amigos_desbloquear(usuario, id_bloqueado):
         #validamos el token csrf antes de modificar los bloqueos
@@ -193,7 +205,7 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
     # API - NOTIFICACIONES DE SOLICITUDES DE AMISTAD
     # ============================================================
 
-    @app.get("/api/amistades/notificaciones")
+    @bp.get("/api/amistades/notificaciones")
     @requiere_sesion
     def notificaciones_amistades(usuario):
         """
@@ -211,4 +223,4 @@ def registrar_rutas_amistades(app, usuario_service, requiere_sesion):
             "cantidad": len(recibidas)
         })
 
-    return amistad_service
+    return bp

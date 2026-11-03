@@ -1,38 +1,13 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Editar perfil | Social UNA{% endblock %}
 
-    <title>Editar perfil | Social UNA</title>
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editar_perfil.css') }}">
+{% endblock %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/login.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/perfil.css') }}"
-    >
-
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/editar_perfil.css') }}"
-    >
-</head>
-
-<body>
-
+{% block contenido %}
     <div class="ambient-light light-one"></div>
     <div class="ambient-light light-two"></div>
     <div class="ambient-light light-three"></div>
@@ -41,7 +16,7 @@
 
         <header class="profile-header">
 
-            <a href="{{ url_for('perfil') }}" class="brand">
+            <a href="{{ url_for('perfil.perfil') }}" class="brand">
                 <span class="brand-icon">S</span>
                 <span>Social UNA</span>
             </a>
@@ -115,7 +90,7 @@
                 {% endif %}
 
                 <form method="POST"
-                      action="{{ url_for('editar_perfil') }}">
+                      action="{{ url_for('perfil.editar_perfil') }}">
 
                     <div class="form-group">
                         <label for="nombre">Nombre completo</label>
@@ -173,7 +148,7 @@
                             <span>Guardar cambios</span>
                         </button>
 
-                        <a href="{{ url_for('perfil') }}"
+                        <a href="{{ url_for('perfil.perfil') }}"
                            class="cancel-edit">
                             Cancelar
                         </a>
@@ -192,7 +167,9 @@
 
     </main>
 
-    <script src="{{ url_for('static', filename='js/editar_perfil.js') }}"></script>
+    
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/editar_perfil.js') }}"></script>
+{% endblock %}

@@ -1,35 +1,16 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Social UNA | Iniciar sesión{% endblock %}
 
+{% block meta %}
     <meta name="theme-color" content="#f1f5fc">
+{% endblock %}
 
-    <title>Social UNA | Iniciar sesión</title>
+{% block estilos %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
 
-    <link
-        rel="stylesheet"
-        href="{{ url_for('static', filename='css/login.css') }}"
-    >
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <script
-        src="{{ url_for('static', filename='js/login.js') }}"
-        defer
-    ></script>
-</head>
-
-<body>
-
+{% block contenido %}
     <!-- Luces decorativas del fondo -->
     <div class="ambient-light light-one"></div>
     <div class="ambient-light light-two"></div>
@@ -164,7 +145,7 @@
                 {% endif %}
 
 
-                <form method="POST" action="{{ url_for('login') }}">
+                <form method="POST" action="{{ url_for('autenticacion.login') }}">
 
                     <div class="form-group">
 
@@ -261,7 +242,7 @@
 
                     <!-- Recuperación de contraseña -->
                     <div class="forgot-password">
-                        <a href="{{ url_for('solicitar_recuperacion') }}">
+                        <a href="{{ url_for('autenticacion.solicitar_recuperacion') }}">
                             ¿Olvidaste tu contraseña?
                         </a>
                     </div>
@@ -285,7 +266,7 @@
                 <div class="register-section">
                     <span>¿Todavía no tienes una cuenta?</span>
 
-                    <a href="{{ url_for('registro') }}">
+                    <a href="{{ url_for('autenticacion.registro') }}">
                         Crear una cuenta
                     </a>
                 </div>
@@ -301,6 +282,8 @@
         </section>
 
     </main>
+{% endblock %}
 
-</body>
-</html>
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/login.js') }}" defer></script>
+{% endblock %}

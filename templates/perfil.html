@@ -1,20 +1,12 @@
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="es" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi perfil | Social UNA</title>
+{% block title %}Mi perfil | Social UNA{% endblock %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
-</head>
+{% endblock %}
 
-<body>
+{% block contenido %}
     <div class="ambient-light light-one"></div>
     <div class="ambient-light light-two"></div>
     <div class="ambient-light light-three"></div>
@@ -22,7 +14,7 @@
     <main class="profile-container">
 
         <header class="profile-header">
-            <a href="{{ url_for('perfil') }}" class="brand">
+            <a href="{{ url_for('perfil.perfil') }}" class="brand">
                 <span class="brand-icon">S</span>
                 <span>Social UNA</span>
             </a>
@@ -135,12 +127,12 @@
                     </div>
                 </div>
 
-                <a href="{{ url_for('editar_perfil') }}" class="profile-edit">
+                <a href="{{ url_for('perfil.editar_perfil') }}" class="profile-edit">
                     Editar perfil
                     <span aria-hidden="true">→</span>
                 </a>
                 
-                <a href="{{ url_for('logout') }}" class="profile-logout">
+                <a href="{{ url_for('autenticacion.logout') }}" class="profile-logout">
                     Cerrar sesión
                     <span aria-hidden="true">→</span>
                 </a>
@@ -153,6 +145,9 @@
 
     </main>
 
+    
+{% endblock %}
+
+{% block scripts %}
     <script src="{{ url_for('static', filename='js/perfil.js') }}"></script>
-</body>
-</html>
+{% endblock %}

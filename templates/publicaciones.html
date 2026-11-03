@@ -54,7 +54,28 @@
                         <span>@{{ usuario.usuario }} · {{ p.fecha.strftime('%d/%m/%Y %H:%M') }}</span>
                     </div>
                 </div>
-                <p class="post-text">{{ p.contenido }}</p>
+                   {% if p.id == editando %}
+                    <form class="form-publicar" method="post"
+                          action="{{ url_for('publicaciones.editar', id_publicacion=p.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <textarea name="contenido" rows="3" maxlength="500" required>{{ p.contenido }}</textarea>
+                        <div class="acciones-post">
+                            <a class="btn-cancelar" href="{{ url_for('publicaciones.muro') }}">Cancelar</a>
+                            <button type="submit">Guardar</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="post-text">{{ p.contenido }}</p>
+                    <div class="acciones-post">
+                        <a class="btn-editar" href="{{ url_for('publicaciones.muro', editar=p.id) }}">Editar</a>
+                        <form method="post"
+                              action="{{ url_for('publicaciones.eliminar', id_publicacion=p.id) }}"
+                              onsubmit="return confirm('¿Eliminar esta publicación?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <button type="submit" class="btn-eliminar">Eliminar</button>
+                        </form>
+                    </div>
+                {% endif %}
             </article>
         {% else %}
             <section class="empty-feed">

@@ -1,0 +1,18 @@
+/* Todo va dentro de .vista-publicaciones para no afectar otras pantallas.
+   Los colores salen de las variables de global.css. */
+
+.vista-publicaciones .muro-contenido {
+    margin: 0 auto;
+    padding: 34px 30px 46px;
+}
+
+.vista-publicaciones .volver-inicio {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.vista-publicaciones .volver-inicio:hover {
+    color: var(--primary-dark);
+}

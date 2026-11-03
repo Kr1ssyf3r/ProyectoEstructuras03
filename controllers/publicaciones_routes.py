@@ -58,7 +58,8 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
         except ValueError as error:
             flash(str(error), "error")
         return redirect(url_for("publicaciones.muro"))
-        @bp.post("/publicaciones/<int:id_publicacion>/editar")
+
+    @bp.post("/publicaciones/<int:id_publicacion>/editar")
     @requiere_sesion
     def editar(usuario, id_publicacion):
         validar_csrf()
@@ -83,5 +84,5 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
         except ValueError as error:
             flash(str(error), "error")
         return redirect(url_for("publicaciones.muro"))
-    
+
     return bp

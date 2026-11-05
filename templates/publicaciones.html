@@ -32,19 +32,34 @@
             </div>
             <span class="feed-greeting">{{ publicaciones | length }} en total</span>
         </div>
+
         {% with mensajes = get_flashed_messages(with_categories=true) %}
             {% for categoria, texto in mensajes %}
                 <div class="{{ 'success-message' if categoria == 'success' else 'error-message' }}">{{ texto }}</div>
             {% endfor %}
         {% endwith %}
 
-        <form class="form-publicar" method="post" action="{{ url_for('publicaciones.crear') }}">
+        <form class="form-publicar" method="post" enctype="multipart/form-data"
+              action="{{ url_for('publicaciones.crear') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
             <textarea name="contenido" rows="3" maxlength="500"
                       placeholder="¿Qué estás pensando, {{ usuario.nombre.split()[0] }}?" required></textarea>
-            <button type="submit">Publicar</button>
+            <div class="fila-publicar">
+                <label class="adjuntar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <path d="m21 15-5-5L5 21"/>
+                    </svg>
+                    <span class="nombre-archivo">Foto o video</span>
+                    <input type="file" name="archivo" hidden
+                           accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm"
+                           onchange="this.parentNode.querySelector('.nombre-archivo').textContent = this.files[0] ? this.files[0].name : 'Foto o video'">
+                </label>
+                <button type="submit">Publicar</button>
+            </div>
         </form>
-        
+
         {% for p in publicaciones %}
             <article class="post-card">
                 <div class="post-author">
@@ -54,7 +69,7 @@
                         <span>@{{ usuario.usuario }} · {{ p.fecha.strftime('%d/%m/%Y %H:%M') }}</span>
                     </div>
                 </div>
-                   {% if p.id == editando %}
+                {% if p.id == editando %}
                     <form class="form-publicar" method="post"
                           action="{{ url_for('publicaciones.editar', id_publicacion=p.id) }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
@@ -66,6 +81,13 @@
                     </form>
                 {% else %}
                     <p class="post-text">{{ p.contenido }}</p>
+                    {% if p.archivo %}
+                        {% if p.tipo_archivo == 'imagen' %}
+                            <img class="post-media" src="{{ url_for('publicaciones.media', nombre=p.archivo) }}" alt="Imagen de la publicación">
+                        {% else %}
+                            <video class="post-media" controls preload="metadata" src="{{ url_for('publicaciones.media', nombre=p.archivo) }}"></video>
+                        {% endif %}
+                    {% endif %}
                     <div class="acciones-post">
                         <a class="btn-editar" href="{{ url_for('publicaciones.muro', editar=p.id) }}">Editar</a>
                         <form method="post"

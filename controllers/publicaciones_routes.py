@@ -1,5 +1,6 @@
 """Blueprint del módulo de publicaciones."""
 import hmac
+import os
 import secrets
 
 from flask import (
@@ -9,6 +10,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    send_from_directory,
     session,
     url_for,
 )
@@ -32,6 +34,11 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
         if not esperado or not hmac.compare_digest(esperado, recibido):
             abort(400, description="Formulario inválido o expirado.")
 
+    @bp.app_context_processor
+    def inyectar_csrf():
+        # Deja csrf_publicaciones() disponible en cualquier template (la usa Inicio)
+        return {"csrf_publicaciones": csrf_token}
+
     @bp.get("/publicaciones")
     @requiere_sesion
     def muro(usuario):
@@ -52,12 +59,21 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
         validar_csrf()
         try:
             publicacion_service.crear_publicacion(
-                usuario.id, request.form.get("contenido", "")
+                usuario.id,
+                request.form.get("contenido", ""),
+                request.files.get("archivo"),
             )
             flash("Publicación creada.", "success")
         except ValueError as error:
             flash(str(error), "error")
         return redirect(url_for("publicaciones.muro"))
+
+    @bp.get("/publicaciones/media/<nombre>")
+    @requiere_sesion
+    def media(usuario, nombre):
+        # Entrega la foto o video guardado (solo a usuarios con sesión)
+        carpeta = os.path.abspath(publicacion_service.carpeta_media)
+        return send_from_directory(carpeta, nombre)
 
     @bp.post("/publicaciones/<id_publicacion>/editar")
     @requiere_sesion

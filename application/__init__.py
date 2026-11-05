@@ -46,7 +46,7 @@ def create_app(test_config=None):
     )
     correo_service = CorreoService()
     amistad_service = AmistadService(usuario_service=usuario_service)
-    publicacion_service = PublicacionService()
+    publicacion_service = PublicacionService(usuario_service=usuario_service)
 
     app.extensions["social_una"] = {
         "usuario_repository": usuario_repository,

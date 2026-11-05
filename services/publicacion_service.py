@@ -1,62 +1,85 @@
+import re
+import unicodedata
+import uuid
+
 from models.publicacion import Publicacion
 from repositories.publicacion_repository import PublicacionRepository
 
-MAX_LONGITUD = 500   #máximo de caracteres por publicación
+MAX_LONGITUD = 500   # máximo de caracteres por publicación
+
+# Palabras que no se permiten (en minúscula y sin tildes). Agregá las que quieran.
+PALABRAS_PROHIBIDAS = {"idiota", "estupido", "imbecil"}
+
+
+def _sin_tildes(texto):
+    # "estúpido" -> "estupido", para comparar sin importar las tildes
+    normal = unicodedata.normalize("NFD", texto)
+    return "".join(c for c in normal if unicodedata.category(c) != "Mn")
 
 
 class PublicacionService:
-    def __init__(self, repositorio=None):
+    def __init__(self, usuario_service, repositorio=None):
+        self.usuario_service = usuario_service
         self.repositorio = repositorio or PublicacionRepository()
 
-        #Lista en memoria con todas las publicaciones (se llena desde el archivo)
-        self.publicaciones = self.repositorio.cargar()
+        # Diccionario 1: id de la publicación -> objeto Publicacion completo
+        self.publicaciones_por_id = {}
+        # Diccionario 2: id del usuario -> set con los ids de SUS publicaciones
+        self.ids_por_usuario = {}
 
-        #El próximo id es el más alto que exista + 1
-        self._siguiente_id = 1
-        for p in self.publicaciones:
-            if p.id >= self._siguiente_id:
-                self._siguiente_id = p.id + 1
+        for p in self.repositorio.cargar():
+            self._indexar(p)
 
-    # ---------- Reglas internas (lógica) ----------
+    # ---------- Reglas internas ----------
+
+    def _indexar(self, publicacion):
+        # Anota la publicación en los dos diccionarios
+        self.publicaciones_por_id[publicacion.id] = publicacion
+        self.ids_por_usuario.setdefault(publicacion.autor_id, set()).add(publicacion.id)
 
     def _validar_contenido(self, contenido):
-        #Quita espacios sobrantes y revisa las reglas
+        # Quita espacios sobrantes y revisa las reglas
         contenido = (contenido or "").strip()
         if not contenido:
             raise ValueError("La publicación no puede estar vacía.")
         if len(contenido) > MAX_LONGITUD:
             raise ValueError(f"La publicación no puede superar {MAX_LONGITUD} caracteres.")
+        # Evita código malicioso (XSS): no se permiten etiquetas HTML como <script>
+        if re.search(r"<\s*/?\s*[a-zA-Z!]", contenido):
+            raise ValueError("La publicación no puede contener etiquetas HTML.")
+        # Palabras inapropiadas
+        palabras = re.findall(r"\w+", _sin_tildes(contenido.casefold()))
+        if any(palabra in PALABRAS_PROHIBIDAS for palabra in palabras):
+            raise ValueError("La publicación contiene palabras inapropiadas.")
         return contenido
 
     def _guardar(self):
-        #Se llama después de cada cambio para que nada se pierda al cerrar
-        self.repositorio.guardar(self.publicaciones)
+        # Se llama después de cada cambio para que nada se pierda al cerrar
+        self.repositorio.guardar(list(self.publicaciones_por_id.values()))
 
     def obtener_publicacion(self, id_publicacion):
-        #Devuelve la publicación con ese id, o None si no existe
-        for p in self.publicaciones:
-            if p.id == id_publicacion:
-                return p
-        return None
+        # Devuelve la publicación con ese id, o None si no existe (búsqueda directa)
+        return self.publicaciones_por_id.get(id_publicacion)
 
     # ---------- Métodos que usan las pantallas y los demás módulos ----------
 
     def crear_publicacion(self, autor_id, contenido):
+        # Primero comprobamos que el usuario exista de verdad
+        if self.usuario_service.obtener_usuario(autor_id) is None:
+            raise ValueError("El usuario no existe.")
         contenido = self._validar_contenido(contenido)
-        nueva = Publicacion(self._siguiente_id, autor_id, contenido)
-        self._siguiente_id += 1
-        self.publicaciones.append(nueva)
+        # uuid4 genera un id único que nunca se repite, aunque se borren publicaciones
+        nueva = Publicacion(str(uuid.uuid4()), autor_id, contenido)
+        self._indexar(nueva)
         self._guardar()
         return nueva
 
     def obtener_publicaciones_usuario(self, autor_id):
-        #Junta solo las publicaciones de ese autor
-        propias = []
-        for p in self.publicaciones:
-            if p.autor_id == autor_id:
-                propias.append(p)
-        #Ordena de la más reciente a la más antigua (si la fecha es igual, desempata el id)
-        return sorted(propias, key=lambda p: (p.fecha, p.id), reverse=True)
+        # Con el diccionario 2 sacamos los ids de ese usuario sin recorrer todo
+        ids = self.ids_por_usuario.get(autor_id, set())
+        propias = [self.publicaciones_por_id[i] for i in ids]
+        # Ordena de la más reciente a la más antigua
+        return sorted(propias, key=lambda p: p.fecha, reverse=True)
 
     def editar_publicacion(self, id_publicacion, usuario_id, nuevo_contenido):
         publicacion = self.obtener_publicacion(id_publicacion)
@@ -74,5 +97,7 @@ class PublicacionService:
             raise ValueError("La publicación no existe.")
         if publicacion.autor_id != usuario_id:
             raise ValueError("Solo puedes eliminar tus propias publicaciones.")
-        self.publicaciones.remove(publicacion)
+        # Se quita de los dos diccionarios
+        del self.publicaciones_por_id[id_publicacion]
+        self.ids_por_usuario[usuario_id].discard(id_publicacion)
         self._guardar()

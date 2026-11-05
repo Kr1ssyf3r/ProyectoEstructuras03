@@ -37,7 +37,7 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
     def muro(usuario):
         publicaciones = publicacion_service.obtener_publicaciones_usuario(usuario.id)
         # Si la dirección trae ?editar=3, esa tarjeta se muestra como formulario
-        editando = request.args.get("editar", type=int)
+        editando = request.args.get("editar")
         return render_template(
             "publicaciones.html",
             usuario=usuario,
@@ -59,7 +59,7 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
             flash(str(error), "error")
         return redirect(url_for("publicaciones.muro"))
 
-    @bp.post("/publicaciones/<int:id_publicacion>/editar")
+    @bp.post("/publicaciones/<id_publicacion>/editar")
     @requiere_sesion
     def editar(usuario, id_publicacion):
         validar_csrf()
@@ -74,7 +74,7 @@ def crear_publicaciones_blueprint(publicacion_service, usuario_service):
             return redirect(url_for("publicaciones.muro", editar=id_publicacion))
         return redirect(url_for("publicaciones.muro"))
 
-    @bp.post("/publicaciones/<int:id_publicacion>/eliminar")
+    @bp.post("/publicaciones/<id_publicacion>/eliminar")
     @requiere_sesion
     def eliminar(usuario, id_publicacion):
         validar_csrf()

@@ -31,3 +31,6 @@ htmlcov/
 # Sistema operativo
 .DS_Store
 Thumbs.db
+
+# Fotos y videos subidos por los usuarios
+data/uploads/

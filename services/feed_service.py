@@ -8,10 +8,10 @@ from models.usuario import Usuario
 
 @dataclass(frozen=True)
 class TarjetaFeed:
-    """Una puplicacion lista para pintar en el feed."""
+    """Una publicacion lista para pintar en el feed."""
 
     publicacion: Publicacion
-    usuario: Usuario
+    autor: Usuario
     cantidad_me_gusta: int
     yo_di_me_gusta: bool
 
@@ -24,19 +24,17 @@ class FeedService:
         amistad_service,
         publicacion_service,
         reaccion_service,
-        usuario_service=None,
     ):
         self.amistad_service = amistad_service
         self.publicacion_service = publicacion_service
         self.reaccion_service = reaccion_service
-        self.usuario_service = usuario_service
 
     def _autores_visibles(self, usuario):
         """Devuelve {id: Usuario} con el propio usuario y sus amigos."""
 
         autores = {usuario.id: usuario}
 
-        for amigo in self.amistad_service.amigos(usuario.id):
+        for amigo in self.amistad_service.obtener_amigos(usuario.id):
             autores[amigo.id] = amigo
 
         return autores
@@ -58,7 +56,7 @@ class FeedService:
         return [
             TarjetaFeed(
                 publicacion=publicacion,
-                usuario=autores[publicacion.autor_id],
+                autor=autores[publicacion.autor_id],
                 cantidad_me_gusta=self.reaccion_service.contar_me_gusta(publicacion.id),
                 yo_di_me_gusta=self.reaccion_service.ya_dio_me_gusta(usuario.id, publicacion.id)
             )
@@ -67,9 +65,6 @@ class FeedService:
 
     def construir_feed(self, usuario, limite=None):
         """Feed del usuario: de la publicación más reciente a la más antigua."""
-
-        if self.usuario_service is not None and self.usuario_service.obtener_usuario(usuario.id) is None:
-            raise ValueError("No se encontró el usuario")
 
         autores = self._autores_visibles(usuario)
 

@@ -7,6 +7,8 @@ from controllers.autenticacion_routes import autenticacion_bp
 from controllers.inicio_routes import inicio_bp
 from controllers.perfil_routes import perfil_bp
 from controllers.amistades_routes import crear_amistades_blueprint
+from controllers.publicaciones_routes import crear_publicaciones_blueprint
+from services.publicacion_service import PublicacionService
 from repositories.token_repository import TokenRepository
 from repositories.usuario_repository import UsuarioRepository
 from services.amistadService import AmistadService
@@ -44,6 +46,7 @@ def create_app(test_config=None):
     )
     correo_service = CorreoService()
     amistad_service = AmistadService(usuario_service=usuario_service)
+    publicacion_service = PublicacionService(usuario_service=usuario_service)
 
     app.extensions["social_una"] = {
         "usuario_repository": usuario_repository,
@@ -52,6 +55,7 @@ def create_app(test_config=None):
         "recuperacion_service": recuperacion_service,
         "correo_service": correo_service,
         "amistad_service": amistad_service,
+        "publicacion_service": publicacion_service,
     }
 
     # Registrar los Blueprints de cada módulo.
@@ -60,6 +64,9 @@ def create_app(test_config=None):
     app.register_blueprint(inicio_bp)
     app.register_blueprint(
         crear_amistades_blueprint(usuario_service, amistad_service)
+    )
+    app.register_blueprint(
+        crear_publicaciones_blueprint(publicacion_service, usuario_service)
     )
 
     return app

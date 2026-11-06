@@ -1,0 +1,191 @@
+/* =========================================
+   MURO PERSONAL - PUBLICACIONES
+   Todo va dentro de .vista-publicaciones para no afectar otras pantallas.
+   Los colores salen de las variables de global.css.
+========================================= */
+
+.vista-publicaciones .muro-contenido {
+    margin: 0 auto;
+    padding: 34px 30px 46px;
+}
+
+.vista-publicaciones .volver-inicio {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.vista-publicaciones .volver-inicio:hover {
+    color: var(--primary-dark);
+}
+
+.vista-publicaciones .form-publicar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.vista-publicaciones .form-publicar textarea {
+    width: 100%;
+    resize: vertical;
+    padding: 12px;
+    font: inherit;
+    color: var(--text);
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.vista-publicaciones .form-publicar textarea:focus {
+    outline: none;
+    box-shadow: var(--input-focus);
+}
+
+.vista-publicaciones .form-publicar button {
+    align-self: flex-end;
+    padding: 10px 22px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.vista-publicaciones .form-publicar button:hover {
+    background: var(--primary-dark);
+}
+
+.vista-publicaciones .acciones-post {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.vista-publicaciones .acciones-post form {
+    margin: 0;
+}
+
+.vista-publicaciones .btn-editar,
+.vista-publicaciones .btn-cancelar {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.vista-publicaciones .btn-editar:hover,
+.vista-publicaciones .btn-cancelar:hover {
+    color: var(--primary-dark);
+}
+
+.vista-publicaciones .btn-eliminar {
+    padding: 0;
+    font: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--error-text);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.vista-publicaciones .btn-eliminar:hover {
+    text-decoration: underline;
+}
+
+/* Subir foto o video */
+.vista-publicaciones .fila-publicar,
+.composer-publicar .fila-publicar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.vista-publicaciones .adjuntar,
+.composer-publicar .adjuntar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    color: var(--muted);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.vista-publicaciones .adjuntar:hover,
+.composer-publicar .adjuntar:hover {
+    color: var(--primary);
+}
+
+.vista-publicaciones .adjuntar svg,
+.composer-publicar .adjuntar svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+}
+
+.vista-publicaciones .adjuntar .nombre-archivo,
+.composer-publicar .adjuntar .nombre-archivo {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vista-publicaciones .post-media {
+    display: block;
+    width: 100%;
+    max-height: 420px;
+    margin-top: 12px;
+    object-fit: contain;
+    background: var(--input);
+    border-radius: 12px;
+}
+
+/* Publicar desde Inicio */
+.composer-publicar .create-post-top {
+    align-items: flex-start;
+}
+
+.composer-publicar textarea {
+    flex: 1;
+    min-width: 0;
+    resize: vertical;
+    padding: 12px;
+    font: inherit;
+    color: var(--text);
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.composer-publicar textarea:focus {
+    outline: none;
+    box-shadow: var(--input-focus);
+}
+
+.composer-publicar button {
+    padding: 10px 22px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.composer-publicar button:hover {
+    background: var(--primary-dark);
+}

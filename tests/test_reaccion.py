@@ -1,5 +1,6 @@
 import pytest
 from models.reaccion import Reaccion
+from repositories.reaccion_repository import ReaccionRepository
 
 @pytest.fixture
 def reaccion():

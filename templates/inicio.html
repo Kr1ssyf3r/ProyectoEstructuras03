@@ -347,13 +347,23 @@
                      PUBLICACIONES
                 ================================== -->
 
-                <div class="feed-section-header">
+            <div class="feed-section-header">
 
-                    <h2>Publicaciones</h2>
+                <h2>Publicaciones</h2>
 
+                <div class="feed-acciones">
                     <span>Tu comunidad</span>
 
-                </div>
+                    <a class="btn-actualizar" href="{{ url_for('inicio.inicio_feed') }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        Actualizar
+                    </a>
+            </div>
+
+        </div>
 
 
                 {% if tarjetas %}

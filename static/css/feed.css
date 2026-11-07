@@ -55,3 +55,56 @@
     outline: 2px solid var(--color-me-gusta);
     outline-offset: 2px;
 }
+
+/* ===== Botón de actualizar el feed ===== */
+
+.feed-acciones {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-actualizar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-actualizar svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.btn-actualizar:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-actualizar:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* El giro del icono solo se aplica si el usuario no pidió reducir animaciones. */
+@media (prefers-reduced-motion: no-preference) {
+    .btn-actualizar svg {
+        transition: transform 0.4s ease;
+    }
+
+    .btn-actualizar:hover svg {
+        transform: rotate(180deg);
+    }
+}

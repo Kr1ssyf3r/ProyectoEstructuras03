@@ -2,6 +2,7 @@
 from datetime import datetime, timedelta
 
 import pytest
+import re
 
 from application import create_app
 
@@ -153,3 +154,23 @@ def test_inicio_sin_sesion_redirige(app):
     respuesta = app.test_client().get("/inicio")
 
     assert respuesta.status_code == 302
+
+def test_inicio_tiene_boton_para_actualizar_el_feed(app, ana):
+    html = cliente_de(app, ana).get("/inicio").get_data(as_text=True)
+
+    boton = re.search(r"<a[^>]*btn-actualizar[^>]*>", html)
+
+    assert boton is not None
+    assert 'href="/inicio"' in boton.group(0)
+
+
+def test_publicacion_nueva_aparece_al_actualizar(app, servicios, ana, luis):
+    cliente = cliente_de(app, ana)
+
+    assert "publicación nueva" not in texto_de(cliente.get("/inicio"))
+
+    servicios["publicacion_service"].crear_publicacion(
+        luis.id, "publicación nueva"
+    )
+
+    assert "publicación nueva" in texto_de(cliente.get("/inicio"))

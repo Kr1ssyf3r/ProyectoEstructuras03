@@ -30,6 +30,8 @@ def crear_feed_blueprint(reaccion_service):
         except ValueError as error:
             flash(str(error), "error")
 
-        return redirect(url_for("inicio.inicio_feed"))
+        return redirect(
+            url_for("inicio.inicio_feed", _anchor=f"post-{id_publicacion}")
+        )
 
     return bp

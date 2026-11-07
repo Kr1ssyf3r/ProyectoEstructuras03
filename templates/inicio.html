@@ -410,9 +410,15 @@
                     type="submit"
                     class="btn-me-gusta{% if tarjeta.yo_di_me_gusta %} activo{% endif %}"
                     aria-pressed="{{ 'true' if tarjeta.yo_di_me_gusta else 'false' }}"
-                >
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+
+                <span>
                     {{ 'Quitar me gusta' if tarjeta.yo_di_me_gusta else 'Me gusta' }}
                     · {{ tarjeta.cantidad_me_gusta }}
+                </span>
                 </button>
             </form>
 

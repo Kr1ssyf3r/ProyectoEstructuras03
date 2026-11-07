@@ -1,11 +1,19 @@
 /* feed.css - Estilos del botón de "Me gusta" del feed (módulo de reacciones).
    Usa las variables de global.css, así que funciona en tema claro y oscuro. */
 
+/* Color del corazón cuando el usuario ya dio "Me gusta". */
+:root {
+    --color-me-gusta: #e0245e;
+}
+
 .form-me-gusta {
     margin-top: 12px;
 }
 
 .btn-me-gusta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 16px;
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -14,22 +22,36 @@
     font: inherit;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Corazón: solo contorno por defecto; hereda el color del texto. */
+.btn-me-gusta svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .btn-me-gusta:hover {
-    border-color: var(--primary);
-    color: var(--primary);
+    border-color: var(--color-me-gusta);
+    color: var(--color-me-gusta);
 }
 
-/* Estado activo: el usuario ya dio "Me gusta". */
+/* Estado activo: el usuario ya dio "Me gusta" -> corazón relleno. */
 .btn-me-gusta.activo {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #ffffff;
+    border-color: var(--color-me-gusta);
+    color: var(--color-me-gusta);
+}
+
+.btn-me-gusta.activo svg {
+    fill: currentColor;
 }
 
 .btn-me-gusta:focus-visible {
-    outline: 2px solid var(--primary);
+    outline: 2px solid var(--color-me-gusta);
     outline-offset: 2px;
 }

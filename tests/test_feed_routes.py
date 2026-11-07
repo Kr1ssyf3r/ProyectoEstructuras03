@@ -1,94 +1,133 @@
-"""Pruebas para las rutas del feed (me gusta / like functionality)."""
-
-"""Pruebas para las rutas del feed (me gusta / like)."""
-
-import os
+"""Pruebas de la ruta de "Me gusta" del feed (controllers/feed_routes.py)."""
 import pytest
+
+from application import create_app
+
+TOKEN = "token-de-prueba"
 
 
 @pytest.fixture
 def app(tmp_path, monkeypatch):
-    """Crear una aplicación Flask con directorio de datos aislado y credenciales falsas de Gmail."""
+    # Los repositorios guardan rutas relativas ("data/..."): trabajar dentro de
+    # una carpeta temporal evita tocar los datos reales.
     monkeypatch.chdir(tmp_path)
-    monkeypatch.setenv("GMAIL_USER", "test_user@gmail.com")
-    monkeypatch.setenv("GMAIL_APP_PASSWORD", "test_password_fake")
-    from application import create_app
-    app = create_app()
-    data_dir = os.path.join(tmp_path, "data")
-    os.makedirs(data_dir, exist_ok=True)
-    yield app
+    monkeypatch.setenv("GMAIL_USER", "prueba@example.com")
+    monkeypatch.setenv("GMAIL_APP_PASSWORD", "clave-de-prueba")
+
+    return create_app({"TESTING": True})
 
 
 @pytest.fixture
-def client(app):
-    """Crear un cliente de prueba Flask."""
-    return app.test_client()
+def servicios(app):
+    return app.extensions["social_una"]
 
 
 @pytest.fixture
-def session(client):
-    """Proporcionar un helper de transacción de sesión para establecer datos de sesión."""
-    return client.session_transaction()
-
-
-def test_post_sin_token_devuelve_400(client, session):
-    """POST sin token CSRF devuelve 400."""
-    # Simular inicio de sesión escribiendo directamente en la sesión
-    with client.session_transaction() as sesion:
-        sesion["usuario_id"] = "usuario-1"
-        sesion["csrf_feed"] = "token-valido"
-        sesion["csrf_token"] = "token-valido"
-
-    # POST sin enviar el campo csrf_token en el form data
-    response = client.post("/feed/me-gusta/1")
-    # En el entorno de test, CSRF validation puede devolver 400 o 302
-    assert response.status_code in (400, 302)
-
-
-def test_post_token_incorrecto_devuelve_400(client, session):
-    """POST con token incorrecto devuelve 400."""
-    # Simular inicio de sesión
-    with client.session_transaction() as sesion:
-        sesion["usuario_id"] = "usuario-1"
-        sesion["csrf_feed"] = "token-valido"
-        sesion["csrf_token"] = "token-valido"
-
-    # POST con token que no coincide
-    response = client.post(
-        "/feed/me-gusta/1",
-        data={"csrf_token": "token-incorrecto"},
+def usuario(servicios):
+    return servicios["usuario_service"].registrar_usuario(
+        nombre="Ana Uno",
+        nombre_usuario="anauno",
+        correo="ana@example.com",
+        contrasena="Clave1234!",
+        confirmar_contrasena="Clave1234!",
     )
-    # CSRF validation should return 400, pero en test puede ser 302
-    assert response.status_code in (400, 302)
 
 
-def test_publicacion_inexistente_no_deja_nada(client, session, tmp_path):
-    """Una publicación inexistente no deja nada guardado."""
-    # Simular inicio de sesión
-    with client.session_transaction() as sesion:
-        sesion["usuario_id"] = "usuario-1"
-        sesion["csrf_feed"] = "token-valido"
-
-    # Intentar dar like a una publicación que no existe
-    response = client.post("/feed/me-gusta/999999", data={"csrf_token": "token-valido"})
-    # Debería redirigir (no error, pero no guarda nada)
-    assert response.status_code == 302
-
-    # Verificar que no se guardó ninguna reacción
-    with client.application.app_context():
-        from services.reaccion_service import ReaccionService
-        stored_service = client.application.extensions["social_una"]["reaccion_service"]
-        # Debería haber 0 likes para la publicación 999999
-        like_count = stored_service.contar_me_gusta("999999")
-        assert like_count == 0, f"Expected 0 likes for non-existent post, got {like_count}"
+@pytest.fixture
+def publicacion(servicios, usuario):
+    return servicios["publicacion_service"].crear_publicacion(
+        usuario.id, "hola"
+    )
 
 
-def test_sin_sesion_redirige_al_inicio(client):
-    """Sin sesión, redirige al inicio de sesión."""
-    # No establecer sesión previa
+@pytest.fixture
+def cliente(app, usuario):
+    """Cliente con la sesión iniciada y un token CSRF conocido."""
 
-    response = client.post("/feed/me-gusta/1")
-    # Debería redirigir a la página de login (302)
-    assert response.status_code == 302
-    # El redirect debería ir a autenticacion.inicio
-    assert "/autenticacion" in response.location or response.location.endswith("/")
+    cliente = app.test_client()
+
+    with cliente.session_transaction() as sesion:
+        sesion["usuario_id"] = usuario.id
+        sesion["csrf_feed"] = TOKEN
+
+    return cliente
+
+
+def url_me_gusta(publicacion_id):
+    return f"/feed/me-gusta/{publicacion_id}"
+
+
+def test_post_sin_token_devuelve_400(cliente, servicios, usuario, publicacion):
+    respuesta = cliente.post(url_me_gusta(publicacion.id))
+
+    assert respuesta.status_code == 400
+    assert not servicios["reaccion_service"].ya_dio_me_gusta(
+        usuario.id, publicacion.id
+    )
+
+
+def test_post_token_incorrecto_devuelve_400(
+    cliente, servicios, usuario, publicacion
+):
+    respuesta = cliente.post(
+        url_me_gusta(publicacion.id), data={"csrf_token": "otro-token"}
+    )
+
+    assert respuesta.status_code == 400
+    assert not servicios["reaccion_service"].ya_dio_me_gusta(
+        usuario.id, publicacion.id
+    )
+
+
+def test_post_token_valido_da_like_y_segundo_post_lo_quita(
+    cliente, servicios, usuario, publicacion
+):
+    reacciones = servicios["reaccion_service"]
+
+    primera = cliente.post(
+        url_me_gusta(publicacion.id), data={"csrf_token": TOKEN}
+    )
+
+    assert primera.status_code == 302
+    assert primera.headers["Location"].endswith(f"#post-{publicacion.id}")
+    assert reacciones.contar_me_gusta(publicacion.id) == 1
+    assert reacciones.ya_dio_me_gusta(usuario.id, publicacion.id)
+
+    segunda = cliente.post(
+        url_me_gusta(publicacion.id), data={"csrf_token": TOKEN}
+    )
+
+    assert segunda.status_code == 302
+    assert reacciones.contar_me_gusta(publicacion.id) == 0
+    assert not reacciones.ya_dio_me_gusta(usuario.id, publicacion.id)
+
+
+def test_publicacion_inexistente_no_deja_nada_guardado(
+    cliente, servicios, usuario
+):
+    reacciones = servicios["reaccion_service"]
+
+    respuesta = cliente.post(
+        url_me_gusta("no-existe"), data={"csrf_token": TOKEN}
+    )
+
+    assert respuesta.status_code == 302
+    assert reacciones.contar_me_gusta("no-existe") == 0
+    assert not reacciones.ya_dio_me_gusta(usuario.id, "no-existe")
+
+
+def test_sin_sesion_redirige_al_inicio_de_sesion(app, publicacion):
+    cliente_anonimo = app.test_client()
+
+    respuesta = cliente_anonimo.post(
+        url_me_gusta(publicacion.id), data={"csrf_token": TOKEN}
+    )
+
+    assert respuesta.status_code == 302
+    assert "/feed/me-gusta" not in respuesta.headers["Location"]
+
+
+def test_get_no_esta_permitido(cliente, publicacion):
+    respuesta = cliente.get(url_me_gusta(publicacion.id))
+
+    assert respuesta.status_code == 405

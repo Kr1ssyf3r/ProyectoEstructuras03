@@ -108,3 +108,44 @@
         transform: rotate(180deg);
     }
 }
+
+/* ===== Filtro por autor ===== */
+
+/* Nombre del autor en la tarjeta: enlace que no se ve como enlace hasta pasar el mouse. */
+.enlace-autor {
+    color: inherit;
+    text-decoration: none;
+}
+
+.enlace-autor:hover {
+    text-decoration: underline;
+}
+
+/* Aviso "Mostrando solo las publicaciones de ..." */
+.aviso-filtro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.aviso-filtro strong {
+    color: var(--text);
+}
+
+.aviso-filtro a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.aviso-filtro a:hover {
+    text-decoration: underline;
+}

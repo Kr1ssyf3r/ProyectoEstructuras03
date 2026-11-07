@@ -285,6 +285,12 @@
 
                 </div>
 
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
+                    {% for categoria, texto in mensajes %}
+                        <div class="{{ 'success-message' if categoria == 'success' else 'error-message' }}">{{ texto }}</div>
+                    {% endfor %}
+                {% endwith %}
+
 
                 <!-- =================================
                      CREACIÓN DE PUBLICACIONES
@@ -354,7 +360,7 @@
                 <div class="feed-acciones">
                     <span>Tu comunidad</span>
 
-                    <a class="btn-actualizar" href="{{ url_for('inicio.inicio_feed') }}">
+                    <a class="btn-actualizar" href="{{ url_for('inicio.inicio_feed', autor=autor_filtrado.id if autor_filtrado else none) }}">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <polyline points="23 4 23 10 17 10"/>
                             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
@@ -364,6 +370,17 @@
             </div>
 
         </div>
+
+        {% if autor_filtrado %}
+            <div class="aviso-filtro">
+                <span>
+                    Mostrando solo las publicaciones de
+                    <strong>{{ autor_filtrado.nombre }}</strong>
+                </span>
+
+                <a href="{{ url_for('inicio.inicio_feed') }}">Ver todas</a>
+            </div>
+        {% endif %}
 
 
                 {% if tarjetas %}
@@ -383,8 +400,11 @@
 
                 <div>
 
-                    <strong>
-                        {{ tarjeta.autor.nombre }}
+                    <<strong>
+                        <a
+                            class="enlace-autor"
+                            href="{{ url_for('inicio.inicio_feed', autor=tarjeta.autor.id) }}"
+                        >{{ tarjeta.autor.nombre }}</a>
                     </strong>
 
                     <span>
@@ -465,24 +485,38 @@
                         </div>
 
 
-                        <h3>
-                            Aquí comenzarán las conversaciones
-                        </h3>
+                        {% if autor_filtrado %}
 
+                            <h3>
+                                {{ autor_filtrado.nombre }} todavía no ha publicado
+                            </h3>
 
-                        <p>
-                            Todavía no hay publicaciones. Publica algo
+                            <p>
+                                Cuando publique algo, aparecerá aquí.
+                            </p>
+
+                            <a class="primary-link" href="{{ url_for('inicio.inicio_feed') }}">
+                                Ver todas
+                            </a>
+
+                        {% else %}
+
+                            <h3>Aquí comenzarán las conversaciones</h3>
+
+                            <p>
+                                Todavía no hay publicaciones. Publica algo
                             o conecta con otros estudiantes para ver
                             las suyas aquí.
-                        </p>
+                            </p>
 
+                            <a
+                                class="primary-link"
+                                href="{{ url_for('amistades.amigos') }}#descubrir"
+                            >
+                                Encontrar estudiantes
+                            </a>
 
-                        <a
-                            class="primary-link"
-                            href="{{ url_for('amistades.amigos') }}#descubrir"
-                        >
-                            Encontrar estudiantes
-                        </a>
+                        {% endif %}
 
                     </section>
 

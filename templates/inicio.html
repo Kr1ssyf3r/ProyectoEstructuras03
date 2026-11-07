@@ -7,6 +7,7 @@
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/feed.css') }}">
 {% endblock %}
 
 {% block contenido %}
@@ -355,43 +356,69 @@
                 </div>
 
 
-                {% if publicaciones %}
+                {% if tarjetas %}
 
                     <!-- PUBLICACIONES DISPONIBLES -->
 
-                    {% for item in publicaciones %}
+    {% for tarjeta in tarjetas %}
+        {% set publicacion = tarjeta.publicacion %}
 
-                        <article class="post-card">
+        <article class="post-card" id="post-{{ publicacion.id }}">
 
-                            <div class="post-author">
+            <div class="post-author">
 
-                                <span class="feed-avatar small">
-                                    {{ item.autor.nombre[:1] | upper }}
-                                </span>
+                <span class="feed-avatar small">
+                {{ tarjeta.autor.nombre[:1] | upper }}
+                </span>
 
+                <div>
 
-                                <div>
+                    <strong>
+                        {{ tarjeta.autor.nombre }}
+                    </strong>
 
-                                    <strong>
-                                        {{ item.autor.nombre }}
-                                    </strong>
+                    <span>
+                    @{{ tarjeta.autor.usuario }} · {{ publicacion.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </span>
 
-                                    <span>
-                                        @{{ item.autor.usuario }}
-                                    </span>
+                </div>
 
-                                </div>
+            </div>
 
-                            </div>
+            {% if publicacion.contenido %}
+                <p class="post-text">
+                    {{ publicacion.contenido }}
+                </p>
+            {% endif %}
 
+            {% if publicacion.archivo %}
+                {% if publicacion.tipo_archivo == 'imagen' %}
+                    <img class="post-media" src="{{ url_for('publicaciones.media', nombre=publicacion.archivo) }}" alt="Imagen de la publicación">
+                {% else %}
+                    <video class="post-media" controls preload="metadata" src="{{ url_for('publicaciones.media', nombre=publicacion.archivo) }}"></video>
+                {% endif %}
+            {% endif %}
 
-                            <p class="post-text">
-                                {{ item.contenido }}
-                            </p>
+            <form
+                class="form-me-gusta"
+                method="post"
+                action="{{ url_for('feed.alternar_me_gusta', id_publicacion=publicacion.id) }}"
+            >
+                <input type="hidden" name="csrf_token" value="{{ csrf_feed() }}">
 
-                        </article>
+                <button
+                    type="submit"
+                    class="btn-me-gusta{% if tarjeta.yo_di_me_gusta %} activo{% endif %}"
+                    aria-pressed="{{ 'true' if tarjeta.yo_di_me_gusta else 'false' }}"
+                >
+                    {{ 'Quitar me gusta' if tarjeta.yo_di_me_gusta else 'Me gusta' }}
+                    · {{ tarjeta.cantidad_me_gusta }}
+                </button>
+            </form>
 
-                    {% endfor %}
+        </article>
+
+{% endfor %}
 
 
                 {% else %}
@@ -428,11 +455,9 @@
 
 
                         <p>
-                            Las publicaciones aparecerán aquí cuando
-                            el módulo del feed esté integrado.
-
-                            Mientras tanto, podés conectar con
-                            otros estudiantes.
+                            Todavía no hay publicaciones. Publica algo
+                            o conecta con otros estudiantes para ver
+                            las suyas aquí.
                         </p>
 
 

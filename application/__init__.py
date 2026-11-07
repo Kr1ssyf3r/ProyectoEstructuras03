@@ -18,6 +18,7 @@ from services.usuario_service import UsuarioService
 from repositories.reaccion_repository import ReaccionRepository
 from services.reaccion_service import ReaccionService
 from services.feed_service import FeedService
+from controllers.feed_routes import crear_feed_blueprint
 
 
 def create_app(test_config=None):
@@ -86,5 +87,6 @@ def create_app(test_config=None):
     app.register_blueprint(
         crear_publicaciones_blueprint(publicacion_service, usuario_service)
     )
+    app.register_blueprint(crear_feed_blueprint(reaccion_service))
 
     return app

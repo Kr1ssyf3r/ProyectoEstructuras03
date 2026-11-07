@@ -1,0 +1,35 @@
+/* feed.css - Estilos del botón de "Me gusta" del feed (módulo de reacciones).
+   Usa las variables de global.css, así que funciona en tema claro y oscuro. */
+
+.form-me-gusta {
+    margin-top: 12px;
+}
+
+.btn-me-gusta {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-me-gusta:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Estado activo: el usuario ya dio "Me gusta". */
+.btn-me-gusta.activo {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+.btn-me-gusta:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}

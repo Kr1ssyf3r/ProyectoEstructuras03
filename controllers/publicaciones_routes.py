@@ -18,7 +18,7 @@ from flask import (
 from controllers.decorators import requiere_sesion
 
 
-def crear_publicaciones_blueprint(publicacion_service, usuario_service):
+def crear_publicaciones_blueprint(publicacion_service):
     bp = Blueprint("publicaciones", __name__)
 
     def csrf_token():

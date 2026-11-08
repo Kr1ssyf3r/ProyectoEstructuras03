@@ -66,7 +66,7 @@ def create_app(test_config=None):
         crear_amistades_blueprint(usuario_service, amistad_service)
     )
     app.register_blueprint(
-        crear_publicaciones_blueprint(publicacion_service, usuario_service)
+        crear_publicaciones_blueprint(publicacion_service)
     )
 
     return app

@@ -1,5 +1,6 @@
 import json
 import os
+import tempfile
 
 from models.publicacion import Publicacion
 
@@ -18,9 +19,18 @@ class PublicacionRepository:
         for p in publicaciones:
             datos.append(p.to_dict())
 
-        #Escribe la lista en el archivo JSON
-        with open(self.ruta, "w", encoding="utf-8") as archivo:
-            json.dump(datos, archivo, ensure_ascii=False, indent=2)
+        #Escritura segura: primero se escribe en un archivo temporal...
+        descriptor, ruta_temporal = tempfile.mkstemp(dir=carpeta or ".", suffix=".tmp")
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as archivo:
+                json.dump(datos, archivo, ensure_ascii=False, indent=2)
+            #...y solo si todo salió bien, reemplaza al archivo original de un solo paso
+            os.replace(ruta_temporal, self.ruta)
+        except Exception:
+            #Si algo falla, borra el temporal y el archivo original queda intacto
+            if os.path.exists(ruta_temporal):
+                os.remove(ruta_temporal)
+            raise
 
     def cargar(self):
         #Si el archivo no existe, devuelve una lista vacía

@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import pytest
+
 from models.publicacion import Publicacion
 from repositories.publicacion_repository import PublicacionRepository
 
@@ -50,3 +52,31 @@ def test_cargar_publicaciones_viejas_sin_foto(tmp_path):
 
     assert cargadas[0].archivo is None
     assert cargadas[0].tipo_archivo is None
+
+
+def test_guardar_no_deja_archivos_temporales(tmp_path):
+    repositorio = PublicacionRepository(str(tmp_path / "publicaciones.json"))
+
+    repositorio.guardar([Publicacion("id-1", "autor-1", "Hola")])
+
+    assert [archivo.name for archivo in tmp_path.iterdir()] == ["publicaciones.json"]
+
+
+def test_si_falla_el_guardado_el_archivo_original_queda_intacto(tmp_path, monkeypatch):
+    repositorio = PublicacionRepository(str(tmp_path / "publicaciones.json"))
+    repositorio.guardar([Publicacion("id-1", "autor-1", "Original")])
+
+    # Se simula un fallo a mitad de la escritura
+    def escritura_que_falla(*args, **kwargs):
+        raise OSError("fallo simulado")
+
+    monkeypatch.setattr("repositories.publicacion_repository.json.dump", escritura_que_falla)
+
+    with pytest.raises(OSError):
+        repositorio.guardar([Publicacion("id-2", "autor-1", "Nuevo")])
+
+    monkeypatch.undo()
+    cargadas = repositorio.cargar()
+    assert len(cargadas) == 1
+    assert cargadas[0].contenido == "Original"
+    assert [archivo.name for archivo in tmp_path.iterdir()] == ["publicaciones.json"]

@@ -18,9 +18,19 @@
             <span>Social <strong>UNA</strong></span>
         </a>
 
-        <a class="volver-inicio" href="{{ url_for('inicio.inicio_feed') }}">
-            ← Volver al inicio
-        </a>
+        <div class="social-top-actions">
+            <a class="volver-inicio" href="{{ url_for('inicio.inicio_feed') }}">
+                ← Volver al inicio
+            </a>
+
+            <!-- CAMBIAR TEMA -->
+            <button type="button" id="themeToggle" class="header-action" aria-label="Cambiar tema">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
+                </svg>
+            </button>
+        </div>
     </header>
 
     <main class="social-feed muro-contenido">
@@ -112,4 +122,6 @@
 </div>
 {% endblock %}
 
-
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/publicaciones.js') }}" defer></script>
+{% endblock %}

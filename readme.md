@@ -90,6 +90,67 @@ Actualmente contempla dos tipos de mensajes:
 
 El servicio utiliza SMTP SSL mediante el servidor `smtp.gmail.com` y el puerto `465`.
 
+### 7. Feed y reacciones
+
+Este módulo contempla el feed de la pantalla de Inicio y las reacciones a las publicaciones. El feed muestra las publicaciones del usuario y las de sus amigos, de la más reciente a la más antigua, y permite dar y quitar "Me gusta", actualizar el feed y filtrar las publicaciones por autor.
+
+Se apoya en los servicios de otros módulos: `usuario_service` (validar que el estudiante existe), `amistad_service` (obtener los amigos) y `publicacion_service` (obtener las publicaciones de cada autor).
+
+**Feed**
+- Muestra las publicaciones propias y las de los amigos.
+- Ordena las publicaciones de la más reciente a la más antigua, mezclando autores distintos.
+- Limita la cantidad de tarjetas mostradas (`LIMITE_FEED`, actualmente 20).
+- Cada tarjeta muestra el autor, la fecha, el texto, la foto o el video, la cantidad de "Me gusta" y si el usuario activo ya dio el suyo.
+- Se recalcula en cada petición, por lo que siempre refleja las publicaciones, las amistades y los "Me gusta" actuales.
+
+**Reacciones ("Me gusta")**
+- Dar y quitar "Me gusta" con un solo botón (con corazón).
+- Un usuario no puede reaccionar dos veces a la misma publicación.
+- Dar el mismo "Me gusta" dos veces o quitar uno que no existe no produce errores.
+- No se permite reaccionar con un usuario inexistente ni a una publicación inexistente.
+- Los "Me gusta" se guardan en `data/reacciones.json` y se reconstruyen al iniciar la aplicación.
+
+**Actualizar y filtrar**
+- Botón **Actualizar**, que vuelve a pedir el feed (y conserva el filtro si hay uno activo).
+- Filtro por autor mediante `/inicio?autor=<id>`: se activa al pulsar el nombre de un autor en una tarjeta y se desactiva con "Ver todas".
+- Solo se puede filtrar por el propio usuario o por sus amigos. Cualquier otro identificador se rechaza con un aviso.
+
+**Mensajes en Inicio**
+
+La pantalla de Inicio muestra los mensajes `flash` (por ejemplo, el aviso de que no se pudo dar un "Me gusta"), que antes no se mostraban.
+
+## Estructuras de datos
+
+### Reacciones (`ReaccionRepository`)
+
+| Estructura | Contenido | Para qué sirve |
+|---|---|---|
+| Diccionario principal | `(usuario_id, publicacion_id)` → `Reaccion` | Fuente de datos. La clave identifica de forma única cada reacción, así que los duplicados se evitan por construcción |
+| Diccionario de conjuntos | `publicacion_id` → conjunto de `usuario_id` | Saber cuántos "Me gusta" tiene una publicación |
+| Diccionario de conjuntos | `usuario_id` → conjunto de `publicacion_id` | Saber a qué publicaciones reaccionó un usuario |
+
+Los dos diccionarios de conjuntos son índices: se construyen a partir del principal y se actualizan siempre juntos. Con ellos, comprobar si existe una reacción, contar los "Me gusta" de una publicación y consultar las publicaciones de un usuario son operaciones de costo casi constante.
+
+### Feed (`FeedService`)
+
+- Los autores visibles se guardan en un diccionario `id` → `Usuario` (el propio usuario y sus amigos), para obtener el nombre del autor de cada tarjeta con una búsqueda directa.
+- Cada autor entrega sus publicaciones ya ordenadas de la más reciente a la más antigua, y se combinan con `heapq.merge` (mezcla de listas ordenadas) en lugar de reordenar todo.
+- `itertools.islice` limita el resultado. Como la mezcla es perezosa, solo se calculan los "Me gusta" de las tarjetas que realmente se muestran.
+
+## Persistencia
+
+Las reacciones se guardan en `data/reacciones.json` como una lista de objetos:
+
+```json
+[
+    {
+        "usuario_id": "...",
+        "publicacion_id": "...",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-07T10:30:00"
+    }
+]
+
 ## Estructura de archivos relacionados
 
 ```text
@@ -99,20 +160,29 @@ ProyectoEstructuras03/
 │
 ├── models/
 │   ├── usuario.py
-│   └── token_recuperacion.py
+│   ├── token_recuperacion.py
+│   └── reaccion.py
 │
 ├── repositories/
 │   ├── usuario_repository.py
-│   └── token_repository.py
+│   ├── token_repository.py
+│   └── reaccion_repository.py
 │
 ├── services/
 │   ├── usuario_service.py
 │   ├── recuperacion_service.py
-│   └── correo_service.py
+│   ├── correo_service.py
+│   ├── reaccion_service.py
+│   └── feed_service.py
+│
+├── controllers/
+│   ├── feed_routes.py
+│   └── csrf.py
 │
 ├── data/
 │   ├── usuarios.json
-│   └── tokens_recuperacion.json
+│   ├── tokens_recuperacion.json
+│   └── reacciones.json          (se genera al ejecutar)
 │
 ├── templates/
 │   ├── login.html
@@ -122,21 +192,30 @@ ProyectoEstructuras03/
 │   ├── perfil.html
 │   └── editar_perfil.html
 │
-└── static/
-    ├── css/
-    │   ├── login.css
-    │   ├── registro.css
-    │   ├── recuperacion.css
-    │   ├── restablecer.css
-    │   ├── perfil.css
-    │   └── editar_perfil.css
-    │
-    └── js/
-        ├── login.js
-        ├── registro.js
-        ├── recuperacion.js
-        ├── perfil.js
-        └── editar_perfil.js
+├── static/
+│   ├── css/
+│   │   ├── login.css
+│   │   ├── registro.css
+│   │   ├── recuperacion.css
+│   │   ├── restablecer.css
+│   │   ├── perfil.css
+│   │   ├── editar_perfil.css
+│   │   └── feed.css
+│   │
+│   └── js/
+│       ├── login.js
+│       ├── registro.js
+│       ├── recuperacion.js
+│       ├── perfil.js
+│       └── editar_perfil.js
+│
+└── tests/
+    ├── test_reaccion.py
+    ├── test_reaccion_repository.py
+    ├── test_reaccion_service.py
+    ├── test_feed_service.py
+    ├── test_feed_routes.py
+    └── test_inicio_feed.py
 ```
 
 ## Tecnologías utilizadas
@@ -273,6 +352,15 @@ Entre los escenarios que pueden contemplarse durante las pruebas se encuentran:
 - Restablecimiento de contraseñas.
 - Envío de correos de bienvenida y recuperación.
 
+Escenarios cubiertos por el módulo de Feed y Reacciones:
+
+-Validación del modelo Reaccion (campos vacíos, tipos incorrectos, tipo y fecha inválidos) y conversión a diccionario y de vuelta.
+-Repositorio: agregar, eliminar, duplicados, consultas, persistencia entre repositorios, pares repetidos en el archivo y deshacer en memoria cuando falla el guardado.
+-Servicio de reacciones: dar, quitar y alternar, usuario o publicación inexistentes.
+-Feed: publicaciones propias y de amigos, exclusión de desconocidos, orden, límite, filtro por autor y usuario inexistente.
+-Ruta de "Me gusta": token CSRF ausente o incorrecto, dar y quitar, redirección a la misma tarjeta y acceso sin sesión.
+-Pantalla de Inicio: contenido y orden del feed, botón de "Me gusta", botón de actualizar, filtro por autor y mensajes de error.
+
 ## Consideraciones de seguridad
 
 - Evitar almacenar contraseñas en texto plano.
@@ -282,6 +370,8 @@ Entre los escenarios que pueden contemplarse durante las pruebas se encuentran:
 - Restringir el acceso a las rutas que requieren autenticación.
 - Evitar mostrar los enlaces de recuperación directamente en la interfaz.
 - Utilizar conexiones seguras para el envío de correos.
+-El "Me gusta" modifica datos, así que solo se acepta por POST y exige un token CSRF guardado en la sesión.
+-controllers/csrf.py ofrece obtener_token(clave_sesion) y validar_token(clave_sesion), reutilizables por otros módulos. El feed usa la clave csrf_feed, y las plantillas obtienen el token con csrf_feed().
 
 ## Alcance del módulo
 
@@ -293,5 +383,8 @@ El módulo comprende los componentes relacionados con la gestión de usuarios de
 - Visualización y edición de perfiles.
 - Recuperación y restablecimiento de contraseñas.
 - Envío de correos electrónicos.
+-Feed de Inicio con publicaciones propias y de amigos.
+-Reacciones ("Me gusta") a las publicaciones.
+-Filtro de publicaciones por autor.
 
 Su desarrollo puede ampliarse conforme avance la integración con los demás módulos de la plataforma.

@@ -1,0 +1,11 @@
+# Dependencias de Social UNA
+# Instalación: python -m pip install -r requirements.txt
+
+# Aplicación web
+Flask>=3.1
+
+# Lectura del archivo .env (credenciales de correo)
+python-dotenv>=1.0
+
+# Pruebas automatizadas: python -m pytest -v
+pytest>=7.0

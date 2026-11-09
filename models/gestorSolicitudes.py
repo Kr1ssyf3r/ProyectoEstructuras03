@@ -65,7 +65,7 @@ class GestorSolicitudes:
             #(CAMBIO) antes era self._por_pareja.pop(pareja) sin valor por defecto, y si el indice se desincronizaba
             #por algun motivo lanzaba KeyError y la eliminacion se quedaba a medias.
             #ahora con pop(pareja, None) si la pareja no esta simplemente no hace nada y la limpieza termina bien
-            self._por_pareja.pop(pareja, None)#y se saca esa pareja de ususarios del diccionario de parejas, para que no quede un indice huérfano, es decir que quede una pareja de usuarios sin una solicitud asociada
+            self._por_pareja.pop(pareja, None)#y se saca esa pareja de usuarios del diccionario de parejas, para que no quede un indice huérfano, es decir que quede una pareja de usuarios sin una solicitud asociada
         return solicitud #retorna la solicitud eliminada
 
 

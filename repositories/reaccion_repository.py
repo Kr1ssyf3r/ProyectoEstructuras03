@@ -54,7 +54,7 @@ class ReaccionRepository:
         self._reconstruir_indices()
 
     def guardar_reacciones(self):
-        """Guarda todaslas reacciones usando un archivo temporal"""
+        """Guarda todas las reacciones usando un archivo temporal"""
 
         datos = [
             reaccion.to_dict()
@@ -85,7 +85,7 @@ class ReaccionRepository:
                 os.remove(archivo_temporal)
 
     def _reconstruir_indices(self):
-        """Recosntruye los dos indices apartir de self.reacciones"""
+        """Reconstruye los dos indices apartir de self.reacciones"""
 
         self.likes_por_publicacion = {}
         self.likes_por_usuario = {}
@@ -107,10 +107,10 @@ class ReaccionRepository:
     def _quitar_de_indices(self, reaccion):
         """Elimina una reaccion de los dos indices"""
 
-        ususarios = self.likes_por_publicacion.get(reaccion.publicacion_id)
-        if ususarios is not None:
-            ususarios.discard(reaccion.usuario_id)
-            if not ususarios:
+        usuarios = self.likes_por_publicacion.get(reaccion.publicacion_id)
+        if usuarios is not None:
+            usuarios.discard(reaccion.usuario_id)
+            if not usuarios:
                 del self.likes_por_publicacion[reaccion.publicacion_id]
 
         publicaciones = self.likes_por_usuario.get(reaccion.usuario_id)
@@ -162,7 +162,7 @@ class ReaccionRepository:
         return True
 
     def existe(self, usuario_id, publicacion_id):
-        """Indica si el ususario ya reacciono a la publicacion. Devuelve True o False"""
+        """Indica si el usuario ya reacciono a la publicacion. Devuelve True o False"""
 
         return (usuario_id, publicacion_id) in self.reacciones
 

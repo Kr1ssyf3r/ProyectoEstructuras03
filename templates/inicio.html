@@ -6,6 +6,7 @@
 
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones.css') }}">
 {% endblock %}
 
 {% block contenido %}
@@ -187,7 +188,20 @@
 
                         <span>Amigos</span>
                     </a>
+                    
+                    <!-- MIS PUBLICACIONES -->
 
+                    <a
+                        class="social-menu-link"
+                        href="{{ url_for('publicaciones.muro') }}"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 3h9l4 4v14H6z"/>
+                            <path d="M14 3v5h5M9 13h6M9 17h6"/>
+                        </svg>
+
+                        <span>Mis publicaciones</span>
+                    </a>
 
                     <!-- MI PERFIL -->
 
@@ -278,60 +292,52 @@
                      el módulo de publicaciones.
                 ================================== -->
 
-                <section class="create-post-card">
+                                <section class="create-post-card composer-publicar">
 
-                    <div class="create-post-top">
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                        action="{{ url_for('publicaciones.crear') }}"
+                    >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_publicaciones() }}">
 
-                        <span class="feed-avatar">
-                            {{ usuario.nombre[:1] | upper }}
-                        </span>
+                        <div class="create-post-top">
 
-                        <div class="post-prompt">
-
-                            <span>
-                                ¿Qué quieres compartir,
-                                {{ usuario.nombre.split(' ')[0] }}?
+                            <span class="feed-avatar">
+                                {{ usuario.nombre[:1] | upper }}
                             </span>
 
-                            <small>
-                                Tu próximo espacio para publicar en Social UNA
-                            </small>
+                            <textarea
+                                name="contenido"
+                                rows="2"
+                                maxlength="500"
+                                placeholder="¿Qué quieres compartir, {{ usuario.nombre.split(' ')[0] }}?"
+                            ></textarea>
 
                         </div>
 
-                    </div>
+                        <div class="create-post-bottom">
 
+                            <label class="adjuntar">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path d="m21 15-5-5L5 21"/>
+                                </svg>
+                                <span class="nombre-archivo">Foto o video</span>
+                                <input
+                                    type="file"
+                                    name="archivo"
+                                    hidden
+                                    accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/webm"
+                                    onchange="this.parentNode.querySelector('.nombre-archivo').textContent = this.files[0] ? this.files[0].name : 'Foto o video'"
+                                >
+                            </label>
 
-                    <div class="create-post-bottom">
+                            <button type="submit">Publicar</button>
 
-                        <span class="media-label">
-
-                            <svg viewBox="0 0 24 24" aria-hidden="true">
-
-                                <rect
-                                    x="3"
-                                    y="3"
-                                    width="18"
-                                    height="18"
-                                    rx="2"
-                                />
-
-                                <circle cx="8.5" cy="8.5" r="1.5"/>
-
-                                <path d="m21 15-5-5L5 21"/>
-
-                            </svg>
-
-                            Foto o video
-
-                        </span>
-
-
-                        <span class="coming-soon">
-                            Publicaciones próximamente
-                        </span>
-
-                    </div>
+                        </div>
+                    </form>
 
                 </section>
 

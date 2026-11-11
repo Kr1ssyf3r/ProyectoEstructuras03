@@ -7,6 +7,7 @@
 {% block estilos %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/publicaciones.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/feed.css') }}">
 {% endblock %}
 
 {% block contenido %}
@@ -284,6 +285,12 @@
 
                 </div>
 
+                {% with mensajes = get_flashed_messages(with_categories=true) %}
+                    {% for categoria, texto in mensajes %}
+                        <div class="{{ 'success-message' if categoria == 'success' else 'error-message' }}">{{ texto }}</div>
+                    {% endfor %}
+                {% endwith %}
+
 
                 <!-- =================================
                      CREACIÓN DE PUBLICACIONES
@@ -346,52 +353,108 @@
                      PUBLICACIONES
                 ================================== -->
 
-                <div class="feed-section-header">
+            <div class="feed-section-header">
 
-                    <h2>Publicaciones</h2>
+                <h2>Publicaciones</h2>
 
+                <div class="feed-acciones">
                     <span>Tu comunidad</span>
 
-                </div>
+                    <a class="btn-actualizar" href="{{ url_for('inicio.inicio_feed', autor=autor_filtrado.id if autor_filtrado else none) }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        Actualizar
+                    </a>
+            </div>
+
+        </div>
+
+        {% if autor_filtrado %}
+            <div class="aviso-filtro">
+                <span>
+                    Mostrando solo las publicaciones de
+                    <strong>{{ autor_filtrado.nombre }}</strong>
+                </span>
+
+                <a href="{{ url_for('inicio.inicio_feed') }}">Ver todas</a>
+            </div>
+        {% endif %}
 
 
-                {% if publicaciones %}
+                {% if tarjetas %}
 
                     <!-- PUBLICACIONES DISPONIBLES -->
 
-                    {% for item in publicaciones %}
+    {% for tarjeta in tarjetas %}
+        {% set publicacion = tarjeta.publicacion %}
 
-                        <article class="post-card">
+        <article class="post-card" id="post-{{ publicacion.id }}">
 
-                            <div class="post-author">
+            <div class="post-author">
 
-                                <span class="feed-avatar small">
-                                    {{ item.autor.nombre[:1] | upper }}
-                                </span>
+                <span class="feed-avatar small">
+                {{ tarjeta.autor.nombre[:1] | upper }}
+                </span>
 
+                <div>
 
-                                <div>
+                    <<strong>
+                        <a
+                            class="enlace-autor"
+                            href="{{ url_for('inicio.inicio_feed', autor=tarjeta.autor.id) }}"
+                        >{{ tarjeta.autor.nombre }}</a>
+                    </strong>
 
-                                    <strong>
-                                        {{ item.autor.nombre }}
-                                    </strong>
+                    <span>
+                    @{{ tarjeta.autor.usuario }} · {{ publicacion.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </span>
 
-                                    <span>
-                                        @{{ item.autor.usuario }}
-                                    </span>
+                </div>
 
-                                </div>
+            </div>
 
-                            </div>
+            {% if publicacion.contenido %}
+                <p class="post-text">
+                    {{ publicacion.contenido }}
+                </p>
+            {% endif %}
 
+            {% if publicacion.archivo %}
+                {% if publicacion.tipo_archivo == 'imagen' %}
+                    <img class="post-media" src="{{ url_for('publicaciones.media', nombre=publicacion.archivo) }}" alt="Imagen de la publicación">
+                {% else %}
+                    <video class="post-media" controls preload="metadata" src="{{ url_for('publicaciones.media', nombre=publicacion.archivo) }}"></video>
+                {% endif %}
+            {% endif %}
 
-                            <p class="post-text">
-                                {{ item.contenido }}
-                            </p>
+            <form
+                class="form-me-gusta"
+                method="post"
+                action="{{ url_for('feed.alternar_me_gusta', id_publicacion=publicacion.id) }}"
+            >
+                <input type="hidden" name="csrf_token" value="{{ csrf_feed() }}">
 
-                        </article>
+                <button
+                    type="submit"
+                    class="btn-me-gusta{% if tarjeta.yo_di_me_gusta %} activo{% endif %}"
+                    aria-pressed="{{ 'true' if tarjeta.yo_di_me_gusta else 'false' }}"
+                    >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
 
-                    {% endfor %}
+                <span>
+                    {{ 'Quitar me gusta' if tarjeta.yo_di_me_gusta else 'Me gusta' }}
+                    · {{ tarjeta.cantidad_me_gusta }}
+                </span>
+                </button>
+            </form>
+
+        </article>
+
+{% endfor %}
 
 
                 {% else %}
@@ -422,26 +485,38 @@
                         </div>
 
 
-                        <h3>
-                            Aquí comenzarán las conversaciones
-                        </h3>
+                        {% if autor_filtrado %}
 
+                            <h3>
+                                {{ autor_filtrado.nombre }} todavía no ha publicado
+                            </h3>
 
-                        <p>
-                            Las publicaciones aparecerán aquí cuando
-                            el módulo del feed esté integrado.
+                            <p>
+                                Cuando publique algo, aparecerá aquí.
+                            </p>
 
-                            Mientras tanto, podés conectar con
-                            otros estudiantes.
-                        </p>
+                            <a class="primary-link" href="{{ url_for('inicio.inicio_feed') }}">
+                                Ver todas
+                            </a>
 
+                        {% else %}
 
-                        <a
-                            class="primary-link"
-                            href="{{ url_for('amistades.amigos') }}#descubrir"
-                        >
-                            Encontrar estudiantes
-                        </a>
+                            <h3>Aquí comenzarán las conversaciones</h3>
+
+                            <p>
+                                Todavía no hay publicaciones. Publica algo
+                            o conecta con otros estudiantes para ver
+                            las suyas aquí.
+                            </p>
+
+                            <a
+                                class="primary-link"
+                                href="{{ url_for('amistades.amigos') }}#descubrir"
+                            >
+                                Encontrar estudiantes
+                            </a>
+
+                        {% endif %}
 
                     </section>
 

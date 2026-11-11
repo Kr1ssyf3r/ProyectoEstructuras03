@@ -23,11 +23,13 @@ class Publicacion:
         Convierte la publicación en un diccionario simple para guardarla en JSON.
         JSON no entiende objetos datetime, por eso la fecha se guarda como texto.
         """
+        fecha = self.fecha
+        fecha_str = fecha if isinstance(fecha, str) else fecha.isoformat()
         return {
             "id": self.id,
             "autor_id": self.autor_id,
             "contenido": self.contenido,
-            "fecha": self.fecha.isoformat(),   # ej. "2026-10-30T05:51:00"
+            "fecha": fecha_str,
             "archivo": self.archivo,
             "tipo_archivo": self.tipo_archivo,
         }

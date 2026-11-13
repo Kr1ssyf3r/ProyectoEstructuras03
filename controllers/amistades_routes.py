@@ -17,7 +17,7 @@ from flask import (
 from controllers.decorators import requiere_sesion
 
 
-def crear_amistades_blueprint(usuario_service, amistad_service):
+def crear_amistades_blueprint(usuario_service, amistad_service,busqueda_service):#ahora recibe busqueda_service para poder pasarle a amistad_service y que este pueda usarlo para filtrar usuarios bloqueados en el autocompletar
     """Construye el Blueprint de amistades con sus dependencias."""
     bp = Blueprint("amistades", __name__)
 
@@ -223,4 +223,17 @@ def crear_amistades_blueprint(usuario_service, amistad_service):
             "cantidad": len(recibidas)
         })
 
+    # ============================================================
+    # API - AUTOCOMPLETAR BUSQUEDA (TRIE)
+    # ============================================================
+    @bp.get('/amigos/autocompletar')
+    @requiere_sesion
+    def amigos_autocompletar(usuario):
+        """Devuelve sugerencias de usuarios segun el prefijo escrito."""
+        #se corta a 100 caracteres igual que la busqueda normal de /amigos
+        q = request.args.get('q', '').strip()[:100]
+
+        #la ruta solo traduce HTTP: toda la logica (Trie, filtro de bloqueos) vive en BusquedaService
+        return jsonify(busqueda_service.autocompletar(usuario.id, q))
+    
     return bp

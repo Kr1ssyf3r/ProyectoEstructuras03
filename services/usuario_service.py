@@ -14,6 +14,12 @@ class UsuarioService:
     LONGITUD_MINIMA_CONTRASENA = 8
 
     def __init__(self, repositorio=None):
+        #lista de oyentes: objetos que quieren enterarse cuando un usuario se registra o cambia su perfil.
+        #el arbol de prefijos se arma una sola vez al iniciar la app, asi que no se entera solo de los cambios que
+        #se guardan en el json. Si UsuarioService llamara directo a BusquedaService tendria que conocerlo
+        #(y BusquedaService ya conoce a UsuarioService), por eso se usa una lista:
+        #BusquedaService se apunta con suscribir() y UsuarioService solo avisa a todos los de la lista
+        self._oyentes = []
         self.repositorio = (
             repositorio
             if repositorio is not None
@@ -145,6 +151,11 @@ class UsuarioService:
         )
 
         self.repositorio.guardar(usuario)
+        #se llama al nuevo metodo de notificacion para informar a los oyentes que hay un nuevo usuario
+        self._notificar("usuario_registrado", usuario) #el evento se llama igual al metodo de registrarUsuarios propio de busquedaService
+        #asi cuando notificar se ejecuta , busquedaServices ejecuta su metodo usuario_registrado y se entera de que hay un nuevo usuario para indexarlo en el arbol de prefijos
+        #por eso su segundo argumento es el usuario que se acaba de registrar, para que busquedaService lo indexe en su arbol de prefijos
+
 
         return usuario
 
@@ -312,8 +323,26 @@ class UsuarioService:
             )
 
             self.repositorio.actualizar(usuario_actualizado)
-
+            # Notificar a los oyentes sobre la actualización del usuario.
+            self._notificar("usuario_actualizado", usuario_anterior, usuario_actualizado)
             return usuario_actualizado
 
+#--------------------------------------------------------------------
+#      METODOS para notificar a los oyentes de cambios en los usuarios
+#--------------------------------------------------------------------
+    def suscribir(self, oyente):
+        """Registra un objeto que quiere enterarse de altas y cambios."""
+        #la lista guarda a quienes quieren ser avisados (por ejemplo BusquedaService), no guarda los cambios ni nada , solo los objetos que quieren enterarse de cambios
+        self._oyentes.append(oyente)
 
-    
+    def _notificar(self, evento, *args):
+        """Llama al metodo con ese nombre en cada oyente."""
+        #evento es el nombre del metodo como texto ("usuario_registrado") y args son los datos que se le pasan.
+        #getattr busca ese metodo dentro del oyente para poder llamarlo, asi un solo _notificar sirve para cualquier aviso
+        
+        #aqui ocurre la magia, se busca en la lista de oyentes(busquedaService), con getattr se busca un metodo dentro de esa clase que 
+        #coincida con el nombre del evento que se le paso por para metro a _notificar
+        #es decir el metodo de actualizar o registrar y con *args se le pasa los parametros que se agregaron segun el tipo de evento
+        #para el registro el objeto usuario , para la actualizacion el objeto anterior y el nuevo        
+        for oyente in self._oyentes:  #de la lista de servicios que quieren informase de cambios 
+            getattr(oyente, evento)(*args)  

@@ -915,3 +915,32 @@
     }
 
 }
+/* =========================================
+   AUTOCOMPLETAR (TRIE)
+========================================= */
+
+.autocompletar {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+
+    list-style: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.autocompletar li {
+    display: flex;
+    justify-content: space-between;
+    padding: 11px 16px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.autocompletar li:hover { background: var(--input); }
+.autocompletar li span  { color: var(--muted); }

@@ -42,12 +42,12 @@
     text-align: center;
     text-decoration: none;
     font-weight: 600;
-    color: var(--text-secondary, #64748b);
+    color: var(--muted);
     transition: color 0.2s ease;
 }
 
 .cancel-edit:hover {
-    color: var(--primary, #4967d5);
+    color: var(--primary);
 }
 
 /* =========================================

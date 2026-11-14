@@ -51,15 +51,15 @@
     align-self: flex-end;
     padding: 10px 22px;
     font-weight: 700;
-    color: #fff;
-    background: var(--primary);
+    color: var(--on-action);
+    background: var(--action);
     border: none;
     border-radius: 10px;
     cursor: pointer;
 }
 
 .vista-publicaciones .form-publicar button:hover {
-    background: var(--primary-dark);
+    background: var(--action-hover);
 }
 
 .vista-publicaciones .acciones-post {
@@ -179,13 +179,13 @@
 .composer-publicar button {
     padding: 10px 22px;
     font-weight: 700;
-    color: #fff;
-    background: var(--primary);
+    color: var(--on-action);
+    background: var(--action);
     border: none;
     border-radius: 10px;
     cursor: pointer;
 }
 
 .composer-publicar button:hover {
-    background: var(--primary-dark);
+    background: var(--action-hover);
 }

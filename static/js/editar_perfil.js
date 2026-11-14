@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const documento = document.documentElement;
 
     // Recuperar el tema guardado.
-    const temaGuardado = localStorage.getItem("socialuna-theme");
+    const temaGuardado = localStorage.getItem("social-una-theme");
 
     if (temaGuardado) {
         documento.setAttribute("data-theme", temaGuardado);
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             documento.setAttribute("data-theme", nuevoTema);
 
             localStorage.setItem(
-                "socialuna-theme",
+                "social-una-theme",
                 nuevoTema
             );
 

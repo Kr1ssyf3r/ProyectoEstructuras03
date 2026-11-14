@@ -71,8 +71,9 @@ def crear_publicaciones_blueprint(publicacion_service):
     @bp.get("/publicaciones/media/<nombre>")
     @requiere_sesion
     def media(usuario, nombre):
-        # Entrega la foto o video guardado (solo a usuarios con sesión)
-        carpeta = os.path.abspath(publicacion_service.carpeta_media)
+        # Entrega la foto o video guardado (solo a usuarios con sesión).
+        # La carpeta ahora vive en MultimediaService, no en PublicacionService.
+        carpeta = os.path.abspath(publicacion_service.multimedia_service.carpeta_media)
         return send_from_directory(carpeta, nombre)
 
     @bp.post("/publicaciones/<id_publicacion>/editar")

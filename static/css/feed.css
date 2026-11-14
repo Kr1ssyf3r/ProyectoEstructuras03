@@ -1,11 +1,7 @@
 /* feed.css - Estilos del botón de "Me gusta" del feed (módulo de reacciones).
    Usa las variables de global.css, así que funciona en tema claro y oscuro. */
 
-/* Color del corazón cuando el usuario ya dio "Me gusta". */
-:root {
-    --color-me-gusta: #e0245e;
-}
-
+/* El color del corazón (--color-me-gusta) se define en global.css. */
 .form-me-gusta {
     margin-top: 12px;
 }

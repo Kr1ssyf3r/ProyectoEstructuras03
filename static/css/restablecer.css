@@ -53,8 +53,8 @@
     display: grid;
     place-items: center;
     border-radius: 12px;
-    background: var(--primary);
-    color: white;
+    background: var(--action-gradient);
+    color: var(--on-action);
     font-size: 20px;
 }
 
@@ -80,18 +80,18 @@
 
 /* Estados */
 .password-state {
-    background: rgba(52, 120, 246, 0.11);
+    background: var(--primary-soft);
     color: var(--primary);
 }
 
 .success-state {
-    background: rgba(22, 163, 106, 0.12);
-    color: #16a36a;
+    background: var(--primary-soft);
+    color: var(--primary);
 }
 
 .error-state {
-    background: rgba(220, 85, 85, 0.12);
-    color: #dc5555;
+    background: var(--danger-soft);
+    color: var(--danger);
 }
 
 /* Títulos */

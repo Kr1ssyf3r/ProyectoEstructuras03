@@ -104,7 +104,7 @@ const temaGuardado = localStorage.getItem("social-una-theme");
 
 html.setAttribute(
     "data-theme",
-    temaGuardado || "light"
+    temaGuardado || "dark"
 );
 
 

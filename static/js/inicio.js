@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     html.setAttribute(
         "data-theme",
-        temaGuardado === "dark" ? "dark" : "light"
+        temaGuardado === "light" ? "light" : "dark"
     );
 
 

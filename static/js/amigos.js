@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const html = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
 
-    html.setAttribute('data-theme', localStorage.getItem(THEME_KEY) || 'light');
+    html.setAttribute('data-theme', localStorage.getItem(THEME_KEY) || 'dark');
 
     function actualizarTemaAccesible() {
         if (!themeToggle) return;

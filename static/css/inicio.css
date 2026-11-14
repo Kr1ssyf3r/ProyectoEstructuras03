@@ -110,13 +110,13 @@
 
     border-radius: 12px;
 
-    color: white;
+    color: var(--on-action);
 
     font-size: 23px;
 
-    background: linear-gradient(145deg, #5794ff, #2463d5);
+    background: var(--action-gradient);
 
-    box-shadow: 0 7px 18px rgba(52, 120, 246, 0.2);
+    box-shadow: 0 7px 18px var(--action-shadow);
 
 }
 
@@ -210,19 +210,11 @@
 
     flex-shrink: 0;
 
-    color: #ffffff;
+    color: var(--on-action);
 
     font-weight: 800;
 
-    background: linear-gradient(
-
-        135deg,
-
-        #4288ff,
-
-        #7659e8
-
-    );
+    background: var(--action-gradient);
 
 }
 
@@ -254,7 +246,7 @@
 
     border-radius: 50%;
 
-    background: #16b880;
+    background: var(--online);
 
     box-shadow: 0 0 0 2px var(--card);
 
@@ -352,7 +344,7 @@
 
 .social-menu-link.is-active {
 
-    background: rgba(52, 120, 246, 0.1);
+    background: var(--primary-soft);
 
     color: var(--primary);
 
@@ -478,7 +470,7 @@
 
     border-radius: 17px;
 
-    box-shadow: 0 7px 26px rgba(32, 56, 101, 0.035);
+    box-shadow: 0 7px 26px color-mix(in srgb, var(--una-borgona) 6%, transparent);
 
 }
 
@@ -590,7 +582,7 @@
 
     padding: 9px 12px;
 
-    background: rgba(52, 120, 246, 0.1);
+    background: var(--primary-soft);
 
     border-radius: 9px;
 
@@ -722,7 +714,7 @@
 
     border-radius: 16px;
 
-    background: rgba(52, 120, 246, 0.1);
+    background: var(--primary-soft);
 
     color: var(--primary);
 
@@ -764,9 +756,9 @@
 
     border-radius: 10px;
 
-    background: linear-gradient(110deg, #4388ff, #2866df);
+    background: var(--action-gradient);
 
-    color: #ffffff;
+    color: var(--on-action);
 
     text-decoration: none;
 
@@ -1166,14 +1158,14 @@ button:focus-visible {
     min-width: 21px;
     height: 21px;
     padding: 0 5px;
-    background: #ef4444;
+    background: var(--una-carmesi);
     border: 2px solid var(--card);
     border-radius: 20px;
-    color: #ffffff;
+    color: var(--on-action);
     font-size: 10px;
     font-weight: 800;
     line-height: 1;
-    box-shadow: 0 3px 9px rgba(239, 68, 68, 0.25);
+    box-shadow: 0 3px 9px var(--action-shadow);
 }
 
 .notification-count[hidden],
@@ -1182,6 +1174,123 @@ button:focus-visible {
 }
 
 [data-theme="dark"] .notification-count {
-    background: #f05252;
+    background: var(--una-carmesi);
     border-color: var(--card);
+}
+/* =========================================
+   HISTORIAS
+========================================= */
+
+.stories-bar {
+    display: flex;
+    gap: 14px;
+    padding: 4px 2px 14px;
+    overflow-x: auto;
+}
+
+.story-item {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.story-item small {
+    font-size: 11px;
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.story-ring {
+    width: 62px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    background: var(--input);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.story-ring-add {
+    border-style: dashed;
+    color: var(--primary);
+}
+
+.story-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: var(--overlay);
+}
+
+.story-modal[hidden] {
+    display: none;
+}
+
+.story-panel {
+    width: min(92vw, 420px);
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: var(--card);
+    color: var(--text);
+}
+
+.story-panel video,
+.story-panel img {
+    width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: var(--una-fondo);
+}
+
+.story-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.story-controls button,
+.story-viewer > button {
+    padding: 9px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--input);
+    color: var(--text);
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.story-error {
+    color: var(--error-text);
+    font-size: 13px;
+}
+
+.story-progress {
+    display: flex;
+    gap: 4px;
+}
+
+.story-progress span {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--border);
+}
+
+.story-progress span.llena {
+    background: var(--primary);
 }

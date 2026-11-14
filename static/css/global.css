@@ -1,80 +1,163 @@
 /* =========================================
-   VARIABLES Y TEMAS
+   SISTEMA DE DISEÑO · SOCIAL UNA
+   -----------------------------------------
+   Paleta oficial (única fuente de color):
+
+     Fondo      #100D13   base de la app (modo oscuro)
+     Superficie #1C151D   tarjetas, paneles, menús
+     Borgoña    #642334   profundidad: bordes, brillos, fondos suaves
+     Carmesí    #B83250   acciones: botones y rellenos (texto blanco)
+     Acento     #F05270   énfasis: enlaces, iconos, foco, estados
+
+   Reglas de uso (contrastes WCAG calculados):
+   - Texto normal sobre Fondo/Superficie: tinte claro de Acento (≥ 16:1).
+   - Acento como texto/icono: SOLO sobre oscuro (5.2:1 en Superficie).
+     En modo claro el texto de énfasis es Carmesí (5.5:1).
+   - Carmesí: SOLO como relleno con texto blanco (5.8:1).
+   - Cualquier otro tono sale de mezclar estos cinco con
+     color-mix(); no se agregan colores nuevos.
 ========================================= */
 
 :root {
+    /* --- Paleta base (no usar directamente en componentes) --- */
+    --una-fondo: #100D13;
+    --una-superficie: #1C151D;
+    --una-borgona: #642334;
+    --una-carmesi: #B83250;
+    --una-acento: #F05270;
+
+    /* --- Tema oscuro (identidad principal) --- */
+    color-scheme: dark;
+
+    --background:
+        radial-gradient(
+            ellipse at 8% 8%,
+            color-mix(in srgb, var(--una-borgona) 55%, transparent),
+            transparent 42%
+        ),
+        radial-gradient(
+            ellipse at 92% 88%,
+            color-mix(in srgb, var(--una-carmesi) 20%, transparent),
+            transparent 42%
+        ),
+        var(--una-fondo);
+
+    /* Superficies */
+    --surface: var(--una-superficie);
+    --card: color-mix(in srgb, var(--una-superficie) 94%, transparent);
+    --input: color-mix(in srgb, var(--una-fondo) 72%, var(--una-superficie));
+    --surface-hover: color-mix(in srgb, var(--una-borgona) 28%, var(--una-superficie));
+
+    /* Texto */
+    --text: color-mix(in srgb, var(--una-acento) 7%, #ffffff);
+    --muted: color-mix(in srgb, var(--text) 62%, var(--una-superficie));
+    --label: color-mix(in srgb, var(--text) 86%, var(--una-superficie));
+    --footer: color-mix(in srgb, var(--text) 48%, var(--una-superficie));
+    --text-secondary: var(--muted);
+
+    /* Bordes */
+    --border: color-mix(in srgb, var(--una-borgona) 62%, var(--una-superficie));
+
+    /* Énfasis (texto, iconos, enlaces, foco) */
+    --primary: var(--una-acento);
+    --primary-dark: color-mix(in srgb, var(--una-acento) 72%, #ffffff);
+    --primary-soft: color-mix(in srgb, var(--una-acento) 10%, transparent);
+    --primary-softer: color-mix(in srgb, var(--una-acento) 8%, transparent);
+    --primary-line: color-mix(in srgb, var(--una-acento) 32%, transparent);
+
+    /* Acciones (rellenos con texto blanco) */
+    --action: var(--una-carmesi);
+    --action-end: color-mix(in srgb, var(--una-carmesi) 62%, var(--una-borgona));
+    --action-gradient: linear-gradient(110deg, var(--action), var(--action-end));
+    --action-hover: color-mix(in srgb, var(--una-carmesi) 82%, var(--una-acento));
+    --on-action: #ffffff;
+    --action-shadow: color-mix(in srgb, var(--una-carmesi) 45%, transparent);
+
+    /* Estados (solo con la paleta) */
+    --accent: var(--una-acento);
+    --danger: var(--una-acento);
+    --danger-soft: color-mix(in srgb, var(--una-carmesi) 22%, transparent);
+    --danger-line: color-mix(in srgb, var(--una-acento) 40%, transparent);
+    --online: var(--una-acento);
+    --color-me-gusta: var(--una-acento);
+
+    --error-bg: color-mix(in srgb, var(--una-borgona) 55%, var(--una-superficie));
+    --error-text: color-mix(in srgb, var(--una-acento) 60%, #ffffff);
+    --success-bg: var(--primary-softer);
+    --success-line: var(--primary-line);
+    --success-text: var(--text);
+
+    /* Sombras y foco */
+    --shadow:
+        0 30px 90px rgba(0, 0, 0, 0.5),
+        0 8px 25px rgba(0, 0, 0, 0.3);
+    --input-focus: 0 0 0 4px color-mix(in srgb, var(--una-acento) 22%, transparent);
+    --overlay: color-mix(in srgb, var(--una-fondo) 82%, transparent);
+
+    /* Luces ambientales */
+    --glow-1: color-mix(in srgb, var(--una-borgona) 70%, transparent);
+    --glow-2: color-mix(in srgb, var(--una-carmesi) 30%, transparent);
+    --glow-3: color-mix(in srgb, var(--una-acento) 14%, transparent);
+}
+
+/* --- Tema claro: misma identidad, versión luminosa --- */
+[data-theme="light"] {
     color-scheme: light;
 
     --background:
         radial-gradient(
-            ellipse at 10% 10%,
-            rgba(52, 120, 246, 0.17),
-            transparent 38%
+            ellipse at 8% 8%,
+            color-mix(in srgb, var(--una-acento) 14%, transparent),
+            transparent 40%
         ),
         radial-gradient(
-            ellipse at 90% 85%,
-            rgba(111, 86, 255, 0.14),
-            transparent 38%
+            ellipse at 92% 88%,
+            color-mix(in srgb, var(--una-carmesi) 10%, transparent),
+            transparent 40%
         ),
-        linear-gradient(
-            135deg,
-            #edf3ff 0%,
-            #f7f9ff 50%,
-            #eef1ff 100%
-        );
+        color-mix(in srgb, var(--una-acento) 5%, #ffffff);
 
-    --card: rgba(255, 255, 255, 0.88);
-    --input: #f5f7fc;
+    --surface: color-mix(in srgb, var(--una-acento) 2%, #ffffff);
+    --card: color-mix(in srgb, var(--una-acento) 2%, #ffffff);
+    --input: color-mix(in srgb, var(--una-acento) 6%, #ffffff);
+    --surface-hover: color-mix(in srgb, var(--una-acento) 10%, #ffffff);
 
-    --text: #17233b;
-    --muted: #8994a8;
-    --label: #35415a;
+    --text: var(--una-fondo);
+    --muted: color-mix(in srgb, var(--una-fondo) 62%, #ffffff);
+    --label: color-mix(in srgb, var(--una-fondo) 84%, #ffffff);
+    --footer: color-mix(in srgb, var(--una-fondo) 66%, #ffffff);
 
-    --border: #e3e9f2;
+    --border: color-mix(in srgb, var(--una-borgona) 18%, #ffffff);
 
-    --primary: #3478f6;
-    --primary-dark: #2263dc;
+    --primary: var(--una-carmesi);
+    --primary-dark: var(--una-borgona);
+    --primary-soft: color-mix(in srgb, var(--una-carmesi) 11%, transparent);
+    --primary-softer: color-mix(in srgb, var(--una-carmesi) 6%, transparent);
+    --primary-line: color-mix(in srgb, var(--una-carmesi) 30%, transparent);
 
-    --shadow:
-        0 30px 80px rgba(24, 43, 77, 0.13),
-        0 8px 25px rgba(24, 43, 77, 0.05);
+    --action-hover: color-mix(in srgb, var(--una-carmesi) 78%, var(--una-borgona));
+    --action-shadow: color-mix(in srgb, var(--una-carmesi) 35%, transparent);
 
-    --input-focus:
-        0 0 0 4px rgba(52, 120, 246, 0.12);
+    --accent: var(--una-carmesi);
+    --danger: var(--una-carmesi);
+    --danger-soft: color-mix(in srgb, var(--una-carmesi) 9%, transparent);
+    --danger-line: color-mix(in srgb, var(--una-carmesi) 35%, transparent);
+    --online: var(--una-carmesi);
+    --color-me-gusta: var(--una-carmesi);
 
-    --error-bg: #fff0f0;
-    --error-text: #c62828;
-
-    --footer: #a0aabb;
-}
-
-[data-theme="dark"] {
-    color-scheme: dark;
-
-    --background: #080e1b;
-    --card: rgba(19, 29, 49, 0.91);
-    --input: #111c30;
-
-    --text: #edf3ff;
-    --muted: #8998b2;
-    --label: #d0d9e9;
-
-    --border: #293750;
-
-    --primary: #5792ff;
-    --primary-dark: #3478f6;
+    --error-bg: color-mix(in srgb, var(--una-carmesi) 9%, #ffffff);
+    --error-text: var(--una-borgona);
+    --success-text: var(--una-borgona);
 
     --shadow:
-        0 30px 90px rgba(0, 0, 0, 0.42),
-        0 8px 25px rgba(0, 0, 0, 0.25);
+        0 30px 80px color-mix(in srgb, var(--una-borgona) 16%, transparent),
+        0 8px 25px color-mix(in srgb, var(--una-borgona) 8%, transparent);
+    --input-focus: 0 0 0 4px color-mix(in srgb, var(--una-carmesi) 18%, transparent);
+    --overlay: color-mix(in srgb, var(--una-fondo) 70%, transparent);
 
-    --input-focus:
-        0 0 0 4px rgba(87, 146, 255, 0.15);
-
-    --error-bg: #351f2a;
-    --error-text: #ff9caa;
-
-    --footer: #71819d;
+    --glow-1: color-mix(in srgb, var(--una-acento) 26%, transparent);
+    --glow-2: color-mix(in srgb, var(--una-carmesi) 16%, transparent);
+    --glow-3: color-mix(in srgb, var(--una-borgona) 10%, transparent);
 }
 
 
@@ -128,7 +211,7 @@ body {
     height: 450px;
     top: -150px;
     left: -120px;
-    background: rgba(52, 120, 246, 0.28);
+    background: var(--glow-1);
 }
 
 .light-two {
@@ -136,7 +219,7 @@ body {
     height: 500px;
     bottom: -200px;
     right: -130px;
-    background: rgba(111, 86, 255, 0.23);
+    background: var(--glow-2);
 }
 
 .light-three {
@@ -144,15 +227,7 @@ body {
     height: 280px;
     top: 30%;
     right: 25%;
-    background: rgba(38, 174, 255, 0.16);
-}
-
-[data-theme="dark"] .light-one {
-    background: rgba(52, 120, 246, 0.22);
-}
-
-[data-theme="dark"] .light-two {
-    background: rgba(111, 86, 255, 0.19);
+    background: var(--glow-3);
 }
 
 
@@ -175,7 +250,7 @@ body {
 
 .brand strong,
 .mobile-brand strong {
-    color: #76a9ff;
+    color: var(--accent);
 }
 
 .brand-icon {
@@ -186,18 +261,18 @@ body {
     align-items: center;
     justify-content: center;
 
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid color-mix(in srgb, var(--una-acento) 45%, transparent);
     border-radius: 13px;
 
-    background: linear-gradient(145deg, #5794ff, #2463d5);
+    background: var(--action-gradient);
 
-    color: #ffffff;
+    color: var(--on-action);
     font-size: 23px;
     font-weight: 800;
 
     box-shadow:
-        0 8px 25px rgba(52, 120, 246, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        0 8px 25px var(--action-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 
@@ -232,8 +307,9 @@ body {
     width: 6px;
     height: 6px;
 
-    background: #36bd88;
+    background: var(--online);
     border-radius: 50%;
+    box-shadow: 0 0 8px var(--primary-line);
 }
 
 
@@ -299,20 +375,16 @@ body {
 
 .error-message {
     background: var(--error-bg);
-    border: 1px solid var(--border);
+    border: 1px solid var(--danger-line);
+    border-left: 4px solid var(--una-carmesi);
     color: var(--error-text);
 }
 
 .success-message {
-    background: rgba(22, 131, 74, 0.10);
-    border: 1px solid rgba(22, 131, 74, 0.18);
-    color: #16834a;
-}
-
-[data-theme="dark"] .success-message {
-    background: #183c2c;
-    border-color: #285b42;
-    color: #9ae6b4;
+    background: var(--success-bg);
+    border: 1px solid var(--success-line);
+    border-left: 4px solid var(--accent);
+    color: var(--success-text);
 }
 
 
@@ -449,11 +521,11 @@ body {
 
     margin-top: 10px;
 
-    background: linear-gradient(110deg, #4388ff, #2866df);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: var(--action-gradient);
+    border: 1px solid color-mix(in srgb, var(--una-acento) 30%, transparent);
     border-radius: 11px;
 
-    color: #ffffff;
+    color: var(--on-action);
 
     font-family: inherit;
     font-size: 13px;
@@ -462,18 +534,19 @@ body {
     cursor: pointer;
 
     box-shadow:
-        0 10px 25px rgba(52, 120, 246, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        0 10px 25px var(--action-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
     transition: 0.25s ease;
 }
 
 .login-button:hover {
     transform: translateY(-3px);
+    background: var(--action-hover);
 
     box-shadow:
-        0 15px 32px rgba(52, 120, 246, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        0 15px 32px var(--action-shadow),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .login-button:active {
@@ -537,13 +610,14 @@ body {
     display: grid;
     place-items: center;
     border-radius: 12px;
-    background: var(--primary);
-    color: white;
+    background: var(--action-gradient);
+    color: var(--on-action);
     font-size: 20px;
     font-weight: 800;
 }
 
 .profile-header .top-actions {
+    position: static;
     display: flex;
     align-items: center;
     gap: 16px;
@@ -565,5 +639,123 @@ body {
 
     .profile-footer {
         margin-top: 15px;
+    }
+}
+
+
+/* =========================================
+   ACCESIBILIDAD: ANILLO DE FOCO VISIBLE
+========================================= */
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+::selection {
+    background: var(--una-carmesi);
+    color: var(--on-action);
+}
+
+
+/* =========================================
+   REFINAMIENTO VISUAL
+   Capa final: profundidad, movimiento sutil y detalles.
+========================================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Barras de desplazamiento con la paleta */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--una-borgona) transparent;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--una-borgona);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--una-carmesi); background-clip: padding-box; }
+
+/* Títulos con más presencia */
+h1, h2 {
+    letter-spacing: -0.03em;
+}
+
+/* Marca: brillo suave en el cuadro con la S */
+.brand-icon {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.brand:hover .brand-icon {
+    transform: rotate(-6deg) scale(1.06);
+}
+
+/* Etiqueta superior (MI CUENTA, etc.) como píldora */
+.form-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    border: 1px solid var(--primary-line);
+    border-radius: 999px;
+    background: var(--primary-softer);
+}
+
+/* Tarjetas: elevación y borde de color al interactuar */
+.profile-card,
+.post-card,
+.composer-card,
+.friend-card {
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.profile-card:hover,
+.post-card:hover,
+.friend-card:hover {
+    border-color: var(--primary-line);
+}
+
+/* Campos: foco con anillo de acento */
+.input-container input:hover {
+    border-color: var(--primary-line);
+}
+
+/* Botón de tema: giro al cambiar */
+.theme-toggle svg {
+    transition: transform 0.4s ease;
+}
+.theme-toggle:hover svg {
+    transform: rotate(25deg);
+}
+
+/* Entrada suave de las pantallas */
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+}
+
+main,
+.page-container,
+.recovery-card,
+.reset-card {
+    animation: aparecer 0.5s ease both;
+}
+
+/* Respeta a quien prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
 }

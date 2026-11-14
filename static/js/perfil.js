@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const html = document.documentElement;
 
     // Recuperar el tema guardado o utilizar el tema claro.
-    const temaGuardado = localStorage.getItem("socialuna-theme") || "light";
+    const temaGuardado = localStorage.getItem("social-una-theme") || "dark";
     html.setAttribute("data-theme", temaGuardado);
 
     // Cambiar el tema al presionar el botón.
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const nuevoTema = temaActual === "dark" ? "light" : "dark";
 
             html.setAttribute("data-theme", nuevoTema);
-            localStorage.setItem("socialuna-theme", nuevoTema);
+            localStorage.setItem("social-una-theme", nuevoTema);
         });
     }
 });

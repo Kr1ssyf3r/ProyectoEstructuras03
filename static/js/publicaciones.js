@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Aplicar el tema guardado
     html.setAttribute(
         "data-theme",
-        localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"
+        localStorage.getItem(THEME_KEY) === "light" ? "light" : "dark"
     );
 
     // Texto del botón para lectores de pantalla

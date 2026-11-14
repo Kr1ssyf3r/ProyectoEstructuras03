@@ -252,7 +252,7 @@
 
                             <li class="friend-row">
 
-                                {{ avatar(amigo) }}
+                                {{ avatar(amigo, "friend-avatar") }}
 
                                 <div class="friend-info">
 
@@ -348,7 +348,7 @@
 
                             <li class="friend-row">
 
-                                {{ avatar(item.usuario) }}
+                                {{ avatar(item.usuario, "friend-avatar") }}
 
                                 <div class="friend-info">
 
@@ -440,7 +440,7 @@
 
                             <li class="friend-row">
 
-                                {{ avatar(item.usuario) }}
+                                {{ avatar(item.usuario, "friend-avatar") }}
 
                                 <div class="friend-info">
 
@@ -563,7 +563,7 @@
 
                                 <li class="friend-row">
 
-                                    {{ avatar(item.usuario) }}
+                                    {{ avatar(item.usuario, "friend-avatar") }}
 
                                     <div class="friend-info">
 
@@ -671,7 +671,7 @@
 
                                 <li class="friend-row">
 
-                                    {{ avatar(item.usuario) }}
+                                    {{ avatar(item.usuario, "friend-avatar") }}
 
                                     <div class="friend-info">
 
@@ -737,7 +737,7 @@
                     <ul class="friend-list">
                         {% for bloqueado in bloqueados %}
                             <li class="friend-row">
-                                {{ avatar(bloqueado) }}
+                                {{ avatar(bloqueado, "friend-avatar") }}
                                 <div class="friend-info">
                                     <strong>{{ bloqueado.nombre }}</strong>
                                     <span>@{{ bloqueado.usuario }}</span>

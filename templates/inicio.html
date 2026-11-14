@@ -292,6 +292,34 @@
                 {% endwith %}
 
 
+
+                <!-- =================================
+                     HISTORIAS
+                ================================== -->
+
+                <section class="stories-bar" aria-label="Historias">
+
+                    <!-- BOTON PARA CREAR (abre la camara) -->
+                    <button type="button" class="story-item story-add" id="abrirCamara">
+                        <span class="story-ring story-ring-add">+</span>
+                        <small>Tu historia</small>
+                    </button>
+
+                    <!-- UN CIRCULO POR AUTOR CON HISTORIAS VISIBLES -->
+                    {% for grupo in grupos_historias %}
+                        <button type="button" class="story-item" data-grupo="{{ loop.index0 }}">
+                            <span class="story-ring">{{ grupo.autor.nombre[:1] | upper }}</span>
+                            <small>{{ 'Tú' if grupo.autor.id == usuario.id else grupo.autor.nombre.split(' ')[0] }}</small>
+                        </button>
+                    {% endfor %}
+
+                </section>
+
+                <!-- datos del visor: el JS los lee sin peticiones extra -->
+                <script id="datosHistorias" type="application/json">{{ datos_historias | tojson }}</script>
+
+
+
                 <!-- =================================
                      CREACIÓN DE PUBLICACIONES
 
@@ -353,7 +381,7 @@
                      PUBLICACIONES
                 ================================== -->
 
-            <div class="feed-section-header">
+                        <div class="feed-section-header">
 
                 <h2>Publicaciones</h2>
 
@@ -367,9 +395,9 @@
                         </svg>
                         Actualizar
                     </a>
-            </div>
+                </div>
 
-        </div>
+            </div>
 
         {% if autor_filtrado %}
             <div class="aviso-filtro">
@@ -400,7 +428,7 @@
 
                 <div>
 
-                    <<strong>
+                    <strong>
                         <a
                             class="enlace-autor"
                             href="{{ url_for('inicio.inicio_feed', autor=tarjeta.autor.id) }}"
@@ -612,9 +640,41 @@
         </div>
 
     </div>
+
+    <!-- CAMARA -->
+    <div class="story-modal" id="modalCamara" hidden>
+        <div class="story-panel">
+            <video id="previewCamara" autoplay muted playsinline></video>
+            <img id="fotoCapturada" hidden alt="Vista previa">
+            <video id="videoGrabado" controls playsinline hidden></video>
+
+            <p class="story-error" id="errorCamara" hidden></p>
+
+            <div class="story-controls">
+                <button type="button" id="btnFoto">Foto</button>
+                <button type="button" id="btnGrabar">Grabar</button>
+                <button type="button" id="btnRepetir" hidden>Repetir</button>
+                <button type="button" id="btnSubir" hidden>Publicar</button>
+                <button type="button" id="btnCerrarCamara">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISOR -->
+    <div class="story-modal" id="modalVisor" hidden>
+        <div class="story-panel story-viewer">
+            <div class="story-progress" id="progresoVisor"></div>
+            <strong id="autorVisor"></strong>
+            <div id="contenidoVisor"></div>
+            <button type="button" id="btnCerrarVisor">Cerrar</button>
+        </div>
+    </div>
+
+    <input type="hidden" id="csrfHistorias" value="{{ csrf_historias() }}">
 {% endblock %}
 
 {% block scripts %}
     <script src="{{ url_for('static', filename='js/inicio.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/notificaciones.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/historias.js') }}" defer></script>
 {% endblock %}

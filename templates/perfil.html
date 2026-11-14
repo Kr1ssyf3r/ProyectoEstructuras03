@@ -14,31 +14,36 @@
     <main class="profile-container">
 
         <header class="profile-header">
-            <a href="{{ url_for('perfil.perfil') }}" class="brand">
-                <span class="brand-icon">S</span>
-                <span>Social UNA</span>
-            </a>
+    <a href="{{ url_for('inicio.inicio_feed') }}" class="brand">
+        <span class="brand-icon">S</span>
+        <span>Social UNA</span>
+    </a>
 
-            <div class="top-actions">
-                <span class="secure-label">
-                    <span class="secure-dot"></span>
-                    SESIÓN ACTIVA
-                </span>
+    <div class="top-actions">
+        <a href="{{ url_for('inicio.inicio_feed') }}" class="back-home">
+            <span aria-hidden="true">←</span>
+            Volver al inicio
+        </a>
 
-                <button class="theme-toggle" id="themeToggle" type="button"
-                        aria-label="Cambiar tema">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="4"/>
-                        <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2">
-                        <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/>
-                    </svg>
-                </button>
-            </div>
-        </header>
+        <span class="secure-label">
+            <span class="secure-dot"></span>
+            SESIÓN ACTIVA
+        </span>
+
+        <button class="theme-toggle" id="themeToggle" type="button"
+                aria-label="Cambiar tema">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+                <path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/>
+            </svg>
+        </button>
+    </div>
+</header>
 
         <section class="profile-content">
             <div class="profile-heading">

@@ -23,7 +23,7 @@
     max-width: 510px;
     padding: 30px 48px 22px;
     box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border);
     border-radius: 25px;
     background: var(--card);
     box-shadow: var(--shadow);
@@ -36,27 +36,17 @@
 }
 
 /* Tema claro */
-:root:not([data-theme="dark"]) .recovery-card {
+[data-theme="light"] .recovery-card {
     background:
         linear-gradient(
             145deg,
-            rgba(255, 255, 255, 0.88),
-            rgba(239, 244, 255, 0.82)
+            color-mix(in srgb, var(--una-acento) 2%, #ffffff),
+            color-mix(in srgb, var(--una-acento) 7%, #ffffff)
         );
-    border-color: rgba(255, 255, 255, 0.85);
     box-shadow:
-        0 35px 90px rgba(39, 65, 120, 0.14),
-        0 12px 30px rgba(39, 65, 120, 0.07),
+        0 35px 90px color-mix(in srgb, var(--una-borgona) 16%, transparent),
+        0 12px 30px color-mix(in srgb, var(--una-borgona) 8%, transparent),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-/* Tema oscuro */
-html[data-theme="dark"] .recovery-card {
-    background: rgba(19, 29, 49, 0.91);
-    border-color: rgba(255, 255, 255, 0.07);
-    box-shadow:
-        0 30px 90px rgba(0, 0, 0, 0.42),
-        0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 
@@ -88,8 +78,8 @@ html[data-theme="dark"] .recovery-card {
     display: grid;
     place-items: center;
     border-radius: 12px;
-    background: var(--primary);
-    color: white;
+    background: var(--action-gradient);
+    color: var(--on-action);
     font-size: 20px;
 }
 
@@ -110,7 +100,7 @@ html[data-theme="dark"] .recovery-card {
     place-items: center;
     margin: 0 auto 22px;
     border-radius: 20px;
-    background: rgba(52, 120, 246, 0.11);
+    background: var(--primary-soft);
     color: var(--primary);
 }
 
@@ -172,17 +162,12 @@ html[data-theme="dark"] .recovery-card {
 .recovery-content .success-message {
     padding: 13px 15px;
     margin-bottom: 22px;
-    background: rgba(22, 131, 74, 0.10);
-    border: 1px solid rgba(22, 131, 74, 0.18);
+    background: var(--success-bg);
+    border: 1px solid var(--success-line);
+    border-left: 4px solid var(--accent);
     border-radius: 10px;
-    color: #16834a;
+    color: var(--success-text);
     font-size: 13px;
-}
-
-html[data-theme="dark"] .recovery-content .success-message {
-    background: #183c2c;
-    border-color: #285b42;
-    color: #9ae6b4;
 }
 
 
@@ -232,7 +217,7 @@ html[data-theme="dark"] .recovery-content .success-message {
     display: grid;
     place-items: center;
     border-radius: 17px;
-    background: rgba(52, 120, 246, 0.12);
+    background: var(--primary-soft);
     color: var(--primary);
 }
 
@@ -278,8 +263,8 @@ html[data-theme="dark"] .recovery-content .success-message {
     justify-content: center;
     gap: 10px;
     border-radius: 11px;
-    background: var(--primary);
-    color: white;
+    background: var(--action-gradient);
+    color: var(--on-action);
     font-size: 13px;
     font-weight: 700;
     text-decoration: none;
@@ -287,7 +272,7 @@ html[data-theme="dark"] .recovery-content .success-message {
 }
 
 .development-button:hover {
-    background: var(--primary-dark);
+    background: var(--action-hover);
     transform: translateY(-2px);
 }
 
@@ -305,7 +290,7 @@ html[data-theme="dark"] .recovery-content .success-message {
     margin-top: 18px;
     padding: 12px;
     border-radius: 10px;
-    background: rgba(52, 120, 246, 0.07);
+    background: var(--primary-softer);
     text-align: left;
 }
 

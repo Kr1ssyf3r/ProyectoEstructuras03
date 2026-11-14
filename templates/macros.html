@@ -1,0 +1,7 @@
+<!-- soluciona el error de avatar en la pagina de amigos ya que flask no reconoce la macro avatar en el template de amigos.html -->
+
+{% macro avatar(usuario, clase="feed-avatar") -%}
+    <span class="{{ clase }}" aria-hidden="true">
+        {{- usuario.nombre[:1] | upper -}}
+    </span>
+{%- endmacro %}

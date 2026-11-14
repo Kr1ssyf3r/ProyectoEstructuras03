@@ -3,22 +3,23 @@ import os
 
 from flask import Flask
 
+from controllers.amistades_routes import crear_amistades_blueprint
 from controllers.autenticacion_routes import autenticacion_bp
+from controllers.feed_routes import crear_feed_blueprint
 from controllers.inicio_routes import inicio_bp
 from controllers.perfil_routes import perfil_bp
-from controllers.amistades_routes import crear_amistades_blueprint
 from controllers.publicaciones_routes import crear_publicaciones_blueprint
-from services.publicacion_service import PublicacionService
+from repositories.reaccion_repository import ReaccionRepository
 from repositories.token_repository import TokenRepository
 from repositories.usuario_repository import UsuarioRepository
 from services.amistadService import AmistadService
+from services.busquedaService import BusquedaService
 from services.correo_service import CorreoService
+from services.feed_service import FeedService
+from services.publicacion_service import PublicacionService
+from services.reaccion_service import ReaccionService
 from services.recuperacion_service import RecuperacionService
 from services.usuario_service import UsuarioService
-from repositories.reaccion_repository import ReaccionRepository
-from services.reaccion_service import ReaccionService
-from services.feed_service import FeedService
-from controllers.feed_routes import crear_feed_blueprint
 
 
 def create_app(test_config=None):
@@ -50,6 +51,7 @@ def create_app(test_config=None):
     )
     correo_service = CorreoService()
     amistad_service = AmistadService(usuario_service=usuario_service)
+    busqueda_service = BusquedaService(usuario_service, amistad_service)#nuevo 
     publicacion_service = PublicacionService(usuario_service=usuario_service)
     reaccion_repository = ReaccionRepository()
     reaccion_service = ReaccionService(
@@ -82,7 +84,7 @@ def create_app(test_config=None):
     app.register_blueprint(perfil_bp)
     app.register_blueprint(inicio_bp)
     app.register_blueprint(
-        crear_amistades_blueprint(usuario_service, amistad_service)
+        crear_amistades_blueprint(usuario_service, amistad_service, busqueda_service)
     )
     app.register_blueprint(
         crear_publicaciones_blueprint(publicacion_service)

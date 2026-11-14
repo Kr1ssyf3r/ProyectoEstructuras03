@@ -508,3 +508,13 @@ class AmistadService:
 
         #a diferencia de existe_bloqueo_entre, aqui importa quien realizo el bloqueo
         return self.bloqueos.ha_bloqueado(id_usuario, id_otro)
+
+
+    # ---------------------------------------
+    # BUSQUEDA (TRIE)
+    # ---------------------------------------
+    def hay_bloqueo_entre(self, id1, id2):
+        """True si cualquiera de los dos bloqueo al otro."""
+        #delega en GestorBloqueos, que ya revisa las dos direcciones (A bloqueo a B o B bloqueo a A).
+        #BusquedaService usa este metodo para no sugerir a usuarios bloqueados en el autocompletar
+        return self.bloqueos.existe_bloqueo_entre(id1, id2)

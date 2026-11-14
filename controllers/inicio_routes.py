@@ -11,7 +11,6 @@ from flask import (
 
 from controllers.decorators import requiere_sesion
 
-
 inicio_bp = Blueprint("inicio", __name__)
 
 # Cantidad máxima de publicaciones que se muestran en el feed.
@@ -26,6 +25,7 @@ def inicio_feed(usuario):
     amistad_service = servicios["amistad_service"]
     feed_service = servicios["feed_service"]
     usuario_service = servicios["usuario_service"]
+    historia_service = servicios["historia_service"]
 
     # Parámetro opcional ?autor=<id>: ver solo las publicaciones de una persona.
     autor_id = request.args.get("autor", "").strip()[:100]
@@ -56,6 +56,24 @@ def inicio_feed(usuario):
     solicitudes_recibidas = amistad_service.obtener_solicitudes_recibidas(usuario.id)
     cantidad_solicitudes = len(solicitudes_recibidas)
 
+    # Historias visibles: las propias y las de amigos, vigentes y sin bloqueos
+    grupos_historias = historia_service.historias_visibles(usuario.id)
+
+    # Datos que lee el visor en JS, armados aqui porque en Jinja seria incomodo
+    datos_historias = [
+        {
+            "autor": grupo["autor"].nombre,
+            "historias": [
+                {
+                    "url": url_for("historias.archivo", nombre=historia.archivo),
+                    "tipo": historia.tipo_archivo,
+                }
+                for historia in grupo["historias"]
+            ],
+        }
+        for grupo in grupos_historias
+    ]
+
     return render_template(
         "inicio.html",
         usuario=usuario,
@@ -64,4 +82,6 @@ def inicio_feed(usuario):
         cantidad_solicitudes=cantidad_solicitudes,
         tarjetas=tarjetas,
         autor_filtrado=autor_filtrado,
+        grupos_historias=grupos_historias,
+        datos_historias=datos_historias,
     )

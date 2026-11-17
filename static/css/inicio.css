@@ -1294,3 +1294,13 @@ button:focus-visible {
 .story-progress span.llena {
     background: var(--primary);
 }
+
+/* Fotos y videos dentro de las tarjetas del feed */
+.post-card .post-media {
+    display: block;
+    max-width: 100%;
+    max-height: 420px;
+    margin: 12px 0;
+    border-radius: 12px;
+    object-fit: contain;
+}

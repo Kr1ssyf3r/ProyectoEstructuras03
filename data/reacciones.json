@@ -1,0 +1,104 @@
+[
+    {
+        "usuario_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "publicacion_id": "9adb2156-ec0a-4bc9-abc4-9a9ef200b957",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "publicacion_id": "9adb2156-ec0a-4bc9-abc4-9a9ef200b957",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+        "publicacion_id": "9adb2156-ec0a-4bc9-abc4-9a9ef200b957",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "publicacion_id": "15134df0-6594-4a69-b5d0-bfe2637464c6",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "publicacion_id": "15134df0-6594-4a69-b5d0-bfe2637464c6",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "publicacion_id": "b8a6beb2-e9d0-4d17-a645-eb0818ee7e12",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "publicacion_id": "65a8aaa0-1024-4763-b560-3a117a70e221",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "publicacion_id": "f6ddb382-7a97-4319-a603-fdf39495fea2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+        "publicacion_id": "f6ddb382-7a97-4319-a603-fdf39495fea2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "publicacion_id": "cc86fa6f-31e1-409c-bac6-4c5e808c51c9",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "publicacion_id": "2c298ee6-2f63-4291-81ca-9c5966e78ff2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "publicacion_id": "2c298ee6-2f63-4291-81ca-9c5966e78ff2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "publicacion_id": "2c298ee6-2f63-4291-81ca-9c5966e78ff2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+        "publicacion_id": "81c7ab47-613b-4d38-bdfb-8856bf9f6520",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "publicacion_id": "81c7ab47-613b-4d38-bdfb-8856bf9f6520",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T18:56:41"
+    },
+    {
+        "usuario_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "publicacion_id": "f6ddb382-7a97-4319-a603-fdf39495fea2",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T19:06:35"
+    },
+    {
+        "usuario_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "publicacion_id": "b8a6beb2-e9d0-4d17-a645-eb0818ee7e12",
+        "tipo": "me_gusta",
+        "fecha": "2026-11-16T19:10:06"
+    }
+]

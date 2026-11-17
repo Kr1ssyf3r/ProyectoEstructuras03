@@ -1,0 +1,58 @@
+[
+    {
+        "id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "nombre": "Ana Mora",
+        "usuario": "ana",
+        "correo": "ana@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$08f364dc331930aac56474865a01db1a$46bdf796e70b3c2b7634edefcd3f04cecc2f1c1ba727b301f93a70cfca036d72",
+        "fecha_registro": "2026-11-16T18:56:40"
+    },
+    {
+        "id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "nombre": "Beto Solís",
+        "usuario": "beto",
+        "correo": "beto@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$682fef07bfb2705272c64271e7866633$9ab49c67e813e07a0877f3c277437fd49ff5df8e3d6744da10bb103fc32c0a31",
+        "fecha_registro": "2026-11-16T18:56:41"
+    },
+    {
+        "id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "nombre": "Carla Jiménez",
+        "usuario": "carla",
+        "correo": "carla@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$8b09043d81bd5ef3c8e5c2887672bccd$f2f2b006dc25214982349454895fc857a59bd8106f636a667bf84a0778eac747",
+        "fecha_registro": "2026-11-16T18:56:41"
+    },
+    {
+        "id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+        "nombre": "Diego Rojas",
+        "usuario": "diego",
+        "correo": "diego@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$fa5d844b1212978f91b7b71c8201684f$cbb4727718dc25d068a27969e7f5264cbbf91ccedcfaab29591fdbdf978a6809",
+        "fecha_registro": "2026-11-16T18:56:41"
+    },
+    {
+        "id": "3626e7d3-fb25-4b10-a216-3e762277e7d5",
+        "nombre": "Elena Vargas",
+        "usuario": "elena",
+        "correo": "elena@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$2023b5f5e0314a8998659a6ed58ad876$9ba19cb86365ee346c27cf35dd4d31fe63af43b5d276950e495270e0197a5858",
+        "fecha_registro": "2026-11-16T18:56:41"
+    },
+    {
+        "id": "6cd41020-6494-40b1-a0f6-f785b7934a96",
+        "nombre": "Fabio Núñez",
+        "usuario": "fabio",
+        "correo": "fabio@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$d3af9db4082686fc63d1225e6d62b487$6409a8448b0649a4ab2fe6037f666c761b796989655885b039bb83f5ad79b182",
+        "fecha_registro": "2026-11-16T18:56:41"
+    },
+    {
+        "id": "c69caa4d-30f0-49e1-815d-49da279c6616",
+        "nombre": "Gaby Salas",
+        "usuario": "gaby",
+        "correo": "gaby@est.una.ac.cr",
+        "contrasena_hash": "pbkdf2_sha256$600000$e6e6277d62127e8bd93cf4da4dc9874a$964e608beb545b21bb441b807c60fdb1a7517c6b4a00e7641926acfe5595b83d",
+        "fecha_registro": "2026-11-16T18:56:41"
+    }
+]

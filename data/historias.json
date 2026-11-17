@@ -1,0 +1,34 @@
+[
+    {
+        "id": "56285cbb-53d2-4acc-a654-7035f339b7a6",
+        "autor_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+        "archivo": "5a8c57d7-31c7-4ba5-867c-4734f47d1aad.png",
+        "tipo_archivo": "imagen",
+        "fecha_creacion": "2026-11-16T17:56:41.608252",
+        "fecha_expiracion": "2027-01-31T23:59:00"
+    },
+    {
+        "id": "be282f39-20e9-43d4-a4c5-b69a21b7d4f5",
+        "autor_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+        "archivo": "82b48b0e-ec24-411d-bebe-dbab0a4bc3e6.mp4",
+        "tipo_archivo": "video",
+        "fecha_creacion": "2026-11-16T17:56:41.608252",
+        "fecha_expiracion": "2027-01-31T23:59:00"
+    },
+    {
+        "id": "3f023b41-2d31-477f-994f-4e2c14a94f5a",
+        "autor_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+        "archivo": "920b81a1-fdf3-4ec5-85ff-216775dcd42b.png",
+        "tipo_archivo": "imagen",
+        "fecha_creacion": "2026-11-16T17:56:41.608252",
+        "fecha_expiracion": "2027-01-31T23:59:00"
+    },
+    {
+        "id": "36d08a10-f0c9-435c-84c6-0c33fc4b5d9c",
+        "autor_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+        "archivo": "70d91080-9144-4b33-8192-bc3147898f2c.png",
+        "tipo_archivo": "imagen",
+        "fecha_creacion": "2026-11-16T17:56:41.608252",
+        "fecha_expiracion": "2027-01-31T23:59:00"
+    }
+]

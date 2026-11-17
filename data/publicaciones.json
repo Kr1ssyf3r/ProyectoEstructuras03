@@ -1,0 +1,114 @@
+[
+  {
+    "id": "ac7c0e8e-f25c-47c9-a4dd-41a376823b81",
+    "autor_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+    "contenido": "¡Primera semana de exámenes! Café y a estudiar.",
+    "fecha": "2026-11-13T14:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "9adb2156-ec0a-4bc9-abc4-9a9ef200b957",
+    "autor_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+    "contenido": "Tarde de estudio en la biblioteca con el grupo.",
+    "fecha": "2026-11-15T06:00:00",
+    "archivo": "ea69fff5-8187-49b0-9225-215ec1419968.png",
+    "tipo_archivo": "imagen"
+  },
+  {
+    "id": "15134df0-6594-4a69-b5d0-bfe2637464c6",
+    "autor_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+    "contenido": "Así se vive el campus hoy.",
+    "fecha": "2026-11-16T09:00:00",
+    "archivo": "7bce9fa5-1732-4b93-889a-c698e74a2a74.mp4",
+    "tipo_archivo": "video"
+  },
+  {
+    "id": "81c7ab47-613b-4d38-bdfb-8856bf9f6520",
+    "autor_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+    "contenido": "Alguien para armar un grupo de estudio de Estructuras de Datos?",
+    "fecha": "2026-11-14T08:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "b8a6beb2-e9d0-4d17-a645-eb0818ee7e12",
+    "autor_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+    "contenido": "",
+    "fecha": "2026-11-15T16:00:00",
+    "archivo": "9d0558ea-682f-4d8e-b76b-a8d74bf4aeb4.png",
+    "tipo_archivo": "imagen"
+  },
+  {
+    "id": "65a8aaa0-1024-4763-b560-3a117a70e221",
+    "autor_id": "f8ec7c73-22e1-4146-aa54-2f596ea81e8f",
+    "contenido": "Entrega del proyecto casi lista.",
+    "fecha": "2026-11-16T07:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "f6ddb382-7a97-4319-a603-fdf39495fea2",
+    "autor_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+    "contenido": "El campus se ve increíble en la tarde.",
+    "fecha": "2026-11-15T10:00:00",
+    "archivo": "c25b0b06-761b-4406-98ea-faa4d935e65e.png",
+    "tipo_archivo": "imagen"
+  },
+  {
+    "id": "cc86fa6f-31e1-409c-bac6-4c5e808c51c9",
+    "autor_id": "4d3dba97-cf73-43db-8034-bb66108a0b7d",
+    "contenido": "Recomiendo mucho el curso de Bases de Datos.",
+    "fecha": "2026-11-16T04:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "8bcc749a-32be-4cc8-bb45-fcf80728f54c",
+    "autor_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+    "contenido": "Probando Social UNA, se ve genial.",
+    "fecha": "2026-11-14T20:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "2c298ee6-2f63-4291-81ca-9c5966e78ff2",
+    "autor_id": "8d96327e-a062-43a0-ad35-63bc84f2e821",
+    "contenido": "Resumen del partido de ayer.",
+    "fecha": "2026-11-16T00:00:00",
+    "archivo": "0932c4eb-d6b5-4ed8-a54f-941d78b1cda2.mp4",
+    "tipo_archivo": "video"
+  },
+  {
+    "id": "fbfcc44e-89bb-406d-8779-7846452cb510",
+    "autor_id": "3626e7d3-fb25-4b10-a216-3e762277e7d5",
+    "contenido": "Nueva por aquí, ¡hola a todos!",
+    "fecha": "2026-11-15T21:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "723083cb-6892-4b7c-98d2-a256b6115737",
+    "autor_id": "6cd41020-6494-40b1-a0f6-f785b7934a96",
+    "contenido": "Buscando apuntes de Cálculo.",
+    "fecha": "2026-11-16T02:00:00",
+    "archivo": null,
+    "tipo_archivo": null
+  },
+  {
+    "id": "600fe2b3-e534-4321-a130-4ce5ab714b19",
+    "autor_id": "c69caa4d-30f0-49e1-815d-49da279c6616",
+    "contenido": "Hoy toca biblioteca.",
+    "fecha": "2026-11-16T06:00:00",
+    "archivo": "e07f683d-ec4e-4d91-b743-29482eab96e4.png",
+    "tipo_archivo": "imagen"
+  },
+  {
+    "id": "1a766bef-28bb-4eed-b44f-84c1f32bc7dc",
+    "autor_id": "0165c6f7-9884-4546-94f5-1e1e520ed0fe",
+    "contenido": "A weli le falta encontrar el token pirata",
+    "fecha": "2026-11-16T19:07:38.713556",
+    "archivo": null,
+    "tipo_archivo": null
+  }
+]
